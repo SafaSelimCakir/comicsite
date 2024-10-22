@@ -1,0 +1,92 @@
+.card{
+
+    align-items: center;
+    
+}
+
+
+.img-container {
+    position: relative;
+}
+
+.card-img-top:hover {
+    opacity: 0.3;
+    transition: .5s ease;
+    cursor: pointer;
+}
+
+.overlay {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    color: white;
+    font-size: 18px;
+    opacity: 0;
+    transition: opacity 0.5s ease;
+    cursor: pointer;
+    
+}
+
+.img-container:hover .overlay {
+    opacity: 1;
+}
+
+.price-and-button {
+    display: flex;
+    align-items: center;
+}
+
+.card-text{
+    margin-right: 15px;
+    margin-top: 8px;
+}
+
+svg:not(:root).svg-inline--fa {
+    overflow: visible;
+  }
+  
+  .svg-inline--fa {
+    display: inline-block;
+    font-size: inherit;
+    height: 1em;
+    overflow: visible;
+    vertical-align: -.125em;
+  }
+  
+  svg {
+    margin-right: .5em;
+  }
+  
+  .svg-inline--fa.fa-w-18 {
+    width: 1.125em;
+  }
+  
+  .css-scan-edited-element-0 {
+    background-color: #1d1d1d;
+    border-radius: 5px;
+    border-style: none;
+    border-width: 0;
+    box-shadow: rgba(0, 0, 0, .4) 0 2px 4px, rgba(0, 0, 0, .3) 0 7px 13px -3px, rgba(0, 0, 0, .2) 0 -3px 0 inset;
+    color: #fff;
+    cursor: pointer;
+    display: none;
+    font-family: Arial, sans-serif;
+    font-size: 1em;
+    height: 50px;
+    padding: 0 15px;
+    transition: all 200ms;
+    transition-behavior: normal;
+  }
+  
+  .css-scan-edited-element-0:hover {
+    background-color: #141414;
+    transform: scale(1.05);
+  }
+  
+  @media screen and (min-width: 1024px) {
+    .css-scan-edited-element-0 {
+      display: inline-block;
+    }
+  }
+  
