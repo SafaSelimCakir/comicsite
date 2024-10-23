@@ -21,10 +21,9 @@ from . import views  # Görünümlerinizi içe aktarın
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('', views.home, name='home'),  # Ana sayfa için görünüm
-<<<<<<< HEAD
+
     path('cart/', views.cart, name='cart'),
     path('checkout', views.checkout, name='checkout'),
-=======
+
     
->>>>>>> 72c9b07376b27ddc0dedc8b07ec028fc13f8d4e9
 ]

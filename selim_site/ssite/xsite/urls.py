@@ -7,14 +7,11 @@ from . import views
 
 
 urlpatterns = [
-<<<<<<< HEAD
+
     path("",views.index,name="home"),
     
     path("cart",views.cart,name="cart"),
     path("checkout",views.checkout,name="checkout"),
-=======
-    path("",views.index),
-    path("home",views.index),
     
->>>>>>> 72c9b07376b27ddc0dedc8b07ec028fc13f8d4e9
+
 ]
