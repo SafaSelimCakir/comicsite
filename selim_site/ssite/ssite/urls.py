@@ -17,6 +17,9 @@ Including another URLconf
 from django.contrib import admin
 from django.urls import path, include
 from . import views  # Görünümlerinizi içe aktarın
+from django.conf.urls.static import static
+from django.conf import settings
+
 
 urlpatterns = [
     path('admin/', admin.site.urls),
@@ -25,5 +28,5 @@ urlpatterns = [
     path('cart/', views.cart, name='cart'),
     path('checkout', views.checkout, name='checkout'),
 
-    
-]
+    path('', include('xsite.urls')),
+] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
