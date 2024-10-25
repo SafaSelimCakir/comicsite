@@ -4,7 +4,6 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     {% load static %}
-    <link rel="stylesheet" href="{% static 'css/main.css'%}">
 
     <meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,minimum-scale=1">
 
@@ -16,22 +15,12 @@
 
     <title>Document</title>
 </head>
-<body>from django.db import models
-
-    class Product(models.Model):
-        name = models.CharField(max_length=255)
-        price = models.DecimalField(max_digits=10, decimal_places=2)
-        description = models.TextField()
-        image = models.ImageField(upload_to='product_images/', null=True, blank=True)
-        created_at = models.DateTimeField(auto_now_add=True)  # Sadece auto_now_add kullanılıyor
-    
-        def __str__(self):
-            return self.name
-    
+<body>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
+    <link rel="stylesheet" href="{% static 'css/main.css'%}">
     <div style="padding-bottom: 20px ;">
-        <nav class="navbar navbar-expand-sm bg-dark navbar-dark" >
+      <nav class="navbar navbar-expand-lg navbar-light bg-dark text-white">
           <div class="container-fluid" style="height: 55px;">
             <a class="navbar-brand" href="#" style="font-size: 26px;font-family: 'Trebuchet MS', 'Lucida Sans Unicode', 'Lucida Grande', 'Lucida Sans', Arial, sans-serif;"><img style="width: 110px;" src="{% static 'img/logo.png'%}" alt="First slide"></a>
             <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNavDropdown" aria-controls="navbarNavDropdown" aria-expanded="false" aria-label="Toggle navigation">
@@ -40,20 +29,20 @@
             <div class="collapse navbar-collapse" id="navbarNavDropdown">
               <ul class="navbar-nav">
                 <li class="nav-item">
-                  <a class="nav-link" aria-current="page" href="{% url 'home' %}"><i class="bi bi-house"></i></a>
+                  <a class="nav-link" style="color: whitesmoke;opacity: 0.5;" aria-current="page" href="{% url 'home' %}"><i class="bi bi-house"></i></a>
                 </li>
                 <li class="nav-item">
-                  <a class="nav-link" href="{% url 'checkout' %}"><i class="bi bi-archive"></i></a>
+                  <a class="nav-link" style="color: whitesmoke;opacity: 0.5;" href="{% url 'checkout' %}"><i class="bi bi-archive"></i></a>
                 </li>
                 <li class="nav-item">
-                  <a class="nav-link" href="#"><i class="bi bi-envelope"></i></a>
+                  <a class="nav-link" style="color: whitesmoke;opacity: 0.5;" href="#"><i class="bi bi-envelope"></i></a>
                 </li>
                 <li class="nav-item">
-                  <a class="nav-link" href="#"><i class="bi bi-collection"></i></a>
+                  <a class="nav-link" style="color: whitesmoke;opacity: 0.5;" href="#"><i class="bi bi-collection"></i></a>
                 </li>
                 
                 <li class="nav-item">
-                  <a class="nav-link" href="#"><i class="bi bi-bag"></i></a>
+                  <a class="nav-link" style="color: whitesmoke;opacity: 0.5;" href="#"><i class="bi bi-bag"></i></a>
                 </li>
               </ul>
             </div>
