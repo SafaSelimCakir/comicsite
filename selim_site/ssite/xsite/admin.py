@@ -1,6 +1,5 @@
 from django.contrib import admin
 from .models import xsite, Category
-
 from .models import *
 
 admin.site.register(Customer)
