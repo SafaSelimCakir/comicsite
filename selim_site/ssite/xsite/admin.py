@@ -1,6 +1,9 @@
 from django.contrib import admin
 from .models import xsite, Category
 from .models import *
+from .models import ImageCard
+
+admin.site.register(ImageCard)
 
 admin.site.register(Customer)
 admin.site.register(Product)

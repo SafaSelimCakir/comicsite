@@ -17,14 +17,13 @@ Including another URLconf
 from django.contrib import admin
 from django.urls import path, include
 from . import views  # Görünümlerinizi içe aktarın
-from django.conf.urls.static import static
 from django.conf import settings
-
+from django.conf.urls.static import static
 
 urlpatterns = [
     path('admin/', admin.site.urls),
-    path('', views.home, name='home'),  # Ana sayfa için görünüm
-
+    path('', views.home, name='home'),
+    path('', include('xsite.urls')),
     path('cart/', views.cart, name='cart'),
-    path('checkout', views.checkout, name='checkout'),
-]
+    path('checkout/', views.checkout, name='checkout'),
+] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

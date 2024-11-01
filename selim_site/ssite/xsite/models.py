@@ -1,6 +1,12 @@
 from django.db import models
 from django.contrib.auth.models import User
 
+class ImageCard(models.Model):
+    title = models.CharField(max_length=100)
+    image = models.ImageField(upload_to='images/')
+    
+    def __str__(self):
+        return self.title
 # Create your models here.
 
 class Customer(models.Model):
@@ -19,7 +25,8 @@ class Product(models.Model):
     price = models.FloatField()
     digital = models.BooleanField(default=False, null=True, blank=True)
     image = models.ImageField(upload_to='img/', null=True, blank=True)  # Resim alanı eklendi
-
+    
+    
     def __str__(self):
         return self.name
 
