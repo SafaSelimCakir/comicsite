@@ -3,31 +3,62 @@
 {% block content %}
 <link rel="stylesheet" href="{% static 'css/main.css'%}">
 <link rel="stylesheet" href="{% static 'css/card.css'%}">
+<link rel="stylesheet" href="{% static 'css/style.css' %}">
 
+<div style="display: flex; align-items: center;">
+  <div class="card" id="hulk">
+    <div class="card-image">
+      <img src="https://res.cloudinary.com/dsgvp2wmj/image/upload/v1636769866/466-4665707_hulk-png-avengers-earths-mightiest-heroes-hulk-transparent-removebg-preview_hxdclj.png"/>
+    </div>
+    <div class="card-text">
+      <h2>MARVEL</h2>
+      <p>COMICS<br>GROUP</p>
+      <div>
+      <div>
+        <span>15</span>
+        <span>&cent;</span>
 
-        <div>
-          <div id="carouselExampleIndicators" class="carousel slide" data-ride="carousel" style="height: 520px;width: 100%;">
-            <div class="carousel-inner" style="height: 500px;width: 100%;">
-              <div class="carousel-item active" style="height: 500px;width: 350px;">
-                <img class="d-block w-100" style="height: 500px;width: 350px;" src="{% static 'img/d1.jpg'%}" alt="First slide">
-              </div>
-              <div class="carousel-item" style="height: 500px;width: 350px;">
-                <img class="d-block w-100" style="height: 500px;width: 350px;" src="{% static 'img/d2.jpg'%}" alt="Second slide">
-              </div>
-              
-            </div>
-            <a class="carousel-control-prev" href="#carouselExampleIndicators" role="button" data-slide="prev">
-              <span class="carousel-control-prev-icon" aria-hidden="true"></span>
-              
-            </a>
-            <a class="carousel-control-next" href="#carouselExampleIndicators" role="button" data-slide="next">
-              <span class="carousel-control-next-icon" aria-hidden="true"></span>
-              
-            </a>
-          </div>
         </div>
-        <div>
-          <ul>
+      <div><span>27</span><span>May</span></div>
+    </div>
+      </div>
+  </div>
+  <div class="card" id="spiderman">
+    <div class="card-image">
+      <img src="https://pngimg.com/uploads/spider_man/spider_man_PNG59.png"/>
+    </div>
+    <div class="card-text">
+      <h2>MARVEL</h2>
+
+      <div>
+      <div>
+        <span>COMICS</span>
+        <span>GROUP</span>
+
+        </div>
+      <div><span>12</span><span>&cent;</span></div>
+    </div>
+      </div>
+  </div>
+  <div class="card" id="deadpool">
+    <div class="card-text">
+      <div><span>40</span><span>&cent;</span></div>
+      <div>
+        <span>29</span>
+        <span>JAN</span>
+        <span>02461</span>
+      </div>
+    </div>
+    <div class="card-image">
+      <p>&copy; 1979 Marvel <br>Comics Group</p>
+      <img src="https://www.pngkey.com/png/full/82-824923_deadpool-deadpool-marvel-comics.png"/>
+    </div>
+  </div>
+</div>
+        <script src="{% static 'css/style.js' %}"></script>
+
+        <div style="margin-top: 20px;">
+          <ul style="display: flex;list-style: none;">
             <li>
               <div class="card bg-dark text-white" style="width:250px;box-shadow: rgba(0, 0, 0, 0.17) 0px -23px 25px 0px inset, rgba(0, 0, 0, 0.15) 0px -36px 30px 0px inset, rgba(0, 0, 0, 0.1) 0px -79px 40px 0px inset, rgba(0, 0, 0, 0.06) 0px 2px 1px, rgba(0, 0, 0, 0.09) 0px 4px 2px, rgba(0, 0, 0, 0.09) 0px 8px 4px, rgba(0, 0, 0, 0.09) 0px 16px 8px, rgba(0, 0, 0, 0.09) 0px 32px 16px;">
                 <div class="img-container">
