@@ -4,6 +4,7 @@ from .models import Product
 from django.views.generic import ListView
 from django.views.generic import TemplateView
 
+
 class CartView(ListView):
     model = Product
     template_name = 'xsite/cart.html' 
@@ -11,8 +12,19 @@ class CartView(ListView):
 
 class HomeView(TemplateView):
     template_name = 'xsite/home.html'
+    context_object_name = 'products'
 
 class CheckoutView(ListView):
     model = Product
     template_name = 'xsite/checkout.html'
     context_object_name = 'products'
+
+class informationView(ListView):
+    model = Product
+    template_name = 'xsite/information.html'
+    context_object_name = 'products' 
+
+class bagView(ListView):
+    model = Product
+    template_name = 'xsite/bag.html'
+    context_object_name = 'products' 

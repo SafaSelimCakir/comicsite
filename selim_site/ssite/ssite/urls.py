@@ -25,5 +25,7 @@ urlpatterns = [
     path('', views.home, name='home'),
     path('', include('xsite.urls')),
     path('cart/', views.cart, name='cart'),
-    path('checkout/', views.checkout, name='checkout'),
+    path('information/', views.information, name='information'),
+    path('checkout/', views.checkout, name='checkout'), 
+    path('bag/', views.bag, name='bag'),
 ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
