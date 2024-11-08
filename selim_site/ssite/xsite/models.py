@@ -18,8 +18,8 @@ class Product(models.Model):
     subname = models.CharField(max_length=200, null=True, blank=True)
     price = models.FloatField()
     digital = models.BooleanField(default=False, null=True, blank=True)
-    image = models.ImageField(upload_to='img/', null=True, blank=True)  # Resim alanı eklendi
-    
+    image = models.ImageField(upload_to='img/', null=True, blank=True)  # Image field
+    pdf = models.FileField(upload_to='pdfs/', null=True, blank=True)  # PDF field added
     
     def __str__(self):
         return self.name
@@ -32,6 +32,14 @@ class Product(models.Model):
             url = ''
         return url
 
+    @property
+    def pdfURL(self):
+        try:
+            url = self.pdf.url
+        except:
+            url = ''
+        return url
+    
 
 class Order(models.Model):
 	customer = models.ForeignKey(Customer, on_delete=models.SET_NULL, null=True, blank=True)

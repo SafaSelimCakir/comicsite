@@ -19,6 +19,17 @@ class CheckoutView(ListView):
     template_name = 'xsite/checkout.html'
     context_object_name = 'products'
 
+class loginView(ListView):
+    model = Product
+    template_name = 'xsite/login.html'
+    context_object_name = 'products'
+    
+
+class registerView(ListView):
+    model = Product
+    template_name = 'xsite/register.html'
+    context_object_name = 'products'
+
 class informationView(ListView):
     model = Product
     template_name = 'xsite/information.html'
