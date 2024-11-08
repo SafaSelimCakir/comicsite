@@ -32,7 +32,7 @@
                 <h5 class="card-title">{{ product.name }}</h5>
                 <p class="card-text">${{ product.price }}</p>
                 {% if product.pdf %}
-    <a href="{{ product.pdf.url }}" target="_blank">Download PDF</a>
+                <iframe src="{{ product.pdf.url }}" width="100%" height="600px"></iframe>
 {% else %}
     <p>No PDF available for this product.</p>
 {% endif %}
