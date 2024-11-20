@@ -21,6 +21,7 @@ class Product(models.Model):
     image = models.ImageField(upload_to='img/', null=True, blank=True)  # Image field
     pdf = models.FileField(upload_to='pdfs/', null=True, blank=True)  # PDF field added
     
+    
     def __str__(self):
         return self.name
 

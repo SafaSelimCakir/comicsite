@@ -29,6 +29,7 @@ urlpatterns = [
     path('information/', views.information, name='information'),
     path('checkout/', views.checkout, name='checkout'), 
     path('bag/', views.bag, name='bag'),
+    path('book/', views.book, name='book'),
     path('login/', views.login, name='login'),
     path('register/', views.login, name='register'),
 ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

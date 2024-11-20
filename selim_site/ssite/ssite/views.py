@@ -14,6 +14,10 @@ def bag(request):
     context={}
     return render(request, 'xsite/bag.html',context)
 
+def book(request):
+    context={}
+    return render(request, 'xsite/book.html',context)
+
 def login(request):
     context={}
     return render(request, 'xsite/login.html',context)

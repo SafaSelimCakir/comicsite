@@ -10,7 +10,8 @@ class CartView(ListView):
     template_name = 'xsite/cart.html' 
     context_object_name = 'products' 
 
-class HomeView(TemplateView):
+class HomeView(ListView):
+    model = Product
     template_name = 'xsite/home.html'
     context_object_name = 'products'
 
@@ -24,6 +25,10 @@ class loginView(ListView):
     template_name = 'xsite/login.html'
     context_object_name = 'products'
     
+class bookView(ListView):
+    model = Product
+    template_name = 'xsite/book.html'
+    context_object_name = 'products'
 
 class registerView(ListView):
     model = Product

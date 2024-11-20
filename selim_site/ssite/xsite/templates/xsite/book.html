@@ -1,0 +1,52 @@
+{% extends 'xsite/cart.html' %}
+{% load static %}
+{% block content %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <title>Flipbook</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
+    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
+    <script type="text/javascript" src="{% static 'js/script.js' %}"></script>
+    <style>
+        body {
+            overflow: hidden;
+            background-color:#141414;
+        }
+        
+        #flipbook .page {
+            background: white;
+        }
+
+        #flipbook .shadow,#flipbook .shadow{
+            -webkit-box-shadow: 0 4px 10px #666;
+            -moz-box-shadow: 0 4px 10px #666;
+            -ms-box-shadow: 0 4px 10px #666;
+            -o-box-shadow: 0 4px 10px #666;
+            box-shadow: 0 4px 10px #666;
+        }
+    </style>
+</head>
+
+<body>
+    <div id="flipbook">
+        {% for product in products %}
+        <div>
+            <img src="{{ product.imageURL }}" alt="" width="100%" height="100%">
+        </div>
+        {% endfor %}
+    </div>
+    
+    <script type="text/javascript">
+        $('#flipbook').turn({
+            width:900,
+            height:600,
+            page:1,
+            autoCenter:true,
+
+        })
+    </script>
+    {% endblock content %}
+</body>
+</html>
