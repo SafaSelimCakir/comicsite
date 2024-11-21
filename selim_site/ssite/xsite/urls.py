@@ -3,7 +3,7 @@ from . import views
 from xsite import views
 from django.conf.urls.static import static
 from django.conf import settings
-from .views import CartView, HomeView, CheckoutView,informationView,bagView,loginView,registerView,bookView
+from .views import CartView, HomeView, CheckoutView,informationView,bagView,loginView,registerView,bookView,ProductDetailView
 
 
 urlpatterns = [
@@ -15,5 +15,6 @@ urlpatterns = [
     path('book/', bookView.as_view(), name='book'),
     path('login/', loginView.as_view(), name='login'),
     path('register/', registerView.as_view(), name='register'),
+    path('product/<int:pk>/', ProductDetailView.as_view(), name='product-detail'),
 ]
 urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

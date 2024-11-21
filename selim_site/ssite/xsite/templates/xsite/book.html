@@ -33,7 +33,9 @@
     <div id="flipbook">
         {% for product in products %}
         <div>
-            <img src="{{ product.imageURL }}" alt="" width="100%" height="100%">
+            {% if product.pdfURL %}
+            <img src="{{ product.imageURL }}" alt="{{ product.name }}" style="height: 100%;width: 100%;">
+        {% endif %}
         </div>
         {% endfor %}
     </div>

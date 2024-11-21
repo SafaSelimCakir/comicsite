@@ -1,35 +1,18 @@
-
-{% extends 'xsite/cart.html' %}
-{% load static %}
-{% block content %}
-
-
-<link rel="stylesheet" href="{% static 'css/sslider.css'%}">
-<link rel="stylesheet" href=
-"https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css" />
-
-<div class="wrapper">
-    <i id="left" class="fa-solid fas fa-angle-left"></i>
-    <ul class="carousel">
-        <li class="card" style="background-color: #141414; border: none;">
-            <div class="img"><img src="{% static 'img/d1.jpg' %}" alt="" draggable="false"> </div>
-        </li>
-        <li class="card" style="background-color: #141414;border: none;">
-            <div class="img"><img src="{% static 'img/d2.jpg' %}" alt="" draggable="false"> </div>
-        </li>
-        <li class="card" style="background-color: #141414;border: none;">
-            <div class="img"><img src="{% static 'img/d1.jpg' %}" alt="" draggable="false"> </div>
-        </li>
-        <li class="card" style="background-color: #141414;border: none;">
-            <div class="img"><img src="{% static 'img/d2.jpg' %}" alt="" draggable="false"> </div>
-        </li>
-        <li class="card" style="background-color: #141414;border: none;">
-            <div class="img"><img src="{% static 'img/d1.jpg' %}" alt="" draggable="false"> </div>
-        </li>
-    </ul>
-    <i id="right" class="fa-solid fas fa-angle-right"></i>
-</div>
-
-<script src="{% static 'js/slider.js' %}"></script>
- 
-{% endblock content %}
+<!doctype html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8">
+        <meta http-equiv="X-UA-Compatible" content="ie=edge">
+        <title>Giriş Yap</title>
+    </head>
+<body>
+    {% load static %}
+    <form method="post">
+        {% csrf_token %}
+        {{ form.as_p }}
+        <button type="submit">Login</button>
+    </form>
+    
+  </body>
+</html>
+        
