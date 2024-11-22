@@ -34,8 +34,11 @@
         {% for product in products %}
         <div>
             {% if product.pdfURL %}
-            <img src="{{ product.imageURL }}" alt="{{ product.name }}" style="height: 100%;width: 100%;">
-        {% endif %}
+            <iframe src="{{ product.pdfURL }}" frameborder="0" style="height: 600px;width: 450px;"></iframe>
+            {% else %}
+            <p>PDF mevcut değil.</p>
+            {% endif %}
+
         </div>
         {% endfor %}
     </div>

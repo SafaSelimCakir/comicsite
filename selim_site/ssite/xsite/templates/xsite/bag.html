@@ -7,7 +7,7 @@
   </div>
   <div class="book-wrapper">
     {% for product in products %}
-    <a href="{% url 'book' %}">
+    <a href="{% url 'book' product.id  %}">
       <div class="book-items">
       <div class="main-book-wrap">
         <div class="book-cover">

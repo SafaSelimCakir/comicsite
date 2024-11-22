@@ -10,13 +10,13 @@
 <div>
   <figure>
     <picture>
-      <img src="{% static 'img/image.jpg'%}" style="height: 500px;" alt="The Ramp game promotional image">
+      <img src="{% static 'img/kryponcomic.webp'%}" style="height: 500px;" alt="The Ramp game promotional image">
     </picture>
     <figcaption>
       <img src="{% static 'img/image.jpg'%}" aria-hidden="true">
       <section class="adaptive-glass">
-        <h3>THE BATMAN is OUT NOW!</h3>
-        <date>Tue, August 3, 2021 9:05 AM PDT</date>
+        <h3>KryponComic Join us now at </h3>
+        <date>Browse, read, and collect with just a tap. The world of comics, all in one place.</date>
       </section>
     </figcaption>
   </figure>
@@ -76,16 +76,26 @@
 <div class="row">
   {% for product in products %}
   <div class="col-lg-3" style="margin-top: 30px;">
-    <div class="card bg-dark text-white" style=" border: none; width:250px;box-shadow: rgba(0, 0, 0, 0.17) 0px -23px 25px 0px inset, rgba(0, 0, 0, 0.15) 0px -36px 30px 0px inset, rgba(0, 0, 0, 0.1) 0px -79px 40px 0px inset, rgba(0, 0, 0, 0.06) 0px 2px 1px, rgba(0, 0, 0, 0.09) 0px 4px 2px, rgba(0, 0, 0, 0.09) 0px 8px 4px, rgba(0, 0, 0, 0.09) 0px 16px 8px, rgba(0, 0, 0, 0.09) 0px 32px 16px;">
+    <div class="card bg-dark text-white" style="width:250px;border: none;box-shadow: rgba(0, 0, 0, 0.17) 0px -23px 25px 0px inset, rgba(0, 0, 0, 0.15) 0px -36px 30px 0px inset, rgba(0, 0, 0, 0.1) 0px -79px 40px 0px inset, rgba(0, 0, 0, 0.06) 0px 2px 1px, rgba(0, 0, 0, 0.09) 0px 4px 2px, rgba(0, 0, 0, 0.09) 0px 8px 4px, rgba(0, 0, 0, 0.09) 0px 16px 8px, rgba(0, 0, 0, 0.09) 0px 32px 16px;">
       <div class="img-container">
-        <img class="card-img-top" style="height: 340px;width: 250px;border-radius: 8px;"  src="{{ product.imageURL }}" alt="{{ product.name }}">
+        <a href="{% url 'product-detail' product.id %}">
+          <img class="card-img-top" style="height: 340px;width: 250px;border-radius: 8px;"  src="{{ product.imageURL }}" alt="{{ product.name }}">
+        </a>
         <p style="font-size:15px;" class="overlay">{{ product.subname }}</p>
       </div>
       <div class="card-body">
         <h5 class="card-title">{{ product.name }}</h5>
         <div class="price-and-button">
-          <p class="card-text">${{ product.price }}</p>
-          <button class="css-scan-edited-element-0" style="height: 30px; width: 135px;"><i style="margin-right: 5px;" class="bi bi-bag"></i>sepete ekle</button>
+          <p class="card-text">
+            {% if product.apply_discount %}
+              <span style="text-decoration: line-through; color: gray;">${{ product.price }}</span>
+              <span style="color: red;">${{ product.discounted_price }}</span>
+            {% else %}
+              ${{ product.price }}
+            {% endif %}
+          </p>
+          <button class="css-scan-edited-element-0" style="height: 30px; width: 135px;">sepete ekle</button>
+          
         </div>
       </div>
     </div>

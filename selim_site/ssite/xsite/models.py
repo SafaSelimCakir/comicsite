@@ -1,6 +1,9 @@
 from django.db import models
 from django.contrib.auth.models import User
-
+from decimal import Decimal
+from PIL import Image
+import fitz  # PyMuPDF
+import os
 
 
 class Customer(models.Model):
@@ -16,14 +19,25 @@ class Customer(models.Model):
 class Product(models.Model):
     name = models.CharField(max_length=200)
     subname = models.CharField(max_length=1000, null=True, blank=True)
-    price = models.FloatField()
+    price = models.FloatField()  # FloatField olarak kalabilir
     digital = models.BooleanField(default=False, null=True, blank=True)
-    image = models.ImageField(upload_to='img/', null=True, blank=True)  # Image field
-    pdf = models.FileField(upload_to='pdfs/', null=True, blank=True)  # PDF field added
-    
-    
+    image = models.ImageField(upload_to='img/', null=True, blank=True)
+    pdf = models.FileField(upload_to='pdfs/', null=True, blank=True)
+    discount = models.IntegerField(default=0)  # Discount as an integer
+    apply_discount = models.BooleanField(default=False, null=True, blank=True)  # Discount flag
+
     def __str__(self):
         return self.name
+
+    @property
+    def discounted_price(self):
+        """
+        Calculate and return the discounted price if the discount is active.
+        """
+        if self.apply_discount and self.discount > 0:
+            return round(Decimal(self.price) * Decimal(1 - self.discount / 100), 2)
+        return self.price
+    
 
     @property
     def imageURL(self):
@@ -32,6 +46,7 @@ class Product(models.Model):
         except:
             url = ''
         return url
+
 
     @property
     def pdfURL(self):

@@ -46,10 +46,22 @@
                 </li>
               </ul>
             </div>
-            <form class="form-inline my-2 my-lg-0 d-flex">
-              <input id="search-toggle" class="form-control mr-sm-2" style="border-radius: 15px;box-shadow: rgba(0, 0, 0, 0.35) 0px 5px 15px;" type="search" placeholder="Search" aria-label="Search">
-              <button id="search-input" class="btn btn-outline-secondary my-2 my-sm-0" style="margin-left: 10px;border-radius: 100px;box-shadow: rgba(0, 0, 0, 0.35) 0px 5px 15px;" type="submit"><i class="bi bi-search"></i></button>
-            </form>             
+            <form class="col-12 col-lg-auto mb-3 mb-lg-0 me-lg-3" role="search">
+              <input type="search" class="form-control" placeholder="Search..." aria-label="Search">
+            </form>
+              
+            <div class="dropdown">
+              <a href="#" class="d-block link-body-emphasis text-decoration-none dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false">
+                <img src="https://github.com/mdo.png" alt="mdo" width="32" height="32" class="rounded-circle">
+              </a>
+              <ul class="dropdown-menu">
+                <li><a class="dropdown-item" href="#">New project...</a></li>
+                <li><a class="dropdown-item" href="#">Settings</a></li>
+                <li><a class="dropdown-item" href="#">Profile</a></li>
+                <li><hr class="dropdown-divider"></li>
+                <li><a class="dropdown-item" href="#">Sign out</a></li>
+              </ul>
+            </div>           
           </div>
         </nav>
       </div>

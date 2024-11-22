@@ -12,9 +12,11 @@ urlpatterns = [
     path('home/', HomeView.as_view(), name='home'),
     path('checkout/', CheckoutView.as_view(), name='checkout'),
     path('bag/', bagView.as_view(), name='bag'),
-    path('book/', bookView.as_view(), name='book'),
+    path('book/<int:id>/', bookView.as_view(), name='book'),
     path('login/', loginView.as_view(), name='login'),
     path('register/', registerView.as_view(), name='register'),
     path('product/<int:pk>/', ProductDetailView.as_view(), name='product-detail'),
+    
 ]
-urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
+if settings.DEBUG:  # Sadece geliştirme modunda çalışır
+    urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
