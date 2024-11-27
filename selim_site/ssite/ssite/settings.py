@@ -30,7 +30,7 @@ ALLOWED_HOSTS = ['127.0.0.1', 'localhost']
 
 
 # Application definition
-
+LOGOUT_REDIRECT_URL = '/users/login/'
 INSTALLED_APPS = [
     'django.contrib.admin',
     'django.contrib.auth',
@@ -38,7 +38,8 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
-    'xsite',    
+    'xsite',
+        
 ]
 
 MIDDLEWARE = [

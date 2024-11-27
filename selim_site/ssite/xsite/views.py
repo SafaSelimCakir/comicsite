@@ -5,24 +5,11 @@ from django.views.generic import ListView
 from django.views.generic import TemplateView,DetailView
 
 from django.contrib.auth import login, authenticate
-from .forms import LoginForm
 
-def login_view(request):
-    if request.method == 'POST':
-        form = LoginForm(request.POST)
-        if form.is_valid():
-            username = form.cleaned_data['username']
-            password = form.cleaned_data['password']
-            user = authenticate(request, username=username, password=password)
-            if user is not None:
-                login(request, user)  # Kullanıcıyı oturum açtır
-                return redirect('home')  # Ana sayfaya yönlendirin, buraya uygun bir URL yazın
-            else:
-                form.add_error(None, "Invalid username or password")
-    else:
-        form = LoginForm()
+from django.contrib.auth.views import LoginView
 
-    return render(request, 'login.html', {'form': form})
+class CustomLoginView(LoginView):
+    template_name = 'xsite/login.html'
 
 
 class ProductDetailView(DetailView):
@@ -55,7 +42,7 @@ class bookView(ListView):
     template_name = 'xsite/book.html'
     context_object_name = 'products'
 
-class registerView(ListView):
+class register_view(ListView):
     model = Product
     template_name = 'xsite/register.html'
     context_object_name = 'products'

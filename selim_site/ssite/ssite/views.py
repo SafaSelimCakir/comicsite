@@ -1,6 +1,20 @@
 from django.http.response import HttpResponse
-from django.shortcuts import render
+from django.shortcuts import render, redirect
 from django.contrib.auth.forms import UserCreationForm
+from django.contrib.auth import authenticate
+from django.contrib.auth import login
+from .forms import RegisterForm
+
+def register_view(request):
+    if request.method == 'POST':
+        form = RegisterForm(request.POST)
+        if form.is_valid():
+            user = form.save()
+            login(request, user)  # Kullanıcıyı otomatik olarak giriş yap
+            return redirect('home')  # Giriş sonrası yönlendirme
+    else:
+        form = RegisterForm()
+    return render(request, 'xsite/register.html', {'form': form})
 
 def home(request):
     context={}
@@ -19,9 +33,9 @@ def book(request):
     return render(request, 'xsite/book.html',context)
 
 def login(request):
-    context={}
-    return render(request, 'xsite/login.html',context)
-
+    return render(request,"xsite/login.html")
+  
+  
 def register(request):
     form=UserCreationForm()
     context={'form':form}

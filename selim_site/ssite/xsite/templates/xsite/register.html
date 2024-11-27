@@ -1,7 +1,7 @@
 
-<h1>register</h1>
-<form method="POST">
+<h2>Kayıt Ol</h2>
+<form method="post">
     {% csrf_token %}
-    {{form.as_p}}
-    <input type="submit" name="Create User">
+    {{ form.as_p }}
+    <button type="submit">Kayıt Ol</button>
 </form>

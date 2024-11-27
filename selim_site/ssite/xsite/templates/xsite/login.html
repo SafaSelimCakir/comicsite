@@ -1,18 +1,6 @@
-<!doctype html>
-<html lang="en">
-    <head>
-        <meta charset="UTF-8">
-        <meta http-equiv="X-UA-Compatible" content="ie=edge">
-        <title>Giriş Yap</title>
-    </head>
-<body>
-    {% load static %}
-    <form method="post">
-        {% csrf_token %}
-        {{ form.as_p }}
-        <button type="submit">Login</button>
-    </form>
-    
-  </body>
-</html>
-        
+<h2>Giriş Yap</h2>
+<form method="post">
+    {% csrf_token %}
+    {{ form.as_p }}
+    <button type="submit">Giriş Yap</button>
+</form>
