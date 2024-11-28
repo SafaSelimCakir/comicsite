@@ -5,16 +5,16 @@ from django.contrib.auth import authenticate
 from django.contrib.auth import login
 from .forms import RegisterForm
 
-def register_view(request):
+def register(request):
     if request.method == 'POST':
         form = RegisterForm(request.POST)
         if form.is_valid():
-            user = form.save()
-            login(request, user)  # Kullanıcıyı otomatik olarak giriş yap
-            return redirect('home')  # Giriş sonrası yönlendirme
+            form.save()
+            return redirect('home')  # Kayıt başarılı ise login sayfasına yönlendir
     else:
         form = RegisterForm()
-    return render(request, 'xsite/register.html', {'form': form})
+    return render(request, 'register.html', {'form': form})
+
 
 def home(request):
     context={}

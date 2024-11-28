@@ -1,7 +1,25 @@
-
-<h2>Kayıt Ol</h2>
-<form method="post">
-    {% csrf_token %}
-    {{ form.as_p }}
-    <button type="submit">Kayıt Ol</button>
-</form>
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Kayıt Ol</title>
+    <link rel="stylesheet" href="{% static 'css/styles.css' %}">
+</head>
+<body>
+    <div class="login-container">
+        <div class="login-box">
+            <h2 style="color: whitesmoke;">Kayıt Ol</h2>
+            <form method="post">
+                {% csrf_token %}
+                {{ form.as_p }}
+                <button type="submit" class="btn">Kayıt Ol</button>
+            </form>
+            <p style="text-align: center; color: whitesmoke;">
+                Hesabınız var mı? <a href="{% url 'login' %}" style="color: #a777e3;">Giriş yap</a>.
+            </p>
+        </div>
+    </div>
+</body>
+</html>

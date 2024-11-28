@@ -14,7 +14,7 @@ urlpatterns = [
     path('bag/', bagView.as_view(), name='bag'),
     path('book/<int:id>/', bookView.as_view(), name='book'),
     path('login/', CustomLoginView.as_view(), name='login'),
-    path('register/', register_view, name='register'),
+    path('register/', register_view.as_view(), name='register'),
     path('product/<int:pk>/', ProductDetailView.as_view(), name='product-detail'),
     
 ]

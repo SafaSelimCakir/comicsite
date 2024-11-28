@@ -32,6 +32,5 @@ urlpatterns = [
     path('book/', views.book, name='book'),
     path('login/', views.login, name='login'),
     path('register/', views.login, name='register'),
-    path('users/', include('users.urls')),  # users uygulamasının yollarını ekle
     path('', include('django.contrib.auth.urls')),
 ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

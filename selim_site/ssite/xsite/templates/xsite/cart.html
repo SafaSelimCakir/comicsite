@@ -50,9 +50,11 @@
               <input type="search" class="form-control" placeholder="Search..." aria-label="Search">
             </form>
               
-            <div class="dropdown">
-              <a href="#" class="d-block link-body-emphasis text-decoration-none dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false">
-                <img src="https://github.com/mdo.png" alt="mdo" width="32" height="32" class="rounded-circle">
+            <div class="dropdown" style="margin-right: 25px;">
+              <a href="#" class="d-flex align-items-center link-body-emphasis text-decoration-none dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false">
+                <img src="{% static 'img/d1.jpg' %}" alt="mdo" width="32" height="32" class="rounded-circle me-2">
+                <h6 style="color: whitesmoke; margin-bottom: 0;">{{ user.username }}</h6>
+                <i class="bi bi-chevron-down text-white ms-2"></i>  <!-- Icona beyaz renk ekledik -->
               </a>
               <ul class="dropdown-menu">
                 <li><a class="dropdown-item" href="#">New project...</a></li>
@@ -61,7 +63,7 @@
                 <li><hr class="dropdown-divider"></li>
                 <li><a class="dropdown-item" href="#">Sign out</a></li>
               </ul>
-            </div>           
+            </div>                                   
           </div>
         </nav>
       </div>

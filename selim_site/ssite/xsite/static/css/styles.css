@@ -1,0 +1,70 @@
+/* Genel ayarlar */
+body {
+    font-family: Arial, sans-serif;
+    margin: 0;
+    padding: 0;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 100vh;
+    background: linear-gradient(135deg, #c51414, #141414);
+}
+
+/* Login kutusu */
+.login-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 100%;
+    max-width: 400px;
+    background: #333;
+    border-radius: 10px;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+    padding: 20px 30px;
+    color: whitesmoke;
+    box-shadow: 20px 20px 25px black;
+}
+
+.login-box h2 {
+    text-align: center;
+    margin-bottom: 20px;
+    font-size: 1.5em;
+    color: whitesmoke;
+}
+
+/* Form elemanları */
+form {
+    width: 100%;
+}
+
+form p {
+    margin-bottom: 15px;
+}
+
+input[type="text"], input[type="password"], input[type="email"], select, textarea {
+    width: 100%;
+    padding: 10px;
+    margin: 5px 0;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    font-size: 1em;
+}
+
+/* Buton */
+.btn {
+    width: 100%;
+    padding: 10px 15px;
+    background: #333;
+    color: #141414;
+    border: solid #141414;
+    border-radius: 8px;
+    font-size: 1em;
+    cursor: pointer;
+    transition: background 0.3s;
+}
+
+.btn:hover {
+    background: #141414;
+    color: #333;
+    border-color: #333;
+}
