@@ -3,7 +3,8 @@ from django.shortcuts import render, redirect
 from .models import Product
 from django.views.generic import ListView
 from django.views.generic import TemplateView,DetailView
-
+from ssite.forms import RegisterForm
+from django.views.generic.edit import FormView
 from django.contrib.auth import login, authenticate
 
 from django.contrib.auth.views import LoginView
@@ -42,10 +43,14 @@ class bookView(ListView):
     template_name = 'xsite/book.html'
     context_object_name = 'products'
 
-class register_view(ListView):
-    model = Product
+class RegisterView(FormView):
     template_name = 'xsite/register.html'
-    context_object_name = 'products'
+    form_class = RegisterForm
+    success_url = '/login/'
+
+    def form_valid(self, form):
+        form.save()  # Kullanıcıyı kaydet
+        return super().form_valid(form)
 
 class informationView(ListView):
     model = Product

@@ -1,0 +1,85 @@
+{% extends 'xsite/cart.html' %}
+
+{% block content %}
+{% load static %}
+
+<link rel="stylesheet" href="{% static 'css/profile.css' %}">
+
+<div class="profile-container">
+    <!-- Profil Kartı -->
+    <div class="profile-card">
+        <div class="profile-header">
+            <h2>{{ user.username }}'in Profil Bilgileri</h2>
+        </div>
+
+        <!-- Profil Bilgileri -->
+        <div class="profile-info">
+            <div class="profile-picture">
+                <img src="{{ user.profile.profile_picture.url }}" alt="Profil Resmi" class="profile-img">
+                <label for="profilePictureUpload" class="profile-upload-icon">
+                    <i class="fas fa-plus-circle"></i>
+                </label>
+                <input type="file" id="profilePictureUpload" name="profile_picture" class="profile-picture-input" style="display: none;">
+            </div>
+
+            <div class="profile-details">
+                <p><strong>Kullanıcı adı:</strong> {{ user.username }}</p>
+                <p><strong>Email:</strong> {{ user.email }}</p>
+                <p><strong>Biyografi:</strong> {{ user.profile.bio }}</p>
+            </div>
+        </div>
+
+        <!-- Düzenleme Formu -->
+        <div class="edit-form">
+            <form method="POST" enctype="multipart/form-data">
+                {% csrf_token %}
+                <h3>Bilgileri Güncelle</h3>
+
+                <!-- Ad Soyad -->
+                <div class="form-group">
+                    <label for="id_full_name" style="color: whitesmoke;">Kullanıcı adı</label>
+                    {{ user_form.username }}
+                </div>
+
+                <!-- Email -->
+                <div class="form-group">
+                    <label for="id_email" style="color: whitesmoke;">Email</label>
+                    {{ user_form.email }}
+                </div>
+
+                <!-- Biyografi -->
+                <div class="form-group">
+                    <label for="id_bio" style="color: whitesmoke;">Biyografi</label>
+                    {{ profile_form.bio }}
+                </div>
+
+                <!-- Şifre Değiştirme -->
+                <h3>Şifre Değiştir</h3>
+                <div class="form-group">
+                    <label for="id_current_password" style="color: whitesmoke;">Mevcut Şifre</label>
+                    <input type="password" id="id_current_password" name="current_password" required>
+                </div>
+                <div class="form-group">
+                    <label for="id_new_password" style="color: whitesmoke;">Yeni Şifre</label>
+                    <input type="password" id="id_new_password" name="new_password" required>
+                </div>
+                <div class="form-group">
+                    <label for="id_confirm_password" style="color: whitesmoke;">Yeni Şifre (Tekrar)</label>
+                    <input type="password" id="id_confirm_password" name="confirm_password" required>
+                </div>
+
+                <!-- Kaydet ve İptal Butonları -->
+                <button type="submit" class="save-btn">Kaydet</button>
+                <button type="button" class="cancel-btn" id="cancelButton">İptal</button>
+            </form>
+        </div>
+
+        <!-- Düzenleme Butonu -->
+        <div class="profile-actions">
+            <button class="edit-btn" id="editButton">Düzenle</button>
+        </div>
+    </div>
+</div>
+
+<script src="{% static 'js/profile.js' %}"></script>
+{% endblock %}

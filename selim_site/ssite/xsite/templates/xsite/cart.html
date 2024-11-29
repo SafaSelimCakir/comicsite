@@ -51,17 +51,17 @@
             </form>
               
             <div class="dropdown" style="margin-right: 25px;">
-              <a href="#" class="d-flex align-items-center link-body-emphasis text-decoration-none dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false">
-                <img src="{% static 'img/d1.jpg' %}" alt="mdo" width="32" height="32" class="rounded-circle me-2">
+              <a href="#" class="d-flex align-items-center link-body-emphasis text-decoration-none " data-bs-toggle="dropdown" aria-expanded="false">
+                <img src="{{ user.profile.profile_picture.url }}" alt="mdo" width="32" height="32" class="rounded-circle me-2">
                 <h6 style="color: whitesmoke; margin-bottom: 0;">{{ user.username }}</h6>
                 <i class="bi bi-chevron-down text-white ms-2"></i>  <!-- Icona beyaz renk ekledik -->
               </a>
               <ul class="dropdown-menu">
-                <li><a class="dropdown-item" href="#">New project...</a></li>
-                <li><a class="dropdown-item" href="#">Settings</a></li>
-                <li><a class="dropdown-item" href="#">Profile</a></li>
+                <li><a class="dropdown-item" href="{% url 'profile' %}">Profile</a></li>
                 <li><hr class="dropdown-divider"></li>
-                <li><a class="dropdown-item" href="#">Sign out</a></li>
+                <li><a class="dropdown-item" href="{% url 'register' %}">Sing in</a></li>
+                <li><a class="dropdown-item" href="{% url 'login' %}">login</a></li>
+                <li><a class="dropdown-item" href="{% url 'register' %}">logout</a></li>
               </ul>
             </div>                                   
           </div>

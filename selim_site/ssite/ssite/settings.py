@@ -30,6 +30,7 @@ ALLOWED_HOSTS = ['127.0.0.1', 'localhost']
 
 
 # Application definition
+
 LOGIN_REDIRECT_URL = '/home/'
 LOGOUT_REDIRECT_URL = '/users/login/'
 INSTALLED_APPS = [

@@ -19,6 +19,9 @@ from django.urls import path, include
 from . import views 
 from django.conf import settings
 from django.conf.urls.static import static
+from .views import register
+from .views import profile_view, add_product, delete_product
+from django.contrib.auth.views import LogoutView
 
 urlpatterns = [
     path("acconts/",include("django.contrib.auth.urls")),
@@ -31,6 +34,9 @@ urlpatterns = [
     path('bag/', views.bag, name='bag'),
     path('book/', views.book, name='book'),
     path('login/', views.login, name='login'),
-    path('register/', views.login, name='register'),
+    path('register/', register, name='register'),
     path('', include('django.contrib.auth.urls')),
+    path('profile/', profile_view, name='profile'),
+    path('product/add/', add_product, name='add_product'),
+    path('product/delete/<int:product_id>/', delete_product, name='delete_product'),
 ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

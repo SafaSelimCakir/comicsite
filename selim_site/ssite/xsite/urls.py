@@ -3,8 +3,8 @@ from . import views
 from xsite import views
 from django.conf.urls.static import static
 from django.conf import settings
-from .views import CartView, HomeView, CheckoutView,informationView,bagView,loginView,register_view,bookView,ProductDetailView
-from .views import register_view, CustomLoginView
+from .views import CartView, HomeView, CheckoutView,informationView,bagView,loginView,bookView,ProductDetailView
+from .views import RegisterView, CustomLoginView
 
 urlpatterns = [
     path('information/', informationView.as_view(), name='information'),
@@ -14,7 +14,7 @@ urlpatterns = [
     path('bag/', bagView.as_view(), name='bag'),
     path('book/<int:id>/', bookView.as_view(), name='book'),
     path('login/', CustomLoginView.as_view(), name='login'),
-    path('register/', register_view.as_view(), name='register'),
+    path('register/', RegisterView.as_view(), name='register'),
     path('product/<int:pk>/', ProductDetailView.as_view(), name='product-detail'),
     
 ]

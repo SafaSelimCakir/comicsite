@@ -5,6 +5,14 @@ from PIL import Image
 import fitz  # PyMuPDF
 import os
 
+class Profile(models.Model):
+    user = models.OneToOneField(User, on_delete=models.CASCADE, related_name='profile')
+    profile_picture = models.ImageField(upload_to='profile_pictures/', default='default.jpg')
+    bio = models.TextField(blank=True)
+    is_authorized = models.BooleanField(default=False)  # Kullanıcının yetkili olup olmadığını belirler
+
+    def __str__(self):
+        return f"{self.user.username}'s Profile"
 
 class Customer(models.Model):
 	user = models.OneToOneField(User, null=True, blank=True, on_delete=models.CASCADE)
@@ -25,6 +33,7 @@ class Product(models.Model):
     pdf = models.FileField(upload_to='pdfs/', null=True, blank=True)
     discount = models.IntegerField(default=0)  # Discount as an integer
     apply_discount = models.BooleanField(default=False, null=True, blank=True)  # Discount flag
+    owner = models.ForeignKey(User, on_delete=models.CASCADE, default=1)
 
     def __str__(self):
         return self.name
