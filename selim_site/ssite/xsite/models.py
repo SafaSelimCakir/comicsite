@@ -29,8 +29,8 @@ class Product(models.Model):
     subname = models.CharField(max_length=1000, null=True, blank=True)
     price = models.FloatField()  # FloatField olarak kalabilir
     digital = models.BooleanField(default=False, null=True, blank=True)
-    image = models.ImageField(upload_to='img/', null=True, blank=True)
-    pdf = models.FileField(upload_to='pdfs/', null=True, blank=True)
+    pimage = models.ImageField(upload_to='img/', null=True, blank=True)
+    #pdf = models.FileField(upload_to='pdfs/', null=True, blank=True)
     discount = models.IntegerField(default=0)  # Discount as an integer
     apply_discount = models.BooleanField(default=False, null=True, blank=True)  # Discount flag
     owner = models.ForeignKey(User, on_delete=models.CASCADE, default=1)
@@ -49,9 +49,9 @@ class Product(models.Model):
     
 
     @property
-    def imageURL(self):
+    def pimageURL(self):
         try:
-            url = self.image.url
+            url = self.pimage.url
         except:
             url = ''
         return url
@@ -65,6 +65,13 @@ class Product(models.Model):
             url = ''
         return url
     
+
+class ProductImage(models.Model):
+    product = models.ForeignKey(Product, on_delete=models.CASCADE, related_name="images")
+    image = models.ImageField(upload_to='product_images/')
+
+    def __str__(self):
+        return f"{self.product.name} - {self.image.name}"
 
 class Order(models.Model):
 	customer = models.ForeignKey(Customer, on_delete=models.SET_NULL, null=True, blank=True)

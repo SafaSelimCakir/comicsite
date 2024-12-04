@@ -7,13 +7,13 @@
   </div>
   <div class="book-wrapper">
     {% for product in products %}
-    <a href="{% url 'book' product.id  %}">
+    <a href="{% url 'book' product.id %}">
       <div class="book-items">
       <div class="main-book-wrap">
         <div class="book-cover">
           <div class="book-inside"></div>
           <div class="book-image">
-            <img src="{{ product.imageURL }}" />
+            <img src="{{ product.pimageURL }}" />
             <div class="effect"></div>
             <div class="light"></div>
           </div>

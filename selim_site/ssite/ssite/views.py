@@ -1,5 +1,5 @@
 from django.http.response import HttpResponse
-from django.shortcuts import render, redirect
+from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib.auth.forms import UserCreationForm
 from django.contrib.auth import authenticate, update_session_auth_hash
 from django.contrib.auth import login
@@ -7,28 +7,35 @@ from .forms import RegisterForm
 from .forms import UserUpdateForm, ProfileUpdateForm
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.decorators import user_passes_test
-from xsite.models import Product
+from xsite.models import Product,Profile
 from django.contrib.auth.decorators import login_required
 from django.contrib import messages
 from .forms import UserForm, ProfileForm
 
+
 @login_required
 def profile_view(request):
-    if request.method == 'POST':
-        user_form = UserForm(request.POST, instance=request.user)
-        profile_form = ProfileForm(request.POST, request.FILES, instance=request.user.profile)
-        if user_form.is_valid() and profile_form.is_valid():
-            user_form.save()
-            profile_form.save()
-            return redirect('profile')
-    else:
-        user_form = UserForm(instance=request.user)
-        profile_form = ProfileForm(instance=request.user.profile)
+    if not hasattr(request.user, 'profile'):
+        Profile.objects.create(user=request.user)
+    
+    
+        if request.method == 'POST':
+            user_form = UserForm(request.POST, instance=request.user)
+            profile_form = ProfileForm(request.POST, request.FILES, instance=request.user.profile)
+            if user_form.is_valid() and profile_form.is_valid():
+                user_form.save()
+                profile_form.save()
+                return redirect('profile')
+        else:
+            user_form = UserForm(instance=request.user)
+            profile_form = ProfileForm(instance=request.user.profile)
 
-    return render(request, 'xsite/profile.html', {
-        'user_form': user_form,
-        'profile_form': profile_form,
-    })
+        return render(request, 'xsite/profile.html', {
+            'user_form': user_form,
+            'profile_form': profile_form,
+        })
+    
+    return render(request, 'xsite/profile.html', {'user': request.user})
 
 
 @login_required
@@ -105,9 +112,10 @@ def bag(request):
     context={}
     return render(request, 'xsite/bag.html',context)
 
-def book(request):
-    context={}
-    return render(request, 'xsite/book.html',context)
+def book_view(request, product_id):
+    product = get_object_or_404(Product, id=product_id)  # product_id'ye göre ürünü al
+    images = product.images.all()  # Ürüne ait resimleri al
+    return render(request, 'xsite/book.html', {'product': product, 'images': images})
 
 def login(request):
     return render(request,"xsite/login.html")

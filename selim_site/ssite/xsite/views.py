@@ -12,6 +12,17 @@ from django.contrib.auth.views import LoginView
 class CustomLoginView(LoginView):
     template_name = 'xsite/login.html'
 
+class BookDetailView(DetailView):
+    model = Product  # Hangi modelin detayını göstereceğimizi belirtiyoruz
+    template_name = 'xsite/book.html'  # Kullanılacak şablon dosyasının adı
+    context_object_name = 'product'  # Şablonda kullanılacak nesne adı (varsayılan 'object' yerine 'product' olarak kullanacağız)
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        product = context['product']
+        context['images'] = product.images.all()  # Ürün resimlerini de ekliyoruz
+        return context
+
 
 class ProductDetailView(DetailView):
     model = Product

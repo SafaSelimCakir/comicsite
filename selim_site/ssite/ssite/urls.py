@@ -22,6 +22,7 @@ from django.conf.urls.static import static
 from .views import register
 from .views import profile_view, add_product, delete_product
 from django.contrib.auth.views import LogoutView
+from .views import book_view
 
 urlpatterns = [
     path("acconts/",include("django.contrib.auth.urls")),
@@ -32,7 +33,7 @@ urlpatterns = [
     path('information/', views.information, name='information'),
     path('checkout/', views.checkout, name='checkout'), 
     path('bag/', views.bag, name='bag'),
-    path('book/', views.book, name='book'),
+    path('book/', views.book_view, name='book_view'),
     path('login/', views.login, name='login'),
     path('register/', register, name='register'),
     path('', include('django.contrib.auth.urls')),

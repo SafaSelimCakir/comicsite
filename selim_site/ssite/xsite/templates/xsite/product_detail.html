@@ -9,11 +9,12 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>{{ product.name }}</title>
+    
 </head>
 <body>
     <div style="display: flex;">
         <ul>
-            <li><img src="{{ product.imageURL }}" alt="{{ product.name }}" style="height: 650px;width: 450px;"></li>
+            <li><img src="{{ product.pimageURL }}" alt="{{ product.name }}" style="height: 650px;width: 450px;"></li>
         </ul>
         <ul style="list-style: none;">
             <li><h1 style="border-bottom: 3px whitesmoke solid;">{{ product.name }}</h1></li>
@@ -30,6 +31,13 @@
             </li>
         </ul>
     </div>
+
+    <div style="height: 600px; width: 450px;display: flex;">
+        {% for image in product.images.all %}
+            <img src="{{ image.image.url }}" alt="{{ product.name }}">
+        {% endfor %}
+    </div>
+    
     
 </body>
 </html>

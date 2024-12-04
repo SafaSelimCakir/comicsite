@@ -2,9 +2,16 @@
 from django import forms
 from django.contrib.auth.forms import UserCreationForm
 from django.contrib.auth.models import User
-from xsite.models import Profile
+from xsite.models import Profile,ProductImage
 from django.contrib.auth.forms import PasswordChangeForm
 from django.contrib.auth import authenticate
+
+
+class ProductImageForm(forms.ModelForm):
+    class Meta:
+        model = ProductImage
+        fields = ['product', 'image']
+
 
 class CustomPasswordChangeForm(forms.Form):
     old_password = forms.CharField(widget=forms.PasswordInput(attrs={'placeholder': 'Eski Şifre'}), label='Eski Şifre')
