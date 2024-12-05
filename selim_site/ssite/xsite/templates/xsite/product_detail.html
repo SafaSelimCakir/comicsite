@@ -19,7 +19,7 @@
         <ul style="list-style: none;">
             <li><h1 style="border-bottom: 3px whitesmoke solid;">{{ product.name }}</h1></li>
             <br>
-            <li><h4>yayin evi:</h4></li>
+            <li><h4>yayin evi:{{ product.owner }}</h4></li>
             <li><h6 style="margin-top: 30px;">fiyat:{{ product.price }}$</h6></li>
             <br>
             <li><h6>degerlendirme</h6></li>
@@ -30,15 +30,7 @@
                 {% endif %}
             </li>
         </ul>
-    </div>
-
-    <div style="height: 600px; width: 450px;display: flex;">
-        {% for image in product.images.all %}
-            <img src="{{ image.image.url }}" alt="{{ product.name }}">
-        {% endfor %}
-    </div>
-    
-    
+    </div>    
 </body>
 </html>
 {% endblock content %}

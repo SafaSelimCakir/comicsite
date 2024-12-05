@@ -11,6 +11,53 @@ from xsite.models import Product,Profile
 from django.contrib.auth.decorators import login_required
 from django.contrib import messages
 from .forms import UserForm, ProfileForm
+from xsite.models import Product, Cart, CartItem
+import json
+from django.http import JsonResponse
+from django.views.decorators.csrf import csrf_exempt
+from xsite.models import CartItem
+
+@csrf_exempt
+def update_cart_item(request, item_id):
+    if request.method == 'POST':
+        data = json.loads(request.body)
+        quantity = data.get('quantity')
+
+        if quantity is None or quantity < 1:
+            return JsonResponse({'success': False, 'message': 'Invalid quantity'}, status=400)
+
+        try:
+            cart_item = CartItem.objects.get(id=item_id)
+            cart_item.quantity = quantity
+            cart_item.save()
+            return JsonResponse({'success': True})
+        except CartItem.DoesNotExist:
+            return JsonResponse({'success': False, 'message': 'Item not found'}, status=404)
+
+    return JsonResponse({'success': False, 'message': 'Invalid request'}, status=400)
+
+@login_required
+def api_add_to_cart(request, product_id):
+    product = get_object_or_404(Product, id=product_id)
+    cart, created = Cart.objects.get_or_create(user=request.user)
+    cart_item, created = CartItem.objects.get_or_create(cart=cart, product=product)
+
+    if not created:
+        cart_item.quantity += 1
+        cart_item.save()
+
+    return JsonResponse({'message': 'Product added to cart!', 'success': True})
+
+@login_required
+def cart_detail(request):
+    cart, created = Cart.objects.get_or_create(user=request.user)
+    return render(request, 'xsite/cart_detail.html', {'cart': cart})
+
+@login_required
+def remove_from_cart(request, item_id):
+    cart_item = get_object_or_404(CartItem, id=item_id)
+    cart_item.delete()
+    return redirect('cart_detail')
 
 
 @login_required

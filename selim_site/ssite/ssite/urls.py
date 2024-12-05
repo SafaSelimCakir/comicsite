@@ -20,9 +20,9 @@ from . import views
 from django.conf import settings
 from django.conf.urls.static import static
 from .views import register
-from .views import profile_view, add_product, delete_product
+from .views import profile_view, api_add_to_cart, remove_from_cart
 from django.contrib.auth.views import LogoutView
-from .views import book_view
+from .views import cart_detail,update_cart_item
 
 urlpatterns = [
     path("acconts/",include("django.contrib.auth.urls")),
@@ -38,6 +38,8 @@ urlpatterns = [
     path('register/', register, name='register'),
     path('', include('django.contrib.auth.urls')),
     path('profile/', profile_view, name='profile'),
-    path('product/add/', add_product, name='add_product'),
-    path('product/delete/<int:product_id>/', delete_product, name='delete_product'),
+    path('api/update_cart_item/<int:item_id>/', update_cart_item, name='update_cart_item'),
+    path('api/add-to-cart/<int:product_id>/', views.api_add_to_cart, name='api_add_to_cart'),
+    path('cartd/', views.cart_detail, name='cart_detail'),
+    path('remove-from-cart/<int:item_id>/', views.remove_from_cart, name='remove_from_cart'),
 ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

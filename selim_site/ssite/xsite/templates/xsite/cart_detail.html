@@ -1,0 +1,116 @@
+{% extends 'xsite/cart.html' %}
+{% load static %}
+{% block content %}
+
+<link rel="stylesheet" href="{% static 'css/cart.css' %}">
+
+<div class="cart-container" style="background-color: #333; box-shadow: 10px 10px 25px black;">
+    <h1 style="color: #111111;font-family: 'Franklin Gothic Medium', 'Arial Narrow', Arial, sans-serif;">Alışveriş Sepetiniz</h1>
+    
+    <div class="cart-items">
+        {% if cart.items.all %}
+            {% for item in cart.items.all %}
+            <div class="cart-item" style="background-color: #141414; box-shadow: 5px 5px 15px black;"
+                {% if item.product.apply_discount %}
+                    data-price="{{ item.product.discounted_price }}"
+                {% else %}
+                    data-price="{{ item.product.price }}"
+                {% endif %}
+                data-quantity="{{ item.quantity }}"
+                data-item-id="{{ item.id }}">
+
+                <img src="{{ item.product.pimageURL }}" alt="{{ item.product.name }}" class="cart-item-image">
+                <div class="cart-item-details">
+                    <h2>{{ item.product.name }}</h2>
+                    <p>
+                        {% if item.product.apply_discount %}
+                            <span class="original-price">${{ item.product.price }}</span>
+                            <span class="discounted-price">${{ item.product.discounted_price }}</span>
+                        {% else %}
+                            <span class="price">${{ item.product.price }}</span>
+                        {% endif %}
+                    </p>
+                    <p>Adet: <span class="item-quantity">{{ item.quantity }}</span></p>
+                </div>
+                <div class="cart-item-actions">
+                    <!-- Add/Remove buttons -->
+                    <button class="item-button" onclick="updateQuantity('{{ item.id }}', 'increase')">+</button>
+                    <button class="item-button" onclick="updateQuantity('{{ item.id }}', 'decrease')">-</button>
+                    <a href="{% url 'remove_from_cart' item.id %}" class="remove-button">Kaldır</a>
+                </div>
+            </div>
+            {% endfor %}
+        {% else %}
+            <p>Sepetiniz boş.</p>
+        {% endif %}
+    </div>
+
+    <div class="cart-summary" style="background-color: #141414; box-shadow: 5px 5px 15px black;">
+        <h3>Toplam</h3>
+        <p>Ürün Toplamı: $<span id="totalPrice">0</span></p>
+    </div>
+</div>
+
+<script>
+    function updateQuantity(itemId, action) {
+        const item = document.querySelector(`[data-item-id="${itemId}"]`);
+        const quantityElement = item.querySelector('.item-quantity');
+        let currentQuantity = parseInt(quantityElement.textContent);
+
+        if (action === 'increase') {
+            currentQuantity += 1;
+        } else if (action === 'decrease' && currentQuantity > 1) {
+            currentQuantity -= 1;
+        }
+
+        quantityElement.textContent = currentQuantity;
+
+        const price = parseFloat(item.getAttribute('data-price'));
+        const totalPriceElement = document.getElementById('totalPrice');
+        let currentTotal = parseFloat(totalPriceElement.textContent);
+        
+        if (action === 'increase') {
+            currentTotal += price;
+        } else if (action === 'decrease') {
+            currentTotal -= price;
+        }
+
+        totalPriceElement.textContent = currentTotal.toFixed(2);
+
+        fetch(`/api/update_cart_item/${itemId}/`, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'X-CSRFToken': '{{ csrf_token }}',
+            },
+            body: JSON.stringify({
+                'quantity': currentQuantity,
+            }),
+        })
+        .then(response => response.json())
+        .then(data => {
+            if (data.success) {
+                console.log('Cart updated successfully');
+            } else {
+                alert('Failed to update cart');
+            }
+        });
+    }
+
+    function calculateTotal() {
+        let total = 0;
+        const cartItems = document.querySelectorAll('.cart-item');
+        
+        cartItems.forEach(item => {
+            const price = parseFloat(item.getAttribute('data-price'));
+            const quantity = parseInt(item.getAttribute('data-quantity')); 
+            total += price * quantity; 
+        });
+
+        document.getElementById('totalPrice').textContent = total.toFixed(2);
+    }
+
+    window.onload = calculateTotal;
+</script>
+
+{% endblock %}
