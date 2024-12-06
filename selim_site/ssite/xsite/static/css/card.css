@@ -15,7 +15,6 @@
     cursor: pointer;
 }
 
-
 .overlay {
     position: absolute;
     top: 50%;
@@ -27,6 +26,14 @@
     transition: opacity 0.5s ease;
     cursor: pointer;
 }
+
+.overlay:hover .card-img-top {
+  opacity: 0.3;
+  transition: .5s ease;
+  cursor: pointer;
+}
+
+
 
 .img-container:hover .overlay {
     opacity: 1;

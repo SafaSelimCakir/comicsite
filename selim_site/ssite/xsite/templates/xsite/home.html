@@ -25,14 +25,14 @@
 
         
 <div class="row">
-  {% for product in products %}
+  {% for product in digital_products %}
   <div class="col-lg-3" style="margin-top: 30px;">
     <div class="card bg-dark text-white" style="width:250px;border: none;box-shadow: rgba(0, 0, 0, 0.17) 0px -23px 25px 0px inset, rgba(0, 0, 0, 0.15) 0px -36px 30px 0px inset, rgba(0, 0, 0, 0.1) 0px -79px 40px 0px inset, rgba(0, 0, 0, 0.06) 0px 2px 1px, rgba(0, 0, 0, 0.09) 0px 4px 2px, rgba(0, 0, 0, 0.09) 0px 8px 4px, rgba(0, 0, 0, 0.09) 0px 16px 8px, rgba(0, 0, 0, 0.09) 0px 32px 16px;">
       <div class="img-container">
         <a href="{% url 'product-detail' product.id %}">
           <img class="card-img-top" style="height: 340px;width: 250px;border-radius: 8px;"  src="{{ product.pimageURL }}" alt="{{ product.name }}">
         </a>
-        <p style="font-size:15px;" class="overlay">{{ product.subname }}</p>
+        <p style="font-size:15px;" class="overlay">Detaylar için tıklayın</p>
       </div>
       <div class="card-body">
         <h5 class="card-title">{{ product.name }}</h5>
@@ -45,8 +45,42 @@
               ${{ product.price }}
             {% endif %}
           </p>
-          <button class="css-scan-edited-element-0" style="height: 30px; width: 135px;">sepete ekle</button>
+          <button 
+						class="css-scan-edited-element-0" 
+						style="height: 30px; width: 135px;"
+						id="add-to-cart-button-{{ product.id }}">
+							sepete ekle
+							<span id="cart-message-{{ product.id }}" style="color: green; display: none;">Eklendi</span>
+						</button>
           
+
+            <script>
+							document.getElementById('add-to-cart-button-{{ product.id }}').addEventListener('click', function() {
+								const productId = "{{ product.id }}";
+								const url = '{% url "api_add_to_cart" product.id %}';
+							
+
+								fetch(url, {
+									method: 'GET', // Use 'POST' if you secure this API later
+									headers: {
+										'X-Requested-With': 'XMLHttpRequest', // Helps to identify this as an AJAX request
+									},
+								})
+								.then(response => response.json())
+								.then(data => {
+									if (data.success) {
+										const message = document.getElementById('cart-message-{{ product.id }}');
+										message.style.display = 'inline';
+										setTimeout(() => {
+											message.style.display = 'none';
+										}, 2000); // Hide the message after 2 seconds
+									} else {
+										alert('Ürün sepete eklenemedi!');
+									}
+								})
+								.catch(error => console.error('Error:', error));
+							});
+						</script>
         </div>
       </div>
     </div>

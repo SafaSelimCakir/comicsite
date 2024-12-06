@@ -34,6 +34,9 @@ ALLOWED_HOSTS = ['127.0.0.1', 'localhost']
 LOGIN_REDIRECT_URL = '/home/'
 LOGOUT_REDIRECT_URL = '/users/login/'
 INSTALLED_APPS = [
+    'jazzmin',
+
+
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',

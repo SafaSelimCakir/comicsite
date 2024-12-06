@@ -5,11 +5,13 @@ from django.conf.urls.static import static
 from django.conf import settings
 from .views import CartView, HomeView, CheckoutView,informationView,bagView,loginView,BookDetailView,ProductDetailView
 from .views import RegisterView, CustomLoginView
+from django.views.generic.base import RedirectView
+
 
 urlpatterns = [
     path('information/', informationView.as_view(), name='information'),
     path('cart/', CartView.as_view(), name='cart'),
-    path('home/', HomeView.as_view(), name='home'),
+    path('home/', RedirectView.as_view(url='/', permanent=False)),
     path('checkout/', CheckoutView.as_view(), name='checkout'),
     path('bag/', bagView.as_view(), name='bag'),
     path('book/<int:pk>/', BookDetailView.as_view(), name='book_view'),

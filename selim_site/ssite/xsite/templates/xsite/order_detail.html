@@ -1,0 +1,18 @@
+{% extends 'xsite/card.html' %}
+{% block content %}
+{% load static %}
+<h1>Sipariş Detayı</h1>
+<p>Sipariş ID: {{ order.id }}</p>
+<p>Toplam Tutar: ${{ order.total_price }}</p>
+<p>Sipariş Tarihi: {{ order.created_at }}</p>
+
+<h2>Ürünler:</h2>
+<ul>
+    {% for item in order.items.all %}
+        <li>
+            {{ item.product.name }} - {{ item.quantity }} adet - ${{ item.price }}
+        </li>
+    {% endfor %}
+</ul>
+<a href="{% url 'home' %}">Anasayfaya Dön</a>
+{% endblock %}

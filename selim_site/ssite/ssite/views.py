@@ -16,6 +16,28 @@ import json
 from django.http import JsonResponse
 from django.views.decorators.csrf import csrf_exempt
 from xsite.models import CartItem
+from .forms import UserProfileUpdateForm
+
+@login_required
+def update_profile(request):
+    if request.method == 'POST':
+        form = UserProfileUpdateForm(request.POST, request.FILES, instance=request.user.profile, user=request.user)
+        if form.is_valid():
+            profile = form.save(commit=False)
+            # User verilerini güncelle
+            request.user.email = form.cleaned_data.get('email')
+            request.user.username = form.cleaned_data.get('username')
+            request.user.save()
+            profile.save()
+            messages.success(request, "Profiliniz başarıyla güncellendi!")
+            return redirect('edit_profile')
+        else:
+            messages.error(request, "Formda hata var. Lütfen düzeltin: {}".format(form.errors))
+    else:
+        form = UserProfileUpdateForm(user=request.user)
+
+    return render(request, 'xsite/profile.html', {'form': form})
+
 
 @csrf_exempt
 def update_cart_item(request, item_id):
@@ -148,7 +170,10 @@ def register(request):
     return render(request, 'xsite/register.html', {'form': form})
 
 def home(request):
-    context={}
+    digital_products = Product.objects.filter(digital=True)
+    context = {
+        'digital_products': digital_products,
+    }
     return render(request, 'xsite/home.html',context)
 
 def information(request):

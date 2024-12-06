@@ -13,8 +13,8 @@
 				<div class="img-container">
 					<a href="{% url 'product-detail' product.id %}">
 						<img class="card-img-top" style="height: 340px;width: 250px;border-radius: 8px;"  src="{{ product.pimageURL }}" alt="{{ product.name }}">
+						<p style="font-size:15px;" class="overlay">Detaylar için tıklayın</p>
 					</a>
-					<p style="font-size:15px;" class="overlay">{{ product.subname }}</p>
 				</div>
 				<div class="card-body">
 					<h5 class="card-title">{{ product.name }}</h5>
