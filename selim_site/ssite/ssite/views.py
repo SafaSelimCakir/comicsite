@@ -11,12 +11,13 @@ from xsite.models import Product,Profile
 from django.contrib.auth.decorators import login_required
 from django.contrib import messages
 from .forms import UserForm, ProfileForm
-from xsite.models import Product, Cart, CartItem
+from xsite.models import Product, Cart, CartItem,Order,OrderItem
 import json
 from django.http import JsonResponse
 from django.views.decorators.csrf import csrf_exempt
 from xsite.models import CartItem
 from .forms import UserProfileUpdateForm
+from decimal import Decimal
 
 @login_required
 def update_profile(request):
@@ -168,6 +169,39 @@ def register(request):
     else:
         form = RegisterForm()  # GET isteğinde boş form oluştur
     return render(request, 'xsite/register.html', {'form': form})
+
+@login_required
+def ordercheckout(request):
+    # Get the user's cart
+    try:
+        cart = Cart.objects.get(user=request.user)
+    except Cart.DoesNotExist:
+        return redirect('cart')  # Redirect to cart page if no cart exists
+
+    # Initialize total_price as a Decimal
+    total_price = Decimal('0.00')
+
+    # Calculate total price
+    for item in cart.items.all():
+        price = Decimal(item.product.discounted_price if item.product.apply_discount else item.product.price)
+        total_price += price * item.quantity
+
+    # Create an Order
+    order = Order.objects.create(user=request.user, total_price=total_price)
+
+    # Create OrderItems from CartItems
+    for item in cart.items.all():
+        OrderItem.objects.create(
+            order=order,
+            product=item.product,
+            quantity=item.quantity,
+            price=Decimal(item.product.discounted_price if item.product.apply_discount else item.product.price)
+        )
+
+    # Clear the cart
+    cart.items.all().delete()
+
+    return render(request, 'xsite/order_confirmation.html', {'order': order})
 
 def home(request):
     digital_products = Product.objects.filter(digital=True)

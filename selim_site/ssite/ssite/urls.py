@@ -22,7 +22,7 @@ from django.conf.urls.static import static
 from .views import register
 from .views import profile_view, api_add_to_cart, remove_from_cart
 from django.contrib.auth.views import LogoutView
-from .views import cart_detail,update_cart_item,update_profile
+from .views import cart_detail,update_cart_item,update_profile,ordercheckout
 
 urlpatterns = [
     path("acconts/",include("django.contrib.auth.urls")),
@@ -32,6 +32,7 @@ urlpatterns = [
     path('cart/', views.cart, name='cart'),
     path('information/', views.information, name='information'),
     path('checkout/', views.checkout, name='checkout'), 
+    path('ordercheckout/', views.ordercheckout, name='ordercheckout'),
     path('bag/', views.bag, name='bag'),
     path('book/', views.book_view, name='book_view'),
     path('login/', views.login, name='login'),

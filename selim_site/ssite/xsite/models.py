@@ -4,6 +4,8 @@ from decimal import Decimal
 from PIL import Image
 import fitz  # PyMuPDF
 import os
+from django.utils.timezone import now
+
 
 
 class Profile(models.Model):
@@ -91,20 +93,25 @@ class CartItem(models.Model):
         return f"{self.quantity} of {self.product.name}"
     
 
-class Order(models.Model):
-	customer = models.ForeignKey(Customer, on_delete=models.SET_NULL, null=True, blank=True)
-	date_ordered = models.DateTimeField(auto_now_add=True)
-	complete = models.BooleanField(default=False)
-	transaction_id = models.CharField(max_length=100, null=True)
 
-	def __str__(self):
-		return str(self.id)
+class Order(models.Model):
+    user = models.ForeignKey(User, on_delete=models.CASCADE)
+    created_at = models.DateTimeField(default=now)  # Default to the current timestamp
+    total_price = models.DecimalField(max_digits=10, decimal_places=2, default=1.00)
+
+    def __str__(self):
+        return f"Order {self.id} by {self.user.username}"
 
 class OrderItem(models.Model):
-	product = models.ForeignKey(Product, on_delete=models.SET_NULL, null=True)
-	order = models.ForeignKey(Order, on_delete=models.SET_NULL, null=True)
-	quantity = models.IntegerField(default=0, null=True, blank=True)
-	date_added = models.DateTimeField(auto_now_add=True)
+    order = models.ForeignKey(Order, on_delete=models.CASCADE, null=False, default=1)  # Default value provided
+    product = models.ForeignKey('Product', on_delete=models.CASCADE, default=now)
+    quantity = models.PositiveIntegerField( default=now)
+    price = models.DecimalField(max_digits=10, decimal_places=2, default=now)
+
+    def __str__(self):
+        return f"{self.product.name} ({self.quantity})"
+
+
 
 
 class ShippingAddress(models.Model):
@@ -128,3 +135,6 @@ class xsite(models.Model):
 class Category(models.Model):
     # model alanları
     pass
+
+
+
