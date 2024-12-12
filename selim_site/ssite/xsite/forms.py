@@ -5,6 +5,14 @@ from django.contrib.auth.models import User
 from xsite.models import Profile,ProductImage
 from django.contrib.auth.forms import PasswordChangeForm
 from django.contrib.auth import authenticate
+from django import forms
+from .models import Rating
+
+class RatingForm(forms.ModelForm):
+    class Meta:
+        model = Rating
+        fields = ['rating', 'comment']
+
 
 
 class ProductImageForm(forms.ModelForm):

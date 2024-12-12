@@ -35,7 +35,7 @@ class CartView(ListView):
     context_object_name = 'products' 
 
 class HomeView(ListView):
-    model = Product
+    model = Product 
     template_name = 'xsite/home.html'
     context_object_name = 'products'
 

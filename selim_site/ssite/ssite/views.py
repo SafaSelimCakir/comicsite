@@ -3,21 +3,77 @@ from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib.auth.forms import UserCreationForm
 from django.contrib.auth import authenticate, update_session_auth_hash
 from django.contrib.auth import login
-from .forms import RegisterForm
 from .forms import UserUpdateForm, ProfileUpdateForm
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.decorators import user_passes_test
 from xsite.models import Product,Profile
 from django.contrib.auth.decorators import login_required
 from django.contrib import messages
-from .forms import UserForm, ProfileForm
-from xsite.models import Product, Cart, CartItem,Order,OrderItem
+from xsite.models import Product, Cart, CartItem,Order,OrderItem, Rating
 import json
 from django.http import JsonResponse
 from django.views.decorators.csrf import csrf_exempt
-from xsite.models import CartItem
-from .forms import UserProfileUpdateForm
+from .forms import UserProfileUpdateForm,RatingForm,UserForm, ProfileForm,RegisterForm
 from decimal import Decimal
+from django.db.models import Avg
+from django.db import models
+
+@csrf_exempt  # CSRF kontrolü devre dışı (Daha iyi bir çözüm için middleware kullanın)
+def product_rating(request, product_id):
+    if request.method == 'POST':
+        try:
+            # İstekten verileri al
+            data = json.loads(request.body)
+            rating_value = data.get('rating')
+            comment_value = data.get('comment')
+
+            # Ürün kontrolü
+            product = Product.objects.get(id=product_id)
+
+            # Veritabanına kaydet
+            Rating.objects.create(
+                product=product,
+                user=request.user,  # Kullanıcı oturumda olan kullanıcıdır
+                rating=rating_value,
+                comment=comment_value,
+            )
+            return JsonResponse({"message": "Değerlendirmeniz kaydedildi!"}, status=200)
+        except Exception as e:
+            return JsonResponse({"error": str(e)}, status=400)
+    return JsonResponse({"error": "Yalnızca POST istekleri destekleniyor."}, status=405)
+
+def product_detail(request, product_id):
+    product = Product.objects.get(id=product_id)
+    ratings = Rating.objects.filter(product=product)
+
+    # Ortalama puanı hesapla
+    average_rating = ratings.aggregate(models.Avg('rating'))['rating__avg'] or 0
+
+    context = {
+        'product': product,
+        'ratings': ratings,
+        'average_rating': round(average_rating, 1),
+    }
+    return render(request, 'product_detail.html', context)
+
+
+@login_required
+def add_rating(request, product_id):
+    if request.method == 'POST':
+        product = get_object_or_404(Product, id=product_id)
+        rating_value = request.POST.get('rating')
+        comment = request.POST.get('comment')
+        
+        # Yeni değerlendirme oluştur
+        rating = Rating.objects.create(
+            product=product,
+            user=request.user.username,  # Oturum açmış kullanıcının adı
+            rating=int(rating_value),
+            comment=comment
+        )
+        return JsonResponse({'success': True, 'message': 'Değerlendirme başarıyla kaydedildi.'})
+    return JsonResponse({'success': False, 'message': 'Geçersiz istek.'})
+
 
 @login_required
 def update_profile(request):

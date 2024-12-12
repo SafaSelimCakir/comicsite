@@ -26,6 +26,19 @@ class Customer(models.Model):
 		return self.name
 
 
+class Rating(models.Model):
+    user = models.ForeignKey(User, on_delete=models.CASCADE, related_name="ratings")
+    product = models.ForeignKey('Product', on_delete=models.CASCADE, related_name="ratings")
+    rating = models.PositiveIntegerField()  # 1-5 arasında bir sayı olabilir
+    comment = models.TextField(null=True, blank=True)  # Kullanıcı yorumu
+    created_at = models.DateTimeField(auto_now_add=True)
+
+    class Meta:
+        unique_together = ('user', 'product')  # Bir kullanıcı bir ürüne yalnızca bir kez oy verebilir.
+
+    def __str__(self):
+        return f"{self.user.username} - {self.product.name} - {self.rating}"
+
 
 class Product(models.Model):
     name = models.CharField(max_length=200)
@@ -68,6 +81,17 @@ class Product(models.Model):
             url = ''
         return url
     
+    @property
+    def image_count(self):
+        return self.images.count()
+    
+    @property
+    def average_rating(self):
+        ratings = self.ratings.all()
+        if ratings.exists():
+            return round(sum(r.rating for r in ratings) / ratings.count(), 2)
+        return 0
+
 
 class ProductImage(models.Model):
     product = models.ForeignKey(Product, on_delete=models.CASCADE, related_name="images")
@@ -75,6 +99,9 @@ class ProductImage(models.Model):
 
     def __str__(self):
         return f"{self.product.name} - {self.image.name}"
+    
+    
+
 
 
 class Cart(models.Model):

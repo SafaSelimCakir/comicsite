@@ -2,10 +2,14 @@
 from django import forms
 from django.contrib.auth.forms import UserCreationForm
 from django.contrib.auth.models import User
-from xsite.models import Profile,ProductImage
+from xsite.models import Profile,ProductImage,Rating
 from django.contrib.auth.forms import PasswordChangeForm
 from django.contrib.auth import authenticate
 
+class RatingForm(forms.ModelForm):
+    class Meta:
+        model = Rating
+        fields = ['rating', 'comment']
 
 class ProductImageForm(forms.ModelForm):
     class Meta:
