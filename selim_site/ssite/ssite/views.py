@@ -18,61 +18,70 @@ from decimal import Decimal
 from django.db.models import Avg
 from django.db import models
 
-@csrf_exempt  # CSRF kontrolü devre dışı (Daha iyi bir çözüm için middleware kullanın)
-def product_rating(request, product_id):
+def add_rating(request, product_id):
     if request.method == 'POST':
-        try:
-            # İstekten verileri al
-            data = json.loads(request.body)
-            rating_value = data.get('rating')
-            comment_value = data.get('comment')
+        product = Product.objects.get(id=product_id)
+        user = request.user  # Giriş yapmış kullanıcı
+        rating = request.POST.get('rating')
+        comment = request.POST.get('comment')
 
-            # Ürün kontrolü
-            product = Product.objects.get(id=product_id)
+        # Daha önce değerlendirme yapılmışsa güncelle
+        existing_rating = Rating.objects.filter(user=user, product=product).first()
+        if existing_rating:
+            existing_rating.rating = rating
+            existing_rating.comment = comment
+            existing_rating.save()
+            return JsonResponse({'success': True, 'message': 'Değerlendirmeniz başarıyla güncellendi!'})
 
-            # Veritabanına kaydet
-            Rating.objects.create(
-                product=product,
-                user=request.user,  # Kullanıcı oturumda olan kullanıcıdır
-                rating=rating_value,
-                comment=comment_value,
-            )
-            return JsonResponse({"message": "Değerlendirmeniz kaydedildi!"}, status=200)
-        except Exception as e:
-            return JsonResponse({"error": str(e)}, status=400)
-    return JsonResponse({"error": "Yalnızca POST istekleri destekleniyor."}, status=405)
+        # Yeni değerlendirme oluştur
+        new_rating = Rating.objects.create(
+            product=product,
+            user=user,
+            rating=rating,
+            comment=comment
+        )
+        return JsonResponse({'success': True, 'message': 'Değerlendirmeniz başarıyla kaydedildi!'})
+
+    return JsonResponse({'success': False, 'message': 'Geçersiz istek.'})
+
 
 def product_detail(request, product_id):
-    product = Product.objects.get(id=product_id)
+    product = get_object_or_404(Product, id=product_id)
+    
     ratings = Rating.objects.filter(product=product)
-
-    # Ortalama puanı hesapla
-    average_rating = ratings.aggregate(models.Avg('rating'))['rating__avg'] or 0
+    
+    average_rating = ratings.aggregate(Avg('rating'))['rating__avg'] or 0
 
     context = {
         'product': product,
         'ratings': ratings,
-        'average_rating': round(average_rating, 1),
+        'average_rating': round(average_rating, 2),
     }
     return render(request, 'product_detail.html', context)
 
 
-@login_required
+@csrf_exempt
 def add_rating(request, product_id):
     if request.method == 'POST':
-        product = get_object_or_404(Product, id=product_id)
-        rating_value = request.POST.get('rating')
-        comment = request.POST.get('comment')
-        
-        # Yeni değerlendirme oluştur
-        rating = Rating.objects.create(
-            product=product,
-            user=request.user.username,  # Oturum açmış kullanıcının adı
-            rating=int(rating_value),
-            comment=comment
-        )
-        return JsonResponse({'success': True, 'message': 'Değerlendirme başarıyla kaydedildi.'})
-    return JsonResponse({'success': False, 'message': 'Geçersiz istek.'})
+        try:
+            product = get_object_or_404(Product, id=product_id)
+            rating_value = int(request.POST.get('rating'))
+            comment = request.POST.get('comment')
+
+            # Değerlendirme oluştur
+            Rating.objects.create(
+                product=product,
+                user=request.user,  # Kullanıcıyı buraya bağlayabilirsiniz
+                rating=rating_value,
+                comment=comment
+            )
+
+            return JsonResponse({'success': True, 'message': 'Değerlendirme başarıyla kaydedildi.'})
+        except Exception as e:
+            return JsonResponse({'success': False, 'message': f'Hata: {str(e)}'}, status=400)
+    else:
+        return JsonResponse({'success': False, 'message': 'Geçersiz istek.'}, status=405)
+ 
 
 
 @login_required

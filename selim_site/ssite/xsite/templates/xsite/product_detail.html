@@ -12,87 +12,109 @@
     
 </head>
 <body>
+    <meta name="csrf-token" content="{{ csrf_token }}">
     <div style="display: flex;">
-        <ul>
+        <ul style="list-style: none;">
             <li><img src="{{ product.pimageURL }}" alt="{{ product.name }}" style="height: 650px;width: 450px;"></li>
         </ul>
         <ul style="list-style: none;">
             <li><h1 style="border-bottom: 3px whitesmoke solid;">{{ product.name }}</h1></li>
             <br>
             <li><h4>Yayınlayan:{{ product.owner }}</h4></li>
-            <li><h6 style="margin-top: 30px;">degerlendirme: 5 <i class="bi bi-star-fill"></i></h6></li>
+            <li><h6 style="margin-top: 30px;">degerlendirme: 
+                {% if ratings %}
+                    {% for rating in ratings %}
+                        {{ average_rating }}
+                    {% endfor %}
+                {% else %} 
+                    0
+                {% endif %}/ 5   <i class="bi bi-star-fill"></i></h6></li>
             <br>
-            <li><h6 style="margin-bottom: 30px;">fiyat:{{ product.price }}$</h6></li>
+            <li><h6 class="card-text" style="margin-bottom: 30px;">fiyat:
+                {% if product.apply_discount %}
+                    <span style="text-decoration: line-through; color: gray;">${{ product.price }}</span>
+                    <span style="color: red;">${{ product.discounted_price }}</span>
+                {% else %}
+                    ${{ product.price }}
+                {% endif %}
+            </h6></li>
             <li style="margin-top: 30px;">
                 <h5>Sayfa Sayısı: {{ product.image_count }}</h5>
             </li>
             <li><h5 style="margin-top: 70px;">{{ product.subname }}</h5></li>
             <br>
-            <li>
-                
-                <h1>Ürün Değerlendirme</h1>
-                <div id="form-message"></div> <!-- Başarı/Hata mesajları buraya -->
-                <form id="rating-form">
-                    <label for="rating">Puan (1-5):</label>
-                    <input type="number" id="rating" name="rating" min="1" max="5" required>
-                    <br><br>
-                    <label for="comment">Yorum:</label>
-                    <textarea id="comment" name="comment" required></textarea>
-                    <br><br>
-                    <button type="submit">Gönder</button>
-                </form>
-            </li>
-            <li>
-                <h2>Ortalama Değerlendirme: {{ average_rating }} / 5</h2>
-
-                <h3>Değerlendirmeler:</h3>
-                {% if ratings %}
-                    <ul>
-                        {% for rating in ratings %}
-                            <li>
-                                <strong>{{ rating.user.username }}:</strong>
-                                {{ rating.rating }} / 5 - {{ rating.comment }}
-                            </li>
-                        {% endfor %}
-                    </ul>
-                {% else %}
-                    <p>Henüz bir değerlendirme yapılmamış.</p>
-                {% endif %}
-            </li>
+            
         </ul>
+        
     </div>    
-    <!-- product_detail.html -->
-<!-- product_detail.html -->
+    <ul style="list-style: none;">
+        <li>
+            
+            <h1>Ürün Değerlendirme</h1>
+            <div id="form-message"></div> <!-- Başarı/Hata mesajları buraya -->
+            <form id="rating-form">
+                <label style="color: whitesmoke;" for="rating">Puan (1-5):</label>
+                <input type="number" id="rating" name="rating" min="1" max="5" required>
+                <br><br>
+                <label style="color: whitesmoke;" for="comment">Yorum:</label>
+                <textarea id="comment" name="comment" required></textarea>
+                <br><br>
+                <button type="submit">Gönder</button>
+            </form>
+        </li>
+        <li>
+              
+            <h3>Değerlendirmeler:</h3>
+            {% if ratings %}
+                <ul>
+                    {% for rating in ratings %}
+                    <li>
+                        <strong>{{ rating.user.username }}:</strong>
+                        {{ rating.rating }} / 5 - {{ rating.comment }}
+                    </li>
+                    {% endfor %}
+                </ul>
+            {% else %}
+                <p style="color: whitesmoke;">Henüz bir değerlendirme yapılmamış.</p>
+            {% endif %}
+
+
+            
+
+        </li>
+    </ul>
 <script>
     document.addEventListener('DOMContentLoaded', function() {
-        var ratingForm = document.querySelector('#rating-form');
+    var ratingForm = document.querySelector('#rating-form');
 
-        ratingForm.addEventListener('submit', function(event) {
-            event.preventDefault();  // Formu gönderme işlemini durdur
+    ratingForm.addEventListener('submit', function(event) {
+        event.preventDefault();
 
-            var ratingValue = document.querySelector('input[name="rating"]:checked').value;
-            var commentValue = document.querySelector('textarea[name="comment"]').value;
+        var ratingValue = document.querySelector('#rating').value;
+        var commentValue = document.querySelector('#comment').value;
 
-            fetch('{% url "add_rating" product.id %}', {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/x-www-form-urlencoded',
-                    'X-CSRFToken': '{{ csrf_token }}'  // CSRF Token gereklidir
-                },
-                body: `rating=${ratingValue}&comment=${commentValue}`
-            })
-            .then(response => response.json())
-            .then(data => {
-                if (data.success) {
-                    alert(data.message);  // Başarılı durumu bildiren bir mesaj
-                    location.reload();  // Sayfayı yeniden yükle
-                } else {
-                    alert(data.message);  // Hata durumunda bir mesaj göster
-                }
-            })
-            .catch(error => console.error('Error:', error));
+        fetch("{% url 'add_rating' product.id %}", {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/x-www-form-urlencoded',
+                'X-CSRFToken': '{{ csrf_token }}'
+            },
+            body: `rating=${ratingValue}&comment=${encodeURIComponent(commentValue)}`
+        })
+        .then(response => response.json())
+        .then(data => {
+            alert(data.message); // Başarı veya hata mesajını göster
+            if (data.success) {
+                location.reload(); // Başarılıysa sayfayı yeniden yükle
+            }
+        })
+        .catch(error => {
+            console.error('Error:', error);
+            alert('Bir hata oluştu: ' + error.message);
         });
     });
+});
+
 </script>
 
 

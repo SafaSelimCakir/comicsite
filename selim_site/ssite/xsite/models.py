@@ -90,7 +90,7 @@ class Product(models.Model):
         ratings = self.ratings.all()
         if ratings.exists():
             return round(sum(r.rating for r in ratings) / ratings.count(), 2)
-        return 0
+        return 
 
 
 class ProductImage(models.Model):
