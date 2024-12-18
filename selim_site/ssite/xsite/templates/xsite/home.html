@@ -44,13 +44,14 @@
             {% else %}
               ${{ product.price }}
             {% endif %}
+            
           </p>
           <button 
 						class="css-scan-edited-element-0" 
 						style="height: 30px; width: 135px;"
 						id="add-to-cart-button-{{ product.id }}">
 							sepete ekle
-							<span id="cart-message-{{ product.id }}" style="color: green; display: none;">Eklendi</span>
+              <span id="cart-message-{{ product.id }}" style="color: green; display: none;">Eklendi</span>
 						</button>
           
 

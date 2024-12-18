@@ -1,15 +1,13 @@
-
 {% extends 'xsite/cart.html' %}
 {% load static %}
 {% block content %}
-
 <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>{{ product.name }}</title>
-    
+    <link rel="stylesheet" href="{% static 'css/rating.css' %}">
 </head>
 <body>
     <meta name="csrf-token" content="{{ csrf_token }}">
@@ -43,29 +41,31 @@
             </li>
             <li><h5 style="margin-top: 70px;">{{ product.subname }}</h5></li>
             <br>
-            
         </ul>
-        
     </div>    
     <ul style="list-style: none;">
         <li>
-            
-            <h1>Ürün Değerlendirme</h1>
-            <div id="form-message"></div> <!-- Başarı/Hata mesajları buraya -->
-            <form id="rating-form">
-                <label style="color: whitesmoke;" for="rating">Puan (1-5):</label>
-                <input type="number" id="rating" name="rating" min="1" max="5" required>
-                <br><br>
-                <label style="color: whitesmoke;" for="comment">Yorum:</label>
-                <textarea id="comment" name="comment" required></textarea>
-                <br><br>
-                <button type="submit">Gönder</button>
-            </form>
-        </li>
-        <li>
-              
-            <h3>Değerlendirmeler:</h3>
-            {% if ratings %}
+            <div class="card" style="width: 20rem;">
+                <div class="card-body">
+                  <h5 style="margin-bottom: 20px;padding-left: 50px;" class="card-title">Ürün Değerlendirme</h5>
+                 <div id="form-message"></div> <!-- Başarı/Hata mesajları buraya -->
+                 <form id="rating-form">
+                    <div style="display: flex; align-items: center; margin-bottom: 10px;">
+                        <label class="card-subtitle mb-2" 
+                               style="color: whitesmoke; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; margin-right: 10px;" 
+                               for="rating">Puan (1-5):</label>
+                        <input style="width: 197px;" type="number" id="rating" name="rating" min="1" max="5" required>
+                    </div>
+                    <div style="display: flex; align-items: center; margin-bottom: 15px;">
+                        <label class="card-subtitle mb-2" 
+                               style="color: whitesmoke; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; margin-right: 10px;" 
+                               for="comment">Yorum:</label>
+                        <textarea style="width: 165px;margin-left: 27px;margin-right: 9px; flex: 1;" id="comment" name="comment" required></textarea>
+                    </div>
+                    <button class="button" type="submit">Gönder</button>
+                </form>
+                <h3 style="margin-top: 20px;font-family: Arial, Helvetica, sans-serif;">Değerlendirmeler:</h3>
+                {% if ratings %}
                 <ul>
                     {% for rating in ratings %}
                     <li>
@@ -74,13 +74,11 @@
                     </li>
                     {% endfor %}
                 </ul>
-            {% else %}
-                <p style="color: whitesmoke;">Henüz bir değerlendirme yapılmamış.</p>
-            {% endif %}
-
-
-            
-
+                {% else %}
+                    <p style="color: whitesmoke;font-family: Arial, Helvetica, sans-serif;">Henüz bir değerlendirme yapılmamış.</p>
+                {% endif %}
+                </div>
+              </div>
         </li>
     </ul>
 <script>
@@ -114,10 +112,7 @@
         });
     });
 });
-
 </script>
-
-
 </body>
 </html>
 {% endblock content %}

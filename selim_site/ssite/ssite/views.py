@@ -108,21 +108,26 @@ def update_profile(request):
 @csrf_exempt
 def update_cart_item(request, item_id):
     if request.method == 'POST':
-        data = json.loads(request.body)
-        quantity = data.get('quantity')
-
-        if quantity is None or quantity < 1:
-            return JsonResponse({'success': False, 'message': 'Invalid quantity'}, status=400)
-
         try:
+            data = json.loads(request.body)
+            quantity = data.get('quantity', 0)
             cart_item = CartItem.objects.get(id=item_id)
+
+            if quantity <= 0:
+                # Remove the item if quantity is 0
+                cart_item.delete()
+                return JsonResponse({'success': True, 'message': 'Item removed from cart'})
+
             cart_item.quantity = quantity
             cart_item.save()
-            return JsonResponse({'success': True})
-        except CartItem.DoesNotExist:
-            return JsonResponse({'success': False, 'message': 'Item not found'}, status=404)
+            return JsonResponse({'success': True, 'quantity': quantity})
 
-    return JsonResponse({'success': False, 'message': 'Invalid request'}, status=400)
+        except CartItem.DoesNotExist:
+            return JsonResponse({'success': False, 'error': 'Item not found'}, status=404)
+        except Exception as e:
+            return JsonResponse({'success': False, 'error': str(e)}, status=500)
+
+    return JsonResponse({'success': False, 'error': 'Invalid request method'}, status=400)
 
 @login_required
 def api_add_to_cart(request, product_id):

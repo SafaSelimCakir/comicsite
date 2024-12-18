@@ -12,7 +12,7 @@ class Profile(models.Model):
     user = models.OneToOneField(User, on_delete=models.CASCADE, related_name='profile')
     profile_picture = models.ImageField(upload_to='profile_pictures/', default='default.jpg')
     bio = models.TextField(blank=True)
-    is_authorized = models.BooleanField(default=False)  # Kullanıcının yetkili olup olmadığını belirler
+    is_authorized = models.BooleanField(default=False)  
 
     def __str__(self):
         return f"{self.user.username}'s Profile"
@@ -29,12 +29,12 @@ class Customer(models.Model):
 class Rating(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE, related_name="ratings")
     product = models.ForeignKey('Product', on_delete=models.CASCADE, related_name="ratings")
-    rating = models.PositiveIntegerField()  # 1-5 arasında bir sayı olabilir
-    comment = models.TextField(null=True, blank=True)  # Kullanıcı yorumu
+    rating = models.PositiveIntegerField()  
+    comment = models.TextField(null=True, blank=True)  
     created_at = models.DateTimeField(auto_now_add=True)
 
     class Meta:
-        unique_together = ('user', 'product')  # Bir kullanıcı bir ürüne yalnızca bir kez oy verebilir.
+        unique_together = ('user', 'product')  
 
     def __str__(self):
         return f"{self.user.username} - {self.product.name} - {self.rating}"
@@ -43,12 +43,12 @@ class Rating(models.Model):
 class Product(models.Model):
     name = models.CharField(max_length=200)
     subname = models.CharField(max_length=1000, null=True, blank=True)
-    price = models.FloatField()  # FloatField olarak kalabilir
+    price = models.FloatField()  
     digital = models.BooleanField(default=False, null=True, blank=True)
     pimage = models.ImageField(upload_to='img/', null=True, blank=True)
     #pdf = models.FileField(upload_to='pdfs/', null=True, blank=True)
-    discount = models.IntegerField(default=0)  # Discount as an integer
-    apply_discount = models.BooleanField(default=False, null=True, blank=True)  # Discount flag
+    discount = models.IntegerField(default=0)  
+    apply_discount = models.BooleanField(default=False, null=True, blank=True)  
     owner = models.ForeignKey(User, on_delete=models.CASCADE, default=1)
 
     def __str__(self):
@@ -100,9 +100,6 @@ class ProductImage(models.Model):
     def __str__(self):
         return f"{self.product.name} - {self.image.name}"
     
-    
-
-
 
 class Cart(models.Model):
     user = models.OneToOneField(User, on_delete=models.CASCADE)
@@ -123,14 +120,14 @@ class CartItem(models.Model):
 
 class Order(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE)
-    created_at = models.DateTimeField(default=now)  # Default to the current timestamp
+    created_at = models.DateTimeField(default=now)  
     total_price = models.DecimalField(max_digits=10, decimal_places=2, default=1.00)
 
     def __str__(self):
         return f"Order {self.id} by {self.user.username}"
 
 class OrderItem(models.Model):
-    order = models.ForeignKey(Order, on_delete=models.CASCADE, null=False, default=1)  # Default value provided
+    order = models.ForeignKey(Order, on_delete=models.CASCADE, null=False, default=1) 
     product = models.ForeignKey('Product', on_delete=models.CASCADE, default=now)
     quantity = models.PositiveIntegerField( default=now)
     price = models.DecimalField(max_digits=10, decimal_places=2, default=now)

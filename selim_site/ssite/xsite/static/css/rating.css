@@ -1,0 +1,33 @@
+.card-body{
+    background-color: #333;
+    color: whitesmoke;
+    padding: 8px;
+    border-radius: 3px;
+}
+
+.card{
+    background-color: #222;
+    border: 6px solid ;
+    box-shadow: 10px 10px 8px black;
+}
+
+.button{
+    color: whitesmoke;
+    background-color:#333 ;
+    border-radius: 8px;
+    width:140px;
+    height: 35px;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    border: #141414 solid 2px;
+}
+
+.button:hover{
+    background-color: #141414;
+    
+}
+
+.card-subtitle{
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    color: whitesmoke;
+    align-items: center;
+}
