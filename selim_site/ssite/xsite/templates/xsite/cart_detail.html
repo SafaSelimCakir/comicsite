@@ -1,11 +1,11 @@
 {% extends 'xsite/cart.html' %}
 {% load static %}
-{% block content %}
 
+{% block content %}
 <link rel="stylesheet" href="{% static 'css/cart.css' %}">
 
 <div class="cart-container" style="background-color: #333; box-shadow: 10px 10px 25px black;">
-    <h1 style="color: #111111;font-family: 'Franklin Gothic Medium', 'Arial Narrow', Arial, sans-serif;">Alışveriş Sepetiniz</h1>
+    <h1 style="color: #111111; font-family: 'Franklin Gothic Medium', 'Arial Narrow', Arial, sans-serif;">Alışveriş Sepetiniz</h1>
     
     <div class="cart-items">
         {% if cart.items.all %}
@@ -42,7 +42,6 @@
             {% endfor %}
         {% else %}
             <div class="cart-item" style="background-color: #141414; box-shadow: 5px 5px 15px black;"><h5 style="color: whitesmoke;">Sepetiniz boş.</h5></div>
-            
         {% endif %}
     </div>
 
@@ -53,11 +52,7 @@
             {% csrf_token %}
             <div class="payment-options" style="margin-top: 20px;">
                 <h4>Ödeme Seçenekleri:</h4>
-                <label>
-                    <input type="radio" name="payment_method" value="cash" checked onchange="toggleCardFields(false)">
-                    Nakit Ödeme
-                </label>
-                <label>
+                <label style="color: whitesmoke;">
                     <input type="radio" name="payment_method" value="card" onchange="toggleCardFields(true)">
                     Kart ile Ödeme
                 </label>
@@ -65,7 +60,7 @@
             
             <div id="cardFields" style="display: none; margin-top: 20px;">
                 <!-- Kredi Kartı Tasarımı -->
-                <div class="card-design">
+                <div class="card-design" style="margin-left: 160px;">
                     <div class="card-front">
                         <div class="chip"></div>
                         <div class="card-number" id="cardNumberDisplay">1234 5678 9012 3456</div>
@@ -81,29 +76,37 @@
                 </div>
     
                 <!-- Form Alanları -->
-                <label for="cardNumber">Kart Numarası:</label>
-                <input type="text" name="card_number" id="cardNumber" placeholder="1234 5678 9012 3456" oninput="updateCardNumber(this.value)">
+                <label class="card-text" for="cardNumber">Kart Numarası:</label>
+                <input maxlength="16" class="card-input" type="text" name="card_number" id="cardNumber" placeholder="1234 5678 9012 3456" oninput="updateCardNumber(this.value)">
                 
-                <label for="cardHolderName">Kart Sahibi Adı:</label>
-                <input type="text" name="card_holder_name" id="cardHolderName" placeholder="Ad Soyad" oninput="updateCardHolderName(this.value)">
+                <label class="card-text" for="cardHolderName">Kart Sahibi Adı:</label>
+                <input class="card-input" type="text" name="card_holder_name" id="cardHolderName" placeholder="Ad Soyad" oninput="updateCardHolderName(this.value)">
                 
-                <label for="expiryDate">Son Kullanma Tarihi:</label>
-                <input type="text" name="expiry_date" id="expiryDate" placeholder="MM/YY" oninput="updateExpiryDate(this.value)">
+                <label class="card-text" for="expiryDate">Son Kullanma Tarihi:</label>
+                <input maxlength="4" class="card-input" style="margin-right: 93px ;" type="text" name="expiry_date" id="expiryDate" placeholder="MM/YY" oninput="updateExpiryDate(this.value)">
                 
-                <label for="cvv">CVV:</label>
-                <input type="text" name="cvv" id="cvv" placeholder="123">
+                <label class="card-text" for="cvv">CVV:</label>
+                <input maxlength="3" class="card-input" type="text" name="cvv" id="cvv" placeholder="123">
             </div>
-            <button type="submit" class="ordercheckout-button" style="font-family: Arial, Helvetica, sans-serif; font-size: large; color: whitesmoke; margin-top: 20px;background-color: rgb(221, 51, 51); padding: 7px  10px; border-radius: 8px;">Satın Al</button>
+            <button type="submit" class="ordercheckout-button" style="font-family: Arial, Helvetica, sans-serif; font-size: large; color: whitesmoke; margin-top: 20px; background-color: rgb(221, 51, 51); padding: 7px 10px; border-radius: 8px;">Satın Al</button>
         </form>
     </div>
 </div>
 
 <style>
+    .card-input {
+        margin-right: 20px;
+    }
+    .card-text {
+        color: whitesmoke;
+        margin-bottom: 15px;
+        margin-right: 10px;
+    }
     .card-design {
         background: linear-gradient(135deg, #4a90e2, #9013fe);
         color: white;
-        width: 350px;
-        height: 200px;
+        width: 400px;
+        height: 250px;
         border-radius: 15px;
         padding: 20px;
         margin-bottom: 20px;
@@ -112,8 +115,8 @@
     }
 
     .chip {
-        width: 50px;
-        height: 35px;
+        width: 60px;
+        height: 40px;
         background: gold;
         border-radius: 5px;
         position: absolute;
@@ -142,10 +145,7 @@
     }
 </style>
 
-
 <script>
-    
-
     function updateCardNumber(value) {
         const display = document.getElementById('cardNumberDisplay');
         display.textContent = value || '1234 5678 9012 3456';
@@ -173,6 +173,7 @@
             inputs.forEach(input => input.required = false);
         }
     }
+
     function updateQuantity(itemId, action) {
         const item = document.querySelector(`[data-item-id="${itemId}"]`);
         const quantityElement = item.querySelector('.item-quantity');
@@ -181,11 +182,11 @@
         if (action === 'increase') {
             currentQuantity += 1;
         } else if (action === 'decrease') {
-        if (currentQuantity > 1) {
-            currentQuantity -= 1;
-        } else {
-            return; 
-        }
+            if (currentQuantity > 1) {
+                currentQuantity -= 1;
+            } else {
+                return;
+            }
         }
 
         quantityElement.textContent = currentQuantity;
@@ -193,7 +194,7 @@
         const price = parseFloat(item.getAttribute('data-price'));
         const totalPriceElement = document.getElementById('totalPrice');
         let currentTotal = parseFloat(totalPriceElement.textContent);
-        
+
         if (action === 'increase') {
             currentTotal += price;
         } else if (action === 'decrease') {

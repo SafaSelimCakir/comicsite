@@ -7,7 +7,6 @@ import os
 from django.utils.timezone import now
 
 
-
 class Profile(models.Model):
     user = models.OneToOneField(User, on_delete=models.CASCADE, related_name='profile')
     profile_picture = models.ImageField(upload_to='profile_pictures/', default='default.jpg')

@@ -1,27 +1,34 @@
 {% extends 'xsite/cart.html' %}
 {% load static %}
+
 {% block content %}
 <link rel="stylesheet" href="{% static 'css/book.css'%}">
 
 <div class="realvjy">
-  </div>
-  <div class="book-wrapper">
+</div>
+<div class="book-wrapper">
+  {% if products %}
     {% for product in products %}
     <a href="{% url 'book_view' product.id %}">
       <div class="book-items">
-      <div class="main-book-wrap">
-        <div class="book-cover">
-          <div class="book-inside"></div>
-          <div class="book-image">
-            <img src="{{ product.pimageURL }}" />
-            <div class="effect"></div>
-            <div class="light"></div>
+        <div class="main-book-wrap" style="height: 400px;">
+          <div class="book-cover" style="height: 400px;">
+            <div class="book-inside"></div>
+            <div class="book-image">
+              <img style="height: 400px;" src="{{ product.pimageURL }}" />
+              <div class="effect"></div>
+              <div class="light"></div>
+            </div>
           </div>
         </div>
       </div>
-    </div>
-  </a>
-  <p style="font-family: 'Franklin Gothic Medium', 'Arial Narrow', Arial, sans-serif;color: whitesmoke;border-style: none;">{{ product.name }}</p>
+    </a>
+    <p class="product-name" style="font-family: 'Franklin Gothic Medium', 'Arial Narrow', Arial, sans-serif; color: whitesmoke; border-style: none;">
+      {{ product.name }}
+    </p>
     {% endfor %}
-  </div>
-{% endblock content %}
+  {% else %}
+    <p style="color: whitesmoke; font-size: 18px;">Henüz ürün satın almadınız veya hediye kodu kullanmadınız.</p>
+  {% endif %}
+</div>
+{% endblock %}

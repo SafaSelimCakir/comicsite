@@ -214,7 +214,7 @@ def profile_update(request):
                     messages.error(request, 'Yeni şifreler eşleşmiyor.')
                 else:
                     request.user.set_password(new_password)
-                    update_session_auth_hash(request, request.user)  # Kullanıcıyı oturumdan atmaz
+                    update_session_auth_hash(request, request.user)  
                     messages.success(request, 'Şifre başarıyla güncellendi.')
 
             user_form.save()
@@ -235,31 +235,29 @@ def register(request):
         form = RegisterForm(request.POST)
         if form.is_valid():
             form.save()
-            return redirect('login')  # Kayıt sonrası yönlendirme
+            return redirect('login')
     else:
-        form = RegisterForm()  # GET isteğinde boş form oluştur
+        form = RegisterForm()
     return render(request, 'xsite/register.html', {'form': form})
 
 @login_required
 def ordercheckout(request):
-    # Get the user's cart
+   
     try:
         cart = Cart.objects.get(user=request.user)
     except Cart.DoesNotExist:
-        return redirect('cart')  # Redirect to cart page if no cart exists
+        return redirect('cart')  
 
-    # Initialize total_price as a Decimal
+
     total_price = Decimal('0.00')
 
-    # Calculate total price
     for item in cart.items.all():
         price = Decimal(item.product.discounted_price if item.product.apply_discount else item.product.price)
         total_price += price * item.quantity
 
-    # Create an Order
     order = Order.objects.create(user=request.user, total_price=total_price)
 
-    # Create OrderItems from CartItems
+   
     for item in cart.items.all():
         OrderItem.objects.create(
             order=order,
@@ -268,7 +266,7 @@ def ordercheckout(request):
             price=Decimal(item.product.discounted_price if item.product.apply_discount else item.product.price)
         )
 
-    # Clear the cart
+    
     cart.items.all().delete()
 
     return render(request, 'xsite/order_confirmation.html', {'order': order})

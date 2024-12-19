@@ -1,11 +1,13 @@
 from django.contrib import admin
-from .models import xsite, Category
+from .models import xsite, Category,Product, ProductImage
 from .models import *
-from .models import Product, ProductImage
+
+
+
+
 
 class ProductImageInline(admin.TabularInline):
     model = ProductImage
-     # Yeni ürün oluştururken varsayılan olarak kaç resim alanı gösterileceği
 
 class ProductAdmin(admin.ModelAdmin):
     inlines = [ProductImageInline]
