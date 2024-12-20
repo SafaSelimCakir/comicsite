@@ -23,6 +23,7 @@ from .views import register
 from .views import profile_view, api_add_to_cart, remove_from_cart
 from django.contrib.auth.views import LogoutView
 from .views import cart_detail,update_cart_item,update_profile,ordercheckout,product_detail
+from xsite.models import Rating
 
 urlpatterns = [
     path("acconts/",include("django.contrib.auth.urls")),
@@ -38,12 +39,11 @@ urlpatterns = [
     path('login/', views.login, name='login'),
     path('register/', register, name='register'),
     path('', include('django.contrib.auth.urls')),
-    path('product/<int:product_id>/', views.product_detail, name='product_detail'),
-    path('product/<int:product_id>/add_rating/', views.add_rating, name='add_rating'),
     path('profile/', profile_view, name='profile'),
     path('profile/edit/', update_profile, name='edit_profile'),
     path('api/update_cart_item/<int:item_id>/', update_cart_item, name='update_cart_item'),
     path('api/add-to-cart/<int:product_id>/', views.api_add_to_cart, name='api_add_to_cart'),
     path('cartd/', views.cart_detail, name='cart_detail'),
     path('remove-from-cart/<int:item_id>/', views.remove_from_cart, name='remove_from_cart'),
+    path('ratings/', include('star_ratings.urls', namespace='ratings')),
 ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

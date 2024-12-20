@@ -18,32 +18,6 @@ from decimal import Decimal
 from django.db.models import Avg
 from django.db import models
 
-def add_rating(request, product_id):
-    if request.method == 'POST':
-        product = Product.objects.get(id=product_id)
-        user = request.user  # Giriş yapmış kullanıcı
-        rating = request.POST.get('rating')
-        comment = request.POST.get('comment')
-
-        # Daha önce değerlendirme yapılmışsa güncelle
-        existing_rating = Rating.objects.filter(user=user, product=product).first()
-        if existing_rating:
-            existing_rating.rating = rating
-            existing_rating.comment = comment
-            existing_rating.save()
-            return JsonResponse({'success': True, 'message': 'Değerlendirmeniz başarıyla güncellendi!'})
-
-        # Yeni değerlendirme oluştur
-        new_rating = Rating.objects.create(
-            product=product,
-            user=user,
-            rating=rating,
-            comment=comment
-        )
-        return JsonResponse({'success': True, 'message': 'Değerlendirmeniz başarıyla kaydedildi!'})
-
-    return JsonResponse({'success': False, 'message': 'Geçersiz istek.'})
-
 
 def product_detail(request, product_id):
     product = get_object_or_404(Product, id=product_id)
