@@ -22,27 +22,27 @@
     <div style="padding-bottom: 20px ;">
       <nav class="navbar sticky-top navbar-expand-lg navbar-light bg-dark text-white" style="border-radius: 20px;box-shadow: rgba(0, 0, 0, 0.35) 0px 5px 15px;">
           <div class="container-fluid" style="height: 55px;">
-            <a class="navbar-brand" href="#" style="font-size: 26px;font-family: 'Trebuchet MS', 'Lucida Sans Unicode', 'Lucida Grande', 'Lucida Sans', Arial, sans-serif;"><img style="width: 110px;" src="{% static 'img/logo.png'%}" alt="First slide"></a>
+            <a class="navbar-brand" href="{% url 'home' %}" style="font-size: 26px;font-family: 'Trebuchet MS', 'Lucida Sans Unicode', 'Lucida Grande', 'Lucida Sans', Arial, sans-serif;"><img style="width: 110px;" src="{% static 'img/logo.png'%}" alt="First slide"></a>
             <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNavDropdown" aria-controls="navbarNavDropdown" aria-expanded="false" aria-label="Toggle navigation">
               <span class="navbar-toggler-icon"></span>
             </button>
             <div class="collapse navbar-collapse" id="navbarNavDropdown">
               <ul class="navbar-nav">
                 <li class="nav-item">
-                  <a class="nav-link" style="color: whitesmoke;opacity: 0.5;" aria-current="page" href="{% url 'home' %}"><i class="bi bi-house" style="font-size:18px;"></i></a>
+                  <a class="nav-link" title="anasayfa" style="color: whitesmoke;opacity: 0.5;" aria-current="page" href="{% url 'home' %}"><i class="bi bi-house" style="font-size:18px;"></i></a>
                 </li>
                 <li class="nav-item">
-                  <a class="nav-link" style="color: whitesmoke;opacity: 0.5;" href="{% url 'checkout' %}"><i class="bi bi-archive" style="font-size:18px;"></i></a>
+                  <a class="nav-link" title="ürünler" style="color: whitesmoke;opacity: 0.5;" href="{% url 'checkout' %}"><i class="bi bi-archive" style="font-size:18px;"></i></a>
                 </li>
                 <li class="nav-item">
-                  <a class="nav-link" style="color: whitesmoke;opacity: 0.5;" href="{% url 'information' %}"><i class="bi bi-envelope" style="font-size:18px;"></i></a>
+                  <a class="nav-link" title="iletişim" style="color: whitesmoke;opacity: 0.5;" href="{% url 'information' %}"><i class="bi bi-envelope" style="font-size:18px;"></i></a>
                 </li>
                 <li class="nav-item">
-                  <a class="nav-link" style="color: whitesmoke;opacity: 0.5;" href="{% url 'bag' %}"><i class="bi bi-collection" style="font-size:18px;"></i></a>
+                  <a class="nav-link" title="canta" style="color: whitesmoke;opacity: 0.5;" href="{% url 'bag' %}"><i class="bi bi-collection" style="font-size:18px;"></i></a>
                 </li>
                 
                 <li class="nav-item">
-                  <a class="nav-link" style="color: whitesmoke;opacity: 0.5;" href="{% url 'cart_detail' %}"><i class="bi bi-bag" style="font-size:18px;"></i></a>
+                  <a class="nav-link" title="sepet" style="color: whitesmoke;opacity: 0.5;" href="{% url 'cart_detail' %}"><i class="bi bi-bag" style="font-size:18px;"></i></a>
                 </li>
               </ul>
             </div>
@@ -68,6 +68,67 @@
         </nav>
       </div>
 
+      <div id="snow-container"></div>
+      
+      <div style="z-index: 1000; position: relative; width: 100%;">
+        <img
+            style="height: 80px; width: 150px; animation: santaMove 2s ease-in-out infinite;margin-left: 82%;"
+            class="top-right-image"
+            src="{% static 'img/santa.png' %}">
+    </div>
+
+<style>
+  @keyframes santaMove {
+    0% {
+        transform: translate(0, 0);
+        transform: translateX(0);
+        transform: translateY(0);
+    }
+    50% {
+        transform: translate(20px, -20px);
+        transform: translateX(20px);
+        transform: translateY(-20px);
+    }
+    100% {
+        transform: translate(0, 0);
+        transform: translateX(0);
+        transform: translateY(0);
+    }
+}
+
+
+  #snow-container {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    pointer-events: none;
+    overflow: hidden;
+    z-index: 1000;
+}
+
+.snowflake {
+    position: absolute;
+    top: -10px;
+    color: white;
+    font-size: 10px;
+    user-select: none;
+    animation: fall linear infinite;
+}
+
+@keyframes fall {
+    0% {
+        transform: translateY(0) rotate(0deg);
+        opacity: 1;
+    }
+    100% {
+        transform: translateY(100vh) rotate(360deg);
+        opacity: 0;
+    }
+}
+
+</style>
 <div class="container">
     {% block content %}
 
@@ -183,5 +244,29 @@
     <!-- Section: Links  -->
   </footer>
   <!-- Footer -->
+
+  <script>
+    const snowContainer = document.getElementById('snow-container');
+    const snowflakeSymbols = ['❄', '✻', '✼', '❅', '❆'];
+
+    function createSnowflake() {
+        const snowflake = document.createElement('div');
+        snowflake.className = 'snowflake';
+        snowflake.innerText = snowflakeSymbols[Math.floor(Math.random() * snowflakeSymbols.length)];
+        snowflake.style.left = Math.random() * window.innerWidth + 'px';
+        snowflake.style.animationDuration = Math.random() * 3 + 2 + 's';
+        snowflake.style.fontSize = Math.random() * 10 + 10 + 'px';
+
+        snowContainer.appendChild(snowflake);
+
+        setTimeout(() => {
+            snowflake.remove();
+        }, 5000);
+    }
+
+    setInterval(createSnowflake, 100);
+</script>
+
+
 </body>
 </html>

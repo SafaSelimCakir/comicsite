@@ -45,9 +45,9 @@
 							
 
 								fetch(url, {
-									method: 'GET', // Use 'POST' if you secure this API later
+									method: 'GET', 
 									headers: {
-										'X-Requested-With': 'XMLHttpRequest', // Helps to identify this as an AJAX request
+										'X-Requested-With': 'XMLHttpRequest',
 									},
 								})
 								.then(response => response.json())
@@ -57,7 +57,7 @@
 										message.style.display = 'inline';
 										setTimeout(() => {
 											message.style.display = 'none';
-										}, 2000); // Hide the message after 2 seconds
+										}, 2000); 
 									} else {
 										alert('Ürün sepete eklenemedi!');
 									}
