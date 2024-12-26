@@ -17,6 +17,7 @@ from .forms import UserProfileUpdateForm,RatingForm,UserForm, ProfileForm,Regist
 from decimal import Decimal
 from django.db.models import Avg
 from django.db import models
+from django.core.exceptions import ObjectDoesNotExist
 
 
 def product_detail(request, product_id):
@@ -172,37 +173,35 @@ def delete_product(request, product_id):
 
 
 @login_required
-def profile_update(request):
+def update_profile(request):
     if request.method == 'POST':
-        user_form = UserForm(request.POST, instance=request.user)
-        profile_form = ProfileForm(request.POST, request.FILES, instance=request.user.profile)
-        current_password = request.POST.get('current_password')
-        new_password = request.POST.get('new_password')
-        confirm_password = request.POST.get('confirm_password')
+        try:
+            # Form verilerini al
+            username = request.POST.get('username')
+            email = request.POST.get('email')
+            bio = request.POST.get('bio')
+            profile_picture = request.FILES.get('profile_picture')
 
-        if user_form.is_valid() and profile_form.is_valid():
-            if current_password and new_password:
-                if not request.user.check_password(current_password):
-                    messages.error(request, 'Mevcut şifreniz yanlış.')
-                elif new_password != confirm_password:
-                    messages.error(request, 'Yeni şifreler eşleşmiyor.')
-                else:
-                    request.user.set_password(new_password)
-                    update_session_auth_hash(request, request.user)  
-                    messages.success(request, 'Şifre başarıyla güncellendi.')
+            # Kullanıcıyı güncelle
+            user = request.user
+            user.username = username
+            user.email = email
+            user.save()
 
-            user_form.save()
-            profile_form.save()
-            messages.success(request, 'Profil başarıyla güncellendi.')
-            return redirect('profile')
-    else:
-        user_form = UserForm(instance=request.user)
-        profile_form = ProfileForm(instance=request.user.profile)
+            # Profil fotoğrafı ve biyografi güncelle
+            profile = user.profile
+            profile.bio = bio
+            if profile_picture:
+                profile.profile_picture = profile_picture
+            profile.save()
 
-    return render(request, 'profile.html', {
-        'user_form': user_form,
-        'profile_form': profile_form
-    })
+            return JsonResponse({'success': True})
+
+        except Exception as e:
+            print(f"Error: {e}")
+            return JsonResponse({'success': False, 'message': 'Bir hata oluştu.'})
+
+    return JsonResponse({'success': False, 'message': 'Geçersiz istek.'})
 
 def register(request):
     if request.method == 'POST':
@@ -261,8 +260,8 @@ def bag(request):
     return render(request, 'xsite/bag.html',context)
 
 def book_view(request, product_id):
-    product = get_object_or_404(Product, id=product_id)  # product_id'ye göre ürünü al
-    images = product.images.all()  # Ürüne ait resimleri al
+    product = get_object_or_404(Product, id=product_id)  
+    images = product.images.all() 
     return render(request, 'xsite/book.html', {'product': product, 'images': images})
 
 def login(request):

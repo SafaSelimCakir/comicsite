@@ -6,81 +6,100 @@
 <link rel="stylesheet" href="{% static 'css/profile.css' %}">
 
 <div class="profile-container">
-    <!-- Profil Kartı -->
     <div class="profile-card">
         <div class="profile-header">
             <h2>{{ user.username }}'in Profil Bilgileri</h2>
         </div>
 
-        <!-- Profil Bilgileri -->
         <div class="profile-info">
-            <div class="profile-picture">
-                <img src="{{ user.profile.profile_picture.url }}" alt="Profil Resmi" class="profile-img">
-                <label for="profilePictureUpload" class="profile-upload-icon">
-                    <i class="bi bi-plus"></i>
-                </label>
-                <input type="file" id="profilePictureUpload" name="profile_picture" class="profile-picture-input" style="display: none;">
-            </div>
-
-            <div class="profile-details">
-                <p><strong>Kullanıcı adı:</strong> {{ user.username }}</p>
-                <p><strong>Email:</strong> {{ user.email }}</p>
-                <p><strong>Biyografi:</strong> {{ user.profile.bio }}</p>
-            </div>
-        </div>
-
-        <!-- Düzenleme Formu -->
-        <div class="edit-form">
-            <form method="POST" enctype="multipart/form-data">
+            <form id="profileForm" method="POST" class="profile-form" enctype="multipart/form-data">
                 {% csrf_token %}
-                <div class="form-group">
-                    <label for="id_username">Kullanıcı Adı</label>
-                    {{ form.username }}
+                <div class="form-group profile-picture-container">
+                    <label for="profile_picture_upload" class="profile-picture-label">
+                        <img id="profile_picture_preview" src="{{ user.profile.profile_picture.url }}" style="height: 150px;width: 150px;margin-left: 30%;" alt="Profil Resmi" class="profile-img">
+                        <span class="plus-icon" style="color: whitesmoke; margin-left: 100%; "><i class="bi bi-plus-circle-fill"></i></span>
+                    </label>
+                    <input type="file" id="profile_picture_upload" name="profile_picture" style="display:none;">
                 </div>
                 <div class="form-group">
-                    <label for="id_email">Email</label>
-                    <input type="text">
-                    {{ form.email }}
+                    <label for="username">Kullanıcı Adı:</label>
+                    <input type="text" id="username" class="form-input" value="{{ user.username }}">
                 </div>
                 <div class="form-group">
-                    <label for="id_bio">Biyografi</label>
-                    {{ form.bio }}
+                    <label for="email">Email:</label>
+                    <input type="email" id="email" class="form-input" value="{{ user.email }}">
                 </div>
                 <div class="form-group">
-                    <label for="id_profile_picture">Profil Fotoğrafı</label>
-                    {{ form.profile_picture }}
+                    <label for="bio">Biyografi:</label>
+                    <textarea id="bio" class="form-textarea">{{ user.profile.bio }}</textarea>
                 </div>
-                <button type="submit" class="btn btn-primary">Kaydet</button>
+                
+                
+                
+                <div class="form-actions">
+                    <button type="button" id="saveButton" class="save-btn">Kaydet</button>
+                </div>
             </form>
-            
-
-                <!-- Şifre Değiştirme -->
-                <h3>Şifre Değiştir</h3>
-                <div class="form-group">
-                    <label for="id_current_password" style="color: whitesmoke;">Mevcut Şifre</label>
-                    <input type="password" id="id_current_password" name="current_password" required>
-                </div>
-                <div class="form-group">
-                    <label for="id_new_password" style="color: whitesmoke;">Yeni Şifre</label>
-                    <input type="password" id="id_new_password" name="new_password" required>
-                </div>
-                <div class="form-group">
-                    <label for="id_confirm_password" style="color: whitesmoke;">Yeni Şifre (Tekrar)</label>
-                    <input type="password" id="id_confirm_password" name="confirm_password" required>
-                </div>
-
-                <!-- Kaydet ve İptal Butonları -->
-                <button type="submit" class="save-btn">Kaydet</button>
-                <button type="button" class="cancel-btn" id="cancelButton">İptal</button>
-            </form>
-        </div>
-
-        <!-- Düzenleme Butonu -->
-        <div class="profile-actions">
-            <button class="edit-btn" id="editButton">Düzenle</button>
         </div>
     </div>
 </div>
 
-<script src="{% static 'js/profile.js' %}"></script>
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    const saveButton = document.getElementById('saveButton');
+    const profilePictureInput = document.getElementById('profile_picture_upload');
+    const profilePicturePreview = document.getElementById('profile_picture_preview');
+
+    profilePictureInput.addEventListener('change', function(event) {
+        const file = event.target.files[0];
+        if (file) {
+            const reader = new FileReader();
+            reader.onload = function(e) {
+                profilePicturePreview.src = e.target.result; 
+            };
+            reader.readAsDataURL(file);
+        }
+    });
+
+    saveButton.addEventListener('click', function(event) {
+        event.preventDefault();  
+
+        const username = document.getElementById('username').value;
+        const email = document.getElementById('email').value;
+        const bio = document.getElementById('bio').value;
+        const profilePicture = document.getElementById('profile_picture_upload').files[0];
+
+        const formData = new FormData();
+        formData.append('username', username);
+        formData.append('email', email);
+        formData.append('bio', bio);
+        if (profilePicture) {
+            formData.append('profile_picture', profilePicture);
+        }
+
+        fetch('/update-profile/', {
+            method: 'POST',
+            headers: {
+                'X-CSRFToken': document.querySelector('[name=csrfmiddlewaretoken]').value
+            },
+            body: formData
+        })
+        .then(response => response.json())
+        .then(data => {
+            console.log("Sunucudan gelen yanıt:", data);
+            if (data.success) {
+                alert('Profil başarıyla güncellendi!');
+            } else {
+                alert('Profil güncellenirken bir hata oluştu!');
+            }
+        })
+        .catch(error => {
+            console.error("Hata oluştu:", error);
+            alert("Bir hata oluştu!");
+        });
+    });
+});
+</script>
+
 {% endblock %}
+

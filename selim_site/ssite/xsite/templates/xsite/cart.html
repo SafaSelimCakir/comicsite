@@ -68,9 +68,10 @@
         </nav>
       </div>
 
-      <div id="snow-container"></div>
       
-      <div style="z-index: 1000; position: relative; width: 100%;">
+      
+      <div style="z-index: 0000; position: relative; width: 100%;">
+        <div id="snow-container"></div>
         <img
             style="height: 80px; width: 150px; animation: santaMove 2s ease-in-out infinite;margin-left: 82%;"
             class="top-right-image"
@@ -264,7 +265,7 @@
         }, 5000);
     }
 
-    setInterval(createSnowflake, 100);
+    setInterval(createSnowflake, 150);
 </script>
 
 

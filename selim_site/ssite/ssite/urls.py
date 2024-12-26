@@ -40,6 +40,7 @@ urlpatterns = [
     path('register/', register, name='register'),
     path('', include('django.contrib.auth.urls')),
     path('profile/', profile_view, name='profile'),
+    path('update-profile/', views.update_profile, name='update_profile'),
     path('profile/edit/', update_profile, name='edit_profile'),
     path('api/update_cart_item/<int:item_id>/', update_cart_item, name='update_cart_item'),
     path('api/add-to-cart/<int:product_id>/', views.api_add_to_cart, name='api_add_to_cart'),
