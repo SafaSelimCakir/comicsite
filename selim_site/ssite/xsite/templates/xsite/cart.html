@@ -46,15 +46,12 @@
                 </li>
               </ul>
             </div>
-            <form class="col-12 col-lg-auto mb-3 mb-lg-0 me-lg-3" role="search">
-              <input type="search" class="form-control" placeholder="Search..." aria-label="Search">
-            </form>
-              
+            
             <div class="dropdown" style="margin-right: 25px;">
               <a href="#" class="d-flex align-items-center link-body-emphasis text-decoration-none " data-bs-toggle="dropdown" aria-expanded="false">
                 <img src="{{ user.profile.profile_picture.url }}" alt="mdo" width="32" height="32" class="rounded-circle me-2">
                 <h6 style="color: whitesmoke; margin-bottom: 0;">{{ user.username }}</h6>
-                <i class="bi bi-chevron-down text-white ms-2"></i>  <!-- Icona beyaz renk ekledik -->
+                <i class="bi bi-chevron-down text-white ms-2"></i>  
               </a>
               <ul class="dropdown-menu">
                 <li><a class="dropdown-item" href="{% url 'profile' %}">Profile</a></li>
@@ -70,7 +67,7 @@
 
       
       
-      <div style="z-index: 0000; position: relative; width: 100%;">
+      <div style="z-index: 0; position: relative; width: 100%;">
         <div id="snow-container"></div>
         <img
             style="height: 80px; width: 150px; animation: santaMove 2s ease-in-out infinite;margin-left: 82%;"

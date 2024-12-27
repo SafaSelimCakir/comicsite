@@ -4,7 +4,7 @@
 {% block content %}
 <link rel="stylesheet" href="{% static 'css/cart.css' %}">
 
-<div class="cart-container" style="background-color: #333; box-shadow: 10px 10px 25px black;">
+<div class="cart-container" style="background-color: #333; box-shadow: 10px 10px 25px black;z-index: 2;">
     <h1 style="color: #111111; font-family: 'Franklin Gothic Medium', 'Arial Narrow', Arial, sans-serif;">Alışveriş Sepetiniz</h1>
     
     <div class="cart-items">
@@ -20,7 +20,7 @@
                 data-item-id="{{ item.id }}">
 
                 <img src="{{ item.product.pimageURL }}" alt="{{ item.product.name }}" class="cart-item-image">
-                <div class="cart-item-details">
+                <div class="cart-item-details" >
                     <h2>{{ item.product.name }}</h2>
                     <p>
                         {% if item.product.apply_discount %}
@@ -35,7 +35,7 @@
                 <div class="cart-item-actions">
                     <!-- Add/Remove buttons -->
                     <button class="item-button" onclick="updateQuantity('{{ item.id }}', 'increase')">+</button>
-                    <button class="item-button decrease" onclick="updateQuantity('{{ item.id }}', 'decrease')" {% if item.quantity == 1 %}disabled{% endif %}>-</button>
+                    <button class="item-button decrease" onclick="updateQuantity('{{ item.id }}', 'decrease')" {% if item.quantity == 1 %}disabled{% else %}enable{% endif %}>-</button>
                     <a href="{% url 'remove_from_cart' item.id %}" class="remove-button">Kaldır</a>
                 </div>
             </div>

@@ -16,11 +16,13 @@
                 {% csrf_token %}
                 <div class="form-group profile-picture-container">
                     <label for="profile_picture_upload" class="profile-picture-label">
-                        <img id="profile_picture_preview" src="{{ user.profile.profile_picture.url }}" style="height: 150px;width: 150px;margin-left: 30%;" alt="Profil Resmi" class="profile-img">
-                        <span class="plus-icon" style="color: whitesmoke; margin-left: 100%; "><i class="bi bi-plus-circle-fill"></i></span>
+                        <img id="profile_picture_preview" src="{{ user.profile.profile_picture.url }}"
+                            style="height: 150px;width: 150px;margin-left: 30%;" alt="Profil Resmi" class="profile-img">
+                        <span class="plus-icon"><i class="bi bi-plus-circle-fill"></i></span>
                     </label>
                     <input type="file" id="profile_picture_upload" name="profile_picture" style="display:none;">
                 </div>
+
                 <div class="form-group">
                     <label for="username">Kullanıcı Adı:</label>
                     <input type="text" id="username" class="form-input" value="{{ user.username }}">
@@ -34,72 +36,116 @@
                     <textarea id="bio" class="form-textarea">{{ user.profile.bio }}</textarea>
                 </div>
                 
-                
-                
-                <div class="form-actions">
-                    <button type="button" id="saveButton" class="save-btn">Kaydet</button>
+                <div class="form-group">
+                    <label for="current_password">Mevcut Şifre</label>
+                    <input type="password" id="current_password" class="form-input"
+                        placeholder="Mevcut şifrenizi girin">
                 </div>
+                <div class="form-group">
+                    <label for="new_password">Yeni Şifre</label>
+                    <input type="password" id="new_password" class="form-input" placeholder="Yeni şifrenizi girin">
+                </div>
+                <div class="form-group">
+                    <label for="confirm_password">Yeni Şifre (Tekrar)</label>
+                    <input type="password" id="confirm_password" class="form-input"
+                        placeholder="Yeni şifrenizi tekrar girin">
+                </div>
+                <div class="form-actions">
+                    <button type="button" id="changePasswordButton" class="save-btn">Şifreyi Güncelle</button>
+
+                    
+                </div>
+
             </form>
         </div>
     </div>
 </div>
 
+
 <script>
-document.addEventListener('DOMContentLoaded', function() {
-    const saveButton = document.getElementById('saveButton');
-    const profilePictureInput = document.getElementById('profile_picture_upload');
-    const profilePicturePreview = document.getElementById('profile_picture_preview');
+    document.addEventListener('DOMContentLoaded', function () {
+        const saveButton = document.getElementById('saveButton');
+        const profilePictureInput = document.getElementById('profile_picture_upload');
+        const profilePicturePreview = document.getElementById('profile_picture_preview');
 
-    profilePictureInput.addEventListener('change', function(event) {
-        const file = event.target.files[0];
-        if (file) {
-            const reader = new FileReader();
-            reader.onload = function(e) {
-                profilePicturePreview.src = e.target.result; 
-            };
-            reader.readAsDataURL(file);
-        }
-    });
-
-    saveButton.addEventListener('click', function(event) {
-        event.preventDefault();  
-
-        const username = document.getElementById('username').value;
-        const email = document.getElementById('email').value;
-        const bio = document.getElementById('bio').value;
-        const profilePicture = document.getElementById('profile_picture_upload').files[0];
-
-        const formData = new FormData();
-        formData.append('username', username);
-        formData.append('email', email);
-        formData.append('bio', bio);
-        if (profilePicture) {
-            formData.append('profile_picture', profilePicture);
-        }
-
-        fetch('/update-profile/', {
-            method: 'POST',
-            headers: {
-                'X-CSRFToken': document.querySelector('[name=csrfmiddlewaretoken]').value
-            },
-            body: formData
-        })
-        .then(response => response.json())
-        .then(data => {
-            console.log("Sunucudan gelen yanıt:", data);
-            if (data.success) {
-                alert('Profil başarıyla güncellendi!');
-            } else {
-                alert('Profil güncellenirken bir hata oluştu!');
+        profilePictureInput.addEventListener('change', function (event) {
+            const file = event.target.files[0];
+            if (file) {
+                const reader = new FileReader();
+                reader.onload = function (e) {
+                    profilePicturePreview.src = e.target.result;
+                };
+                reader.readAsDataURL(file);
             }
-        })
-        .catch(error => {
-            console.error("Hata oluştu:", error);
-            alert("Bir hata oluştu!");
+        });
+
+        saveButton.addEventListener('click', function (event) {
+            event.preventDefault();
+
+            const username = document.getElementById('username').value;
+            const email = document.getElementById('email').value;
+            const bio = document.getElementById('bio').value;
+            const profilePicture = document.getElementById('profile_picture_upload').files[0];
+            const currentPassword = document.getElementById('current_password').value;
+            const newPassword = document.getElementById('new_password').value;
+            const confirmPassword = document.getElementById('confirm_password').value;
+
+
+            if (newPassword !== confirmPassword) {
+                alert("Yeni şifreler eşleşmiyor!");
+                return;
+            }
+
+            const formData = new FormData();
+            formData.append('username', username);
+            formData.append('email', email);
+            formData.append('bio', bio);
+            formData.append('current_password', currentPassword);
+            formData.append('new_password', newPassword);
+            if (profilePicture) {
+                formData.append('profile_picture', profilePicture);
+            }
+            document.getElementById('changePasswordButton').addEventListener('click', function (event) {
+                event.preventDefault();
+
+                const currentPassword = document.getElementById('current_password').value;
+                const newPassword = document.getElementById('new_password').value;
+                const confirmPassword = document.getElementById('confirm_password').value;
+
+                if (newPassword !== confirmPassword) {
+                    alert('Yeni şifreler eşleşmiyor!');
+                    return;
+                }
+
+                fetch('/update-password/', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'X-CSRFToken': document.querySelector('[name=csrfmiddlewaretoken]').value
+                    },
+                    body: JSON.stringify({
+                        current_password: currentPassword,
+                        new_password: newPassword
+                    })
+                })
+                    .then(response => response.json())
+                    .then(data => {
+                        if (data.success) {
+                            alert('Şifre başarıyla güncellendi!');
+                        } else {
+                            alert('Hata: ' + (data.error || 'Şifre güncellenemedi!'));
+                        }
+                    })
+                    .catch(error => {
+                        console.error("Hata:", error);
+                        alert("Bir hata oluştu!");
+                    });
+            });
+
+
         });
     });
-});
+
 </script>
 
 {% endblock %}
-

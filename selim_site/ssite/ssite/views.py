@@ -59,25 +59,38 @@ def add_rating(request, product_id):
  
 
 
+@csrf_exempt
 @login_required
 def update_profile(request):
     if request.method == 'POST':
-        form = UserProfileUpdateForm(request.POST, request.FILES, instance=request.user.profile, user=request.user)
-        if form.is_valid():
-            profile = form.save(commit=False)
-            # User verilerini güncelle
-            request.user.email = form.cleaned_data.get('email')
-            request.user.username = form.cleaned_data.get('username')
-            request.user.save()
-            profile.save()
-            messages.success(request, "Profiliniz başarıyla güncellendi!")
-            return redirect('edit_profile')
-        else:
-            messages.error(request, "Formda hata var. Lütfen düzeltin: {}".format(form.errors))
-    else:
-        form = UserProfileUpdateForm(user=request.user)
+        user = request.user
+        data = request.POST
 
-    return render(request, 'xsite/profile.html', {'form': form})
+        try:
+            # Şifre değişikliği
+            current_password = data.get('current_password')
+            new_password = data.get('new_password')
+
+            if current_password and new_password:
+                if not user.check_password(current_password):
+                    return JsonResponse({'success': False, 'error': 'Mevcut şifre yanlış.'})
+
+                user.set_password(new_password)
+
+            # Diğer profil bilgilerini güncelle
+            user.username = data.get('username', user.username)
+            user.email = data.get('email', user.email)
+            user.profile.bio = data.get('bio', user.profile.bio)
+
+            # Değişiklikleri kaydet
+            user.save()
+            user.profile.save()
+
+            return JsonResponse({'success': True})
+        except Exception as e:
+            return JsonResponse({'success': False, 'error': str(e)})
+
+    return JsonResponse({'success': False, 'error': 'Geçersiz istek.'})
 
 
 @csrf_exempt
@@ -103,6 +116,31 @@ def update_cart_item(request, item_id):
             return JsonResponse({'success': False, 'error': str(e)}, status=500)
 
     return JsonResponse({'success': False, 'error': 'Invalid request method'}, status=400)
+
+
+@csrf_exempt
+@login_required
+def update_password(request):
+    if request.method == 'POST':
+        user = request.user
+        data = request.POST
+
+        current_password = data.get('current_password')
+        new_password = data.get('new_password')
+
+        if not user.check_password(current_password):
+            return JsonResponse({'success': False, 'error': 'Mevcut şifre yanlış.'})
+
+        if not new_password or len(new_password) < 8:
+            return JsonResponse({'success': False, 'error': 'Yeni şifre geçerli değil.'})
+
+        user.set_password(new_password)
+        user.save()
+        return JsonResponse({'success': True})
+
+    return JsonResponse({'success': False, 'error': 'Geçersiz istek.'})
+
+
 
 @login_required
 def api_add_to_cart(request, product_id):
