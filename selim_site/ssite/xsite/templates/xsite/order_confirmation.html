@@ -3,14 +3,7 @@
 <div class="order-confirmation">
     <h1>Teşekkürler!</h1>
     <h3>Siparişiniz başarıyla tamamlandı.</h3>
-    <h2>Sipariş Özeti</h2>
-    <ul>
-        {% for item in order.items.all %}
-            <li>{{ item.product.name }} - {{ item.quantity }} x ${{ item.price|floatformat:2 }}</li>
-        {% empty %}
-            <li>Sipariş özeti boş.</li>
-        {% endfor %}
-    </ul>
+    <br>
     <h1 style="color: whitesmoke;">Toplam: ${{ order.total_price|floatformat:2 }}</h1>
 </div>
 {% endblock %}

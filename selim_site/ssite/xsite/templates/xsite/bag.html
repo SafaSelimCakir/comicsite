@@ -4,8 +4,6 @@
 {% block content %}
 <link rel="stylesheet" href="{% static 'css/book.css'%}">
 
-<div class="realvjy">
-</div>
 <div class="book-wrapper">
   {% if products %}
     {% for product in products %}
@@ -28,7 +26,8 @@
     </p>
     {% endfor %}
   {% else %}
-    <p style="color: whitesmoke; font-size: 18px;">Henüz ürün satın almadınız veya hediye kodu kullanmadınız.</p>
+    <p style="color: whitesmoke; font-size: 18px;">Henüz ürün satın almadınız.</p>
   {% endif %}
 </div>
+
 {% endblock %}

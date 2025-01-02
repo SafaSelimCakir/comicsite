@@ -1,24 +1,23 @@
-from django.http.response import HttpResponse
+from .forms import UserProfileUpdateForm,RatingForm,UserForm, ProfileForm,RegisterForm,UserUpdateForm, ProfileUpdateForm
+from xsite.models import Product, Cart, CartItem,Order,OrderItem, Rating,Product,Profile
+from django.contrib.auth import authenticate, update_session_auth_hash,login
+from django.contrib.auth.decorators import login_required,user_passes_test
 from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib.auth.forms import UserCreationForm
-from django.contrib.auth import authenticate, update_session_auth_hash
-from django.contrib.auth import login
-from .forms import UserUpdateForm, ProfileUpdateForm
-from django.contrib.auth.decorators import login_required
-from django.contrib.auth.decorators import user_passes_test
-from xsite.models import Product,Profile
-from django.contrib.auth.decorators import login_required
-from django.contrib import messages
-from xsite.models import Product, Cart, CartItem,Order,OrderItem, Rating
-import json
-from django.http import JsonResponse
+from django.core.exceptions import ObjectDoesNotExist
 from django.views.decorators.csrf import csrf_exempt
-from .forms import UserProfileUpdateForm,RatingForm,UserForm, ProfileForm,RegisterForm
-from decimal import Decimal
+from django.http.response import HttpResponse
+from django.http import JsonResponse
+from django.contrib import messages
 from django.db.models import Avg
 from django.db import models
-from django.core.exceptions import ObjectDoesNotExist
+from decimal import Decimal
+import json
 
+
+def order_items_view(request):
+    order_items = OrderItem.objects.filter(order__user=request.user)
+    return render(request, 'template_name.html', {'order_items': order_items})
 
 def product_detail(request, product_id):
     product = get_object_or_404(Product, id=product_id)
@@ -43,10 +42,9 @@ def add_rating(request, product_id):
             rating_value = int(request.POST.get('rating'))
             comment = request.POST.get('comment')
 
-            # Değerlendirme oluştur
             Rating.objects.create(
                 product=product,
-                user=request.user,  # Kullanıcıyı buraya bağlayabilirsiniz
+                user=request.user,
                 rating=rating_value,
                 comment=comment
             )
@@ -67,7 +65,6 @@ def update_profile(request):
         data = request.POST
 
         try:
-            # Şifre değişikliği
             current_password = data.get('current_password')
             new_password = data.get('new_password')
 
@@ -77,12 +74,10 @@ def update_profile(request):
 
                 user.set_password(new_password)
 
-            # Diğer profil bilgilerini güncelle
             user.username = data.get('username', user.username)
             user.email = data.get('email', user.email)
             user.profile.bio = data.get('bio', user.profile.bio)
 
-            # Değişiklikleri kaydet
             user.save()
             user.profile.save()
 
@@ -102,7 +97,6 @@ def update_cart_item(request, item_id):
             cart_item = CartItem.objects.get(id=item_id)
 
             if quantity <= 0:
-                # Remove the item if quantity is 0
                 cart_item.delete()
                 return JsonResponse({'success': True, 'message': 'Item removed from cart'})
 
@@ -195,7 +189,6 @@ def profile_view(request):
 @user_passes_test(lambda u: u.profile.is_authorized)
 def add_product(request):
     if request.method == 'POST':
-        # Ürün formu burada oluşturulabilir
         name = request.POST.get('name')
         description = request.POST.get('description')
         price = request.POST.get('price')
@@ -214,19 +207,16 @@ def delete_product(request, product_id):
 def update_profile(request):
     if request.method == 'POST':
         try:
-            # Form verilerini al
             username = request.POST.get('username')
             email = request.POST.get('email')
             bio = request.POST.get('bio')
             profile_picture = request.FILES.get('profile_picture')
 
-            # Kullanıcıyı güncelle
             user = request.user
             user.username = username
             user.email = email
             user.save()
 
-            # Profil fotoğrafı ve biyografi güncelle
             profile = user.profile
             profile.bio = bio
             if profile_picture:
@@ -294,7 +284,11 @@ def information(request):
     return render(request, 'xsite/information.html',context)
 
 def bag(request):
-    context={}
+    purchased_items = OrderItem.objects.filter(order__user=request.user).select_related('product')
+
+    context = {
+        'products': [item.product for item in purchased_items],
+    }
     return render(request, 'xsite/bag.html',context)
 
 def book_view(request, product_id):

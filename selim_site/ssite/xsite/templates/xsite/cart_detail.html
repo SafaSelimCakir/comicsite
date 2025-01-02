@@ -33,7 +33,6 @@
                     <p>Adet: <span class="item-quantity">{{ item.quantity }}</span></p>
                 </div>
                 <div class="cart-item-actions">
-                    <!-- Add/Remove buttons -->
                     <button class="item-button" onclick="updateQuantity('{{ item.id }}', 'increase')">+</button>
                     <button class="item-button decrease" onclick="updateQuantity('{{ item.id }}', 'decrease')" {% if item.quantity == 1 %}disabled{% else %}enable{% endif %}>-</button>
                     <a href="{% url 'remove_from_cart' item.id %}" class="remove-button">Kaldır</a>
@@ -53,7 +52,7 @@
             <div class="payment-options" style="margin-top: 20px;">
                 <h4>Ödeme Seçenekleri:</h4>
                 <label style="color: whitesmoke;">
-                    <input type="radio" name="payment_method" value="card" onchange="toggleCardFields(true)">
+                    <input required="required" type="radio" name="payment_method" value="card" onchange="toggleCardFields(true)">
                     Kart ile Ödeme
                 </label>
             </div>
@@ -77,21 +76,21 @@
                     <div style="display: flex; justify-content: space-between; gap: 10px;">
                         <div style="flex: 1;">
                             <label class="card-text" for="cardNumber">Kart Numarası:</label>
-                            <input maxlength="16" class="card-input" type="text" name="card_number" id="cardNumber" placeholder="1234 5678 9012 3456" oninput="updateCardNumber(this.value)">
+                            <input required="required" maxlength="16" class="card-input" type="text" name="card_number" id="cardNumber" placeholder="1234 5678 9012 3456" oninput="updateCardNumber(this.value)">
                         </div>
                         <div style="flex: 1;">
                             <label class="card-text" for="cardHolderName">Kart Sahibi Adı:</label>
-                            <input class="card-input" type="text" name="card_holder_name" id="cardHolderName" placeholder="Ad Soyad" oninput="updateCardHolderName(this.value)">
+                            <input required="required" class="card-input" type="text" name="card_holder_name" id="cardHolderName" placeholder="Ad Soyad" oninput="updateCardHolderName(this.value)">
                         </div>
                     </div>
                     <div style="display: flex; justify-content: space-between; gap: 10px;">
                         <div style="flex: 1;">
                             <label class="card-text" for="expiryDate">Son Kullanma Tarihi:</label>
-                            <input maxlength="4" class="card-input" type="text" name="expiry_date" id="expiryDate" placeholder="MM/YY" oninput="updateExpiryDate(this.value)">
+                            <input required="required" maxlength="4" class="card-input" type="text" name="expiry_date" id="expiryDate" placeholder="MM/YY" oninput="updateExpiryDate(this.value)">
                         </div>
                         <div style="flex: 1;">
                             <label class="card-text" for="cvv">CVV:</label>
-                            <input maxlength="3" class="card-input" type="text" name="cvv" id="cvv" placeholder="123">
+                            <input required="required" maxlength="3" class="card-input" type="text" name="cvv" id="cvv" placeholder="123">
                         </div>
                     </div>
                 </div>

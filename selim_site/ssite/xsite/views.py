@@ -6,27 +6,30 @@ from django.views.generic import TemplateView,DetailView
 from ssite.forms import RegisterForm
 from django.views.generic.edit import FormView
 from django.contrib.auth import login, authenticate
-
+from django.db.models import Q
 from django.contrib.auth.views import LoginView
+from django.http import JsonResponse
+from django.views import View
+
 
 class CustomLoginView(LoginView):
     template_name = 'xsite/login.html'
 
 class BookDetailView(DetailView):
-    model = Product  # Hangi modelin detayını göstereceğimizi belirtiyoruz
-    template_name = 'xsite/book.html'  # Kullanılacak şablon dosyasının adı
-    context_object_name = 'product'  # Şablonda kullanılacak nesne adı (varsayılan 'object' yerine 'product' olarak kullanacağız)
+    model = Product  
+    template_name = 'xsite/book.html'  
+    context_object_name = 'product' 
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         product = context['product']
-        context['images'] = product.images.all()  # Ürün resimlerini de ekliyoruz
+        context['images'] = product.images.all()  
         return context
 
 
 class ProductDetailView(DetailView):
     model = Product
-    template_name = 'xsite/product_detail.html'  # Oluşturacağınız HTML şablon
+    template_name = 'xsite/product_detail.html'  
     context_object_name = 'product'
 
 class CartView(ListView):
@@ -39,10 +42,34 @@ class HomeView(ListView):
     template_name = 'xsite/home.html'
     context_object_name = 'products'
 
+
+class GetQuerySetView(View):
+    def get(self, request):
+        query = request.GET.get('q')
+        if query:
+            products = Product.objects.filter(
+                Q(name__icontains=query)  
+            )
+        else:
+            products = Product.objects.all()  
+        return render(request, 'xsite/checkout.html', {'products': products})
+
+
 class CheckoutView(ListView):
     model = Product
     template_name = 'xsite/checkout.html'
     context_object_name = 'products'
+
+    def get(self, request):
+        query = request.GET.get('q')
+        if query:
+            products = Product.objects.filter(
+                Q(name__icontains=query)  
+            )
+        else:
+            products = Product.objects.all()  
+        return render(request, 'xsite/checkout.html', {'products': products})
+    
 
 class loginView(ListView):
     model = Product
