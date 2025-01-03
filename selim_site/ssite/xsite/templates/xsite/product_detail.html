@@ -22,6 +22,10 @@
             <li><h1 style="border-bottom: 3px whitesmoke solid;">{{ product.name }}</h1></li>
             <br>
             <li><h4>Yayınlayan:{{ product.owner }}</h4></li>
+            <br>
+            <li><h4>category:{% for category in product.categories.all %}
+                {{ category.name }}
+            {% endfor %}</h4></li>
             <li><h6 style="margin-top: 30px;">Değerlendirme: </h6></li>
             <br>
             <h6><li>

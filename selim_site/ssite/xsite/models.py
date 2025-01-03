@@ -39,6 +39,13 @@ class Rating(models.Model):
         return f"{self.user.username} - {self.product.name} - {self.rating}"
 
 
+class Category(models.Model):
+    name = models.CharField(max_length=100)
+
+    def __str__(self):
+        return self.name
+
+
 class Product(models.Model):
     name = models.CharField(max_length=200)
     subname = models.CharField(max_length=1000, null=True, blank=True)
@@ -46,6 +53,7 @@ class Product(models.Model):
     digital = models.BooleanField(default=False, null=True, blank=True)
     pimage = models.ImageField(upload_to='img/', null=True, blank=True)
     #pdf = models.FileField(upload_to='pdfs/', null=True, blank=True)
+    categories = models.ManyToManyField(Category, related_name='products')
     discount = models.IntegerField(default=0)  
     apply_discount = models.BooleanField(default=False, null=True, blank=True)  
     owner = models.ForeignKey(User, on_delete=models.CASCADE, default=1)
@@ -113,8 +121,7 @@ class CartItem(models.Model):
     quantity = models.PositiveIntegerField(default=1)
 
     def __str__(self):
-        return f"{self.quantity} of {self.product.name}"
-    
+        return f"{self.quantity} of {self.product.name}"    
 
 
 class Order(models.Model):
@@ -125,6 +132,7 @@ class Order(models.Model):
     def __str__(self):
         return f"Order {self.id} by {self.user.username}"
 
+
 class OrderItem(models.Model):
     order = models.ForeignKey(Order, on_delete=models.CASCADE, null=False, default=1) 
     product = models.ForeignKey('Product', on_delete=models.CASCADE, default=now)
@@ -133,8 +141,6 @@ class OrderItem(models.Model):
 
     def __str__(self):
         return f"{self.product.name} ({self.quantity})"
-
-
 
 
 class ShippingAddress(models.Model):
@@ -149,15 +155,6 @@ class ShippingAddress(models.Model):
 	def __str__(self):
 		return self.address
 
-# Create your models here.
+
 class xsite(models.Model):
-    # model alanları
     pass
-
-
-class Category(models.Model):
-    # model alanları
-    pass
-
-
-

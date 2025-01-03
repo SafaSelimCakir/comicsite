@@ -1,5 +1,4 @@
 {% extends 'xsite/cart.html' %}
-
 {% block content %}
 {% load static %}
 
@@ -10,7 +9,6 @@
         <div class="profile-header">
             <h2>{{ user.username }}'in Profil Bilgileri</h2>
         </div>
-
         <div class="profile-info">
             <form id="profileForm" method="POST" class="profile-form" enctype="multipart/form-data">
                 {% csrf_token %}
@@ -22,7 +20,6 @@
                     </label>
                     <input type="file" id="profile_picture_upload" name="profile_picture" style="display:none;">
                 </div>
-
                 <div class="form-group">
                     <label for="username">Kullanıcı Adı:</label>
                     <input type="text" id="username" class="form-input" value="{{ user.username }}">
@@ -35,7 +32,6 @@
                     <label for="bio">Biyografi:</label>
                     <textarea id="bio" class="form-textarea">{{ user.profile.bio }}</textarea>
                 </div>
-                
                 <div class="form-group">
                     <label for="current_password">Mevcut Şifre</label>
                     <input type="password" id="current_password" class="form-input"
@@ -52,15 +48,11 @@
                 </div>
                 <div class="form-actions">
                     <button type="button" id="changePasswordButton" class="save-btn">Şifreyi Güncelle</button>
-
-                    
                 </div>
-
             </form>
         </div>
     </div>
 </div>
-
 
 <script>
     document.addEventListener('DOMContentLoaded', function () {

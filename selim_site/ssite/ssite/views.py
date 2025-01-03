@@ -1,5 +1,5 @@
 from .forms import UserProfileUpdateForm,RatingForm,UserForm, ProfileForm,RegisterForm,UserUpdateForm, ProfileUpdateForm
-from xsite.models import Product, Cart, CartItem,Order,OrderItem, Rating,Product,Profile
+from xsite.models import Product, Cart, CartItem,Order,OrderItem, Rating,Product,Profile,Category
 from django.contrib.auth import authenticate, update_session_auth_hash,login
 from django.contrib.auth.decorators import login_required,user_passes_test
 from django.shortcuts import render, redirect, get_object_or_404
@@ -13,6 +13,29 @@ from django.db.models import Avg
 from django.db import models
 from decimal import Decimal
 import json
+
+
+def categorized_products(request):
+    categories = Category.objects.prefetch_related('products').all()
+    return render(request, 'checkout.html', {'categories': categories})
+
+
+def get_queryset(request):
+    query = request.GET.get('q', '')
+    category_ids = request.GET.getlist('category')
+    print(categories)
+    products = Product.objects.all()
+    if query:
+        products = products.filter(name__icontains=query)
+    if category_ids:
+        products = products.filter(categories__id__in=category_ids).distinct()
+
+    categories = Category.objects.all() 
+    return render(request, 'template_name.html', {
+        'products': products,
+        'categories': categories  
+    })
+
 
 
 def order_items_view(request):
