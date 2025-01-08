@@ -17,6 +17,18 @@
 		{% endfor %}
 	</ul>
 	
+	<form method="get" action="{% url 'get_queryset' %}">
+		<select name="category">
+			<option value="">Tüm Kategoriler</option>
+			{% for category in categories %}
+				<option value="{{ category.id }}">{{ category.name }}</option>
+			{% empty %}
+				<option value="">Kategori bulunamadı.</option>
+			{% endfor %}
+		</select>
+		
+		<button type="submit">Filtrele</button>
+	</form>
 	
 	<form method="get" action="{% url 'get_queryset' %}">
 		<select name="category">

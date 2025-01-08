@@ -21,6 +21,7 @@ def categorized_products(request):
 
 
 def get_queryset(request):
+    categories = Category.objects.all()
     query = request.GET.get('q', '')
     category_ids = request.GET.getlist('category')
     print(categories)
@@ -31,16 +32,19 @@ def get_queryset(request):
         products = products.filter(categories__id__in=category_ids).distinct()
 
     categories = Category.objects.all() 
-    return render(request, 'template_name.html', {
+    return render(request, 'checkout.html', {
         'products': products,
         'categories': categories  
     })
 
+def categorized_products_view(request):
+    categories = Category.objects.all()  # Tüm kategorileri getir
+    return render(request, 'categorized_products.html', {'categories': categories})
 
 
 def order_items_view(request):
     order_items = OrderItem.objects.filter(order__user=request.user)
-    return render(request, 'template_name.html', {'order_items': order_items})
+    return render(request, 'order_confirmation.html', {'order_items': order_items})
 
 def product_detail(request, product_id):
     product = get_object_or_404(Product, id=product_id)

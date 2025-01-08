@@ -20,7 +20,7 @@
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
     <link rel="stylesheet" href="{% static 'css/main.css'%}">
     <div style="padding-bottom: 20px ;">
-      <nav class="navbar sticky-top navbar-expand-lg navbar-light bg-dark text-white" style="border-radius: 20px;box-shadow: rgba(0, 0, 0, 0.35) 0px 5px 15px;">
+      <nav class="navbar sticky-top navbar-expand-lg navbar-light bg-dark text-white" style="border-radius:2px 2px 20px 20px ;box-shadow: rgba(0, 0, 0, 0.35) 0px 5px 15px;">
           <div class="container-fluid" style="height: 55px;">
             <a class="navbar-brand" href="{% url 'home' %}" style="font-size: 26px;font-family: 'Trebuchet MS', 'Lucida Sans Unicode', 'Lucida Grande', 'Lucida Sans', Arial, sans-serif;"><img style="width: 110px;" src="{% static 'img/logo.png'%}" alt="First slide"></a>
             <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNavDropdown" aria-controls="navbarNavDropdown" aria-expanded="false" aria-label="Toggle navigation">
@@ -69,32 +69,10 @@
       
       <div style="z-index: 0; position: relative; width: 100%;">
         <div id="snow-container"></div>
-        <img
-            style="height: 80px; width: 150px; animation: santaMove 2s ease-in-out infinite;margin-left: 82%;"
-            class="top-right-image"
-            src="{% static 'img/santa.png' %}">
+        
     </div>
 
 <style>
-  @keyframes santaMove {
-    0% {
-        transform: translate(0, 0);
-        transform: translateX(0);
-        transform: translateY(0);
-    }
-    50% {
-        transform: translate(20px, -20px);
-        transform: translateX(20px);
-        transform: translateY(-20px);
-    }
-    100% {
-        transform: translate(0, 0);
-        transform: translateX(0);
-        transform: translateY(0);
-    }
-}
-
-
   #snow-container {
     position: fixed;
     top: 0;
@@ -134,114 +112,62 @@
 </div>
 
 
-<!-- Footer -->
 <footer class="text-center text-lg-start bg-body-dark text-muted-tertiary" style="color: #ffffff;">
-    <!-- Section: Social media -->
-    <section class="d-flex justify-content-center justify-content-lg-between p-4 border-bottom">
-      <!-- Left -->
-      <div class="me-5 d-none d-lg-block">
-      </div>
-      <!-- Left -->
-  
-      <!-- Right -->
+  <section class="d-flex justify-content-center justify-content-lg-between p-4 border-bottom">
+      <div class="me-5 d-none d-lg-block"></div>
       <div>
-        <a href="" class="me-4 text-reset">
-            <i class="bi bi-twitter-x"></i>
-        </a>
-        <a href="" class="me-4 text-reset">
-            <i class="bi bi-google"></i>
-        </a>
-        <a href="" class="me-4 text-reset">
-          <i class="bi bi-instagram"></i>
-        </a>
-        <a href="" class="me-4 text-reset">
-            <i class="bi bi-linkedin"></i>
-        </a>
-        <a href="" class="me-4 text-reset">
-            <i class="bi bi-github"></i>
-        </a>
+          <a href="https://twitter.com" class="me-4 text-reset">
+              <i class="bi bi-twitter"></i>
+          </a>
+          <a href="https://google.com" class="me-4 text-reset">
+              <i class="bi bi-google"></i>
+          </a>
+          <a href="https://instagram.com" class="me-4 text-reset">
+              <i class="bi bi-instagram"></i>
+          </a>
+          <a href="https://linkedin.com" class="me-4 text-reset">
+              <i class="bi bi-linkedin"></i>
+          </a>
+          <a href="https://github.com" class="me-4 text-reset">
+              <i class="bi bi-github"></i>
+          </a>
       </div>
-      <!-- Right -->
-    </section>
-    <!-- Section: Social media -->
-  
-    <!-- Section: Links  -->
-    <section class="">
+  </section>
+  <section>
       <div class="container text-center text-md-start mt-5">
-        <!-- Grid row -->
-        <div class="row mt-3">
-          <!-- Grid column -->
-          <div class="col-md-3 col-lg-4 col-xl-3 mx-auto mb-4">
-            <!-- Content -->
-            <h6 class="text-uppercase fw-bold mb-4">LOGO</h6>
-            <p>
-              Here you can use rows and columns to organize your footer content. Lorem ipsum
-              dolor sit amet, consectetur adipisicing elit.
-            </p>
+          <div class="row mt-3">
+              <div class="col-md-3 col-lg-4 col-xl-3 mx-auto mb-4">
+                  <h6 class="text-uppercase fw-bold mb-4">Krypon Comic</h6>
+                  <p>
+                      En sevdiğiniz çizgi romanları keşfetmek ve satın almak için en iyi yer!
+                  </p>
+              </div>
+              <div class="col-md-2 col-lg-2 col-xl-2 mx-auto mb-4">
+                  <h6 class="text-uppercase fw-bold mb-4">Ürünler</h6>
+                  {% for product in latest_products %}
+                      <p><a href="{% url 'product-detail' product.id %}" class="text-reset">{{ product.name }}</a></p>
+                  {% empty %}
+                      <p>Henüz ürün yok.</p>
+                  {% endfor %}
+              </div>
+              <div class="col-md-3 col-lg-2 col-xl-2 mx-auto mb-4">
+                  <h6 class="text-uppercase fw-bold mb-4">Faydalı Linkler</h6>
+                  <p><a href="" class="text-reset">Fiyatlandırma</a></p>
+                  <p><a href="{% url 'profile' %}" class="text-reset">Ayarlar</a></p>
+                  <p><a href="{% url 'checkout' %}" class="text-reset">Siparişler</a></p>
+                  <p><a href="" class="text-reset">Yardım</a></p>
+              </div>
+              <div class="col-md-4 col-lg-3 col-xl-3 mx-auto mb-md-0 mb-4">
+                  <h6 class="text-uppercase fw-bold mb-4">İletişim</h6>
+                  <p><i class="bi bi-geo-alt-fill"></i> İstanbul, Türkiye</p>
+                  <p><i class="bi bi-envelope-fill"></i> info@kryponcomic.com</p>
+                  <p><i class="bi bi-telephone-fill"></i> +90 212 345 67 89</p>
+              </div>
           </div>
-          <!-- Grid column -->
-  
-          <!-- Grid column -->
-          <div class="col-md-2 col-lg-2 col-xl-2 mx-auto mb-4">
-            <!-- Links -->
-            <h6 class="text-uppercase fw-bold mb-4">
-              Products
-            </h6>
-            <p>
-              <a href="#!" class="text-reset">Angular</a>
-            </p>
-            <p>
-              <a href="#!" class="text-reset">React</a>
-            </p>
-            <p>
-              <a href="#!" class="text-reset">Vue</a>
-            </p>
-            <p>
-              <a href="#!" class="text-reset">Laravel</a>
-            </p>
-          </div>
-          <!-- Grid column -->
-  
-          <!-- Grid column -->
-          <div class="col-md-3 col-lg-2 col-xl-2 mx-auto mb-4">
-            <!-- Links -->
-            <h6 class="text-uppercase fw-bold mb-4">
-              Useful links
-            </h6>
-            <p>
-              <a href="#!" class="text-reset">Pricing</a>
-            </p>
-            <p>
-              <a href="#!" class="text-reset">Settings</a>
-            </p>
-            <p>
-              <a href="#!" class="text-reset">Orders</a>
-            </p>
-            <p>
-              <a href="#!" class="text-reset">Help</a>
-            </p>
-          </div>
-          <!-- Grid column -->
-  
-          <!-- Grid column -->
-          <div class="col-md-4 col-lg-3 col-xl-3 mx-auto mb-md-0 mb-4">
-            <!-- Links -->
-            <h6 class="text-uppercase fw-bold mb-4">Contact</h6>
-            <p><i class="bi bi-geo-alt-fill"></i> New York, NY 10012, US</p>
-            <p>
-                <i class="bi bi-envelope-fill"></i>
-              info@example.com
-            </p>
-            <p><i class="bi bi-telephone-fill"></i> + 01 234 567 88</p>
-          </div>
-          <!-- Grid column -->
-        </div>
-        <!-- Grid row -->
       </div>
-    </section>
-    <!-- Section: Links  -->
-  </footer>
-  <!-- Footer -->
+  </section>
+</footer>
+
 
   <script>
     const snowContainer = document.getElementById('snow-container');

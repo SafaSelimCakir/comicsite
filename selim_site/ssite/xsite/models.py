@@ -63,9 +63,6 @@ class Product(models.Model):
 
     @property
     def discounted_price(self):
-        """
-        Calculate and return the discounted price if the discount is active.
-        """
         if self.apply_discount and self.discount > 0:
             return round(Decimal(self.price) * Decimal(1 - self.discount / 100), 2)
         return self.price

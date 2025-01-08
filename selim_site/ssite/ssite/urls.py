@@ -20,7 +20,7 @@ from . import views
 from django.conf import settings
 from django.conf.urls.static import static
 from .views import register
-from .views import profile_view, api_add_to_cart, remove_from_cart
+from .views import profile_view, api_add_to_cart, remove_from_cart,categorized_products_view
 from django.contrib.auth.views import LogoutView
 from .views import cart_detail,update_cart_item,update_profile,ordercheckout,product_detail
 from xsite.models import Rating
@@ -42,7 +42,7 @@ urlpatterns = [
     path('', include('django.contrib.auth.urls')),
     path('profile/', profile_view, name='profile'),
     path('update-profile/', views.update_profile, name='update_profile'),
-
+    path('checkout/', views.categorized_products_view, name='checkout'), 
     path('profile/edit/', update_profile, name='edit_profile'),
     path('api/update_cart_item/<int:item_id>/', update_cart_item, name='update_cart_item'),
     path('api/add-to-cart/<int:product_id>/', views.api_add_to_cart, name='api_add_to_cart'),
