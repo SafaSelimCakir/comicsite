@@ -49,4 +49,5 @@ urlpatterns = [
     path('cartd/', views.cart_detail, name='cart_detail'),
     path('remove-from-cart/<int:item_id>/', views.remove_from_cart, name='remove_from_cart'),
     path('ratings/', include('star_ratings.urls', namespace='ratings')),
+    path('<slug:slug>/', views.product_detail, name='product_detail'),
 ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

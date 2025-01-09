@@ -12,8 +12,8 @@ from django.contrib import messages
 from django.db.models import Avg
 from django.db import models
 from decimal import Decimal
-import json
-
+import json  
+from .forms import CommentForm
 
 def categorized_products(request):
     categories = Category.objects.prefetch_related('products').all()
@@ -38,7 +38,7 @@ def get_queryset(request):
     })
 
 def categorized_products_view(request):
-    categories = Category.objects.all()  # Tüm kategorileri getir
+    categories = Category.objects.all()  
     return render(request, 'categorized_products.html', {'categories': categories})
 
 
@@ -48,16 +48,30 @@ def order_items_view(request):
 
 def product_detail(request, product_id):
     product = get_object_or_404(Product, id=product_id)
-    
+    comments = product.comments.filter(active=True)
+    new_comment = None  
+    comment_form = CommentForm()
+    if request.method == 'POST' and 'comment_form' in request.POST:
+        comment_form = CommentForm(data=request.POST)
+        if comment_form.is_valid():
+            new_comment = comment_form.save(commit=False)
+            new_comment.product = product
+            new_comment.save()
+    else:
+        comment_form = CommentForm()
+
     ratings = Rating.objects.filter(product=product)
-    
     average_rating = ratings.aggregate(Avg('rating'))['rating__avg'] or 0
 
     context = {
         'product': product,
+        'comments': comments,
+        'new_comment': new_comment,
+        'comment_form': comment_form,
         'ratings': ratings,
         'average_rating': round(average_rating, 2),
     }
+    
     return render(request, 'product_detail.html', context)
 
 
@@ -312,9 +326,12 @@ def information(request):
 
 def bag(request):
     purchased_items = OrderItem.objects.filter(order__user=request.user).select_related('product')
-
+    digital_products = Product.objects.annotate(
+        average_rating=Avg('ratings__rating')
+    ).order_by('-average_rating')[:4]
     context = {
         'products': [item.product for item in purchased_items],
+        'digital_products': digital_products,
     }
     return render(request, 'xsite/bag.html',context)
 

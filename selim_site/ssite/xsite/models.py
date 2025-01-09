@@ -5,6 +5,8 @@ from PIL import Image
 import fitz  # PyMuPDF
 import os
 from django.utils.timezone import now
+from django.utils.text import slugify
+from djmoney.models.fields import MoneyField
 
 
 class Profile(models.Model):
@@ -49,7 +51,8 @@ class Category(models.Model):
 class Product(models.Model):
     name = models.CharField(max_length=200)
     subname = models.CharField(max_length=1000, null=True, blank=True)
-    price = models.FloatField()  
+    CURRENCY_CHOICES = [('TRY', 'Türk Lirası'), ('USD', 'Amerikan Doları')]
+    price = MoneyField(max_digits=10, decimal_places=2, default_currency='TRY', currency_choices=CURRENCY_CHOICES)
     digital = models.BooleanField(default=False, null=True, blank=True)
     pimage = models.ImageField(upload_to='img/', null=True, blank=True)
     #pdf = models.FileField(upload_to='pdfs/', null=True, blank=True)
@@ -57,15 +60,21 @@ class Product(models.Model):
     discount = models.IntegerField(default=0)  
     apply_discount = models.BooleanField(default=False, null=True, blank=True)  
     owner = models.ForeignKey(User, on_delete=models.CASCADE, default=1)
+    slug = models.SlugField(unique=True, blank=True, null=True)
+
+    def save(self, *args, **kwargs):
+        if not self.slug:
+            self.slug = slugify(self.name)  
+        super().save(*args, **kwargs)
 
     def __str__(self):
         return self.name
 
-    @property
-    def discounted_price(self):
-        if self.apply_discount and self.discount > 0:
-            return round(Decimal(self.price) * Decimal(1 - self.discount / 100), 2)
-        return self.price
+    #@property
+    #def discounted_price(self):
+    #    if self.apply_discount and self.discount > 0:
+    #        return round(Decimal(self.price) * Decimal(1 - self.discount / 100), 2)
+    #    return self.price
     
 
     @property
@@ -155,3 +164,18 @@ class ShippingAddress(models.Model):
 
 class xsite(models.Model):
     pass
+
+
+class Comment(models.Model):
+    post = models.ForeignKey(Product, on_delete=models.CASCADE, related_name='comments')
+    name = models.CharField(max_length=80)
+    email = models.EmailField()
+    body = models.TextField()
+    created_on = models.DateTimeField(auto_now_add=True)
+    active = models.BooleanField(default=False)
+
+    class Meta:
+        ordering = ['created_on']
+
+    def __str__(self):
+        return 'Comment {} by {}'.format(self.body, self.name)

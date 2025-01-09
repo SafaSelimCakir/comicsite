@@ -7,6 +7,14 @@ from django.contrib.auth.forms import PasswordChangeForm
 from django.contrib.auth import authenticate
 from django import forms
 from .models import Rating
+from .models import Comment
+from django import forms
+
+class CommentForm(forms.ModelForm):
+    class Meta:
+        model = Comment
+        fields = ('name', 'email', 'body')
+
 
 class RatingForm(forms.ModelForm):
     class Meta:

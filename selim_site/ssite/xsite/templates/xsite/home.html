@@ -22,15 +22,13 @@
   </figure>
 </div>
   
-
-        
 <div class="row">
   {% for product in digital_products %}
   <div class="col-lg-3" style="margin-top: 30px;">
     <div class="card bg-dark text-white" style="width:250px;border: none;box-shadow: rgba(0, 0, 0, 0.17) 0px -23px 25px 0px inset, rgba(0, 0, 0, 0.15) 0px -36px 30px 0px inset, rgba(0, 0, 0, 0.1) 0px -79px 40px 0px inset, rgba(0, 0, 0, 0.06) 0px 2px 1px, rgba(0, 0, 0, 0.09) 0px 4px 2px, rgba(0, 0, 0, 0.09) 0px 8px 4px, rgba(0, 0, 0, 0.09) 0px 16px 8px, rgba(0, 0, 0, 0.09) 0px 32px 16px;">
       <div class="img-container">
-        <a href="{% url 'product-detail' product.id %}">
-          <img class="card-img-top" style="height: 340px;width: 250px;border-radius: 8px;"  src="{{ product.pimageURL }}" alt="{{ product.name }}">
+        <a href="{% url 'product_detail' product.slug %}">
+          <img class="card-img-top" style="height: 340px;width: 250px;border-radius: 8px;" src="{{ product.pimageURL }}" alt="{{ product.name }}">
         </a>
         <p style="font-size:15px;" class="overlay">Detaylar için tıklayın</p>
       </div>
@@ -39,59 +37,55 @@
         <div class="price-and-button">
           <p class="card-text">
             {% if product.apply_discount %}
-              <span style="text-decoration: line-through; color: gray;">${{ product.price }}</span>
-              <span style="color: red;">${{ product.discounted_price }}</span>
+              <span style="text-decoration: line-through; color: gray;">{{ product.price }}</span>
+              <span style="color: red;">{{ product.discounted_price }}</span>
             {% else %}
-              ${{ product.price }}
+              {{ product.price }}
             {% endif %}
-            
           </p>
+          <p class="card-text">
+            Ortalama Puan: {{ product.average_rating|default:"0" }}
+        </p>
+        
           <button 
-						class="css-scan-edited-element-0" 
-						style="height: 30px; width: 135px;"
-						id="add-to-cart-button-{{ product.id }}">
-							sepete ekle
+            class="css-scan-edited-element-0" 
+            style="height: 30px; width: 135px;"
+            id="add-to-cart-button-{{ product.id }}">
+              Sepete Ekle
               <span id="cart-message-{{ product.id }}" style="color: green; display: none;">Eklendi</span>
-						</button>
+          </button>
           
-
-            <script>
-							document.getElementById('add-to-cart-button-{{ product.id }}').addEventListener('click', function() {
-								const productId = "{{ product.id }}";
-								const url = '{% url "api_add_to_cart" product.id %}';
-							
-
-								fetch(url, {
-									method: 'GET', // Use 'POST' if you secure this API later
-									headers: {
-										'X-Requested-With': 'XMLHttpRequest', // Helps to identify this as an AJAX request
-									},
-								})
-								.then(response => response.json())
-								.then(data => {
-									if (data.success) {
-										const message = document.getElementById('cart-message-{{ product.id }}');
-										message.style.display = 'inline';
-										setTimeout(() => {
-											message.style.display = 'none';
-										}, 2000); // Hide the message after 2 seconds
-									} else {
-										alert('Ürün sepete eklenemedi!');
-									}
-								})
-								.catch(error => console.error('Error:', error));
-							});
-						</script>
+          <script>
+            document.getElementById('add-to-cart-button-{{ product.id }}').addEventListener('click', function() {
+              const productId = "{{ product.id }}";
+              const url = '{% url "api_add_to_cart" product.id %}';
+              
+              fetch(url, {
+                method: 'GET',
+                headers: {
+                  'X-Requested-With': 'XMLHttpRequest', 
+                },
+              })
+              .then(response => response.json())
+              .then(data => {
+                if (data.success) {
+                  const message = document.getElementById('cart-message-{{ product.id }}');
+                  message.style.display = 'inline';
+                  setTimeout(() => {
+                    message.style.display = 'none';
+                  }, 2000); 
+                } else {
+                  alert('Ürün sepete eklenemedi!');
+                }
+              })
+              .catch(error => console.error('Error:', error));
+            });
+          </script>
         </div>
       </div>
     </div>
   </div>
   {% endfor %}
-  
 </div>
 
-
-
 {% endblock content %}
-</body>
-</html>
