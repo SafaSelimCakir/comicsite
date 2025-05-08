@@ -67,44 +67,10 @@
 
       
       
-      <div style="z-index: 0; position: relative; width: 100%;">
-        <div id="snow-container"></div>
+      
         
     </div>
 
-<style>
-  #snow-container {
-    position: fixed;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    pointer-events: none;
-    overflow: hidden;
-    z-index: 1000;
-}
-
-.snowflake {
-    position: absolute;
-    top: -10px;
-    color: white;
-    font-size: 10px;
-    user-select: none;
-    animation: fall linear infinite;
-}
-
-@keyframes fall {
-    0% {
-        transform: translateY(0) rotate(0deg);
-        opacity: 1;
-    }
-    100% {
-        transform: translateY(100vh) rotate(360deg);
-        opacity: 0;
-    }
-}
-
-</style>
 <div class="container">
     {% block content %}
 

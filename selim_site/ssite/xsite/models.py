@@ -73,7 +73,7 @@ class Product(models.Model):
     #@property
     #def discounted_price(self):
     #    if self.apply_discount and self.discount > 0:
-    #        return round(Decimal(self.price) * Decimal(1 - self.discount / 100), 2)
+    #        return round(float(self.price) * (1 - self.discount / 100), 2)
     #    return self.price
     
 

@@ -4,7 +4,7 @@ from xsite import views
 from django.conf.urls.static import static
 from django.conf import settings
 from .views import CartView, HomeView, CheckoutView,informationView,bagView,loginView,BookDetailView,ProductDetailView,GetQuerySetView
-from .views import RegisterView, CustomLoginView
+from .views import RegisterView, CustomLoginView ,OrderCheckoutView ,PaymentReturnView
 from django.views.generic.base import RedirectView
 
 
@@ -19,7 +19,8 @@ urlpatterns = [
     path('register/', RegisterView.as_view(), name='register'),
     path('product/<int:pk>/', ProductDetailView.as_view(), name='product-detail'),
     path('checkout/get_queryset/', GetQuerySetView.as_view(), name='get_queryset'),
-    
+    path('ordercheckout/', OrderCheckoutView.as_view(), name='ordercheckout'),
+    path('payment/return/', PaymentReturnView.as_view(), name='payment_return'),
 ]
 urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
 

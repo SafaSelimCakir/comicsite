@@ -172,7 +172,39 @@
     }
 </style>
 
+<script src="https://js.stripe.com/v3/"></script>
 <script>
+const stripe = Stripe('{{ pk_test_51RKDReEHV4Cg2qzC63ohva7LMtTMpdvX5Ml8P7sMnbxQmSagpYlPfMZ3C0ssOj8AWYUmaJEHc8fmGZUilonGOzwv00cINO9izj }}');
+    const elements = stripe.elements();
+    const cardElement = elements.create('card');
+    cardElement.mount('#card-element');
+
+    const form = document.querySelector('form');
+    form.addEventListener('submit', async (event) => {
+        event.preventDefault();
+
+        const { paymentMethod, error } = await stripe.createPaymentMethod({
+            type: 'card',
+            card: cardElement,
+            billing_details: {
+                name: document.getElementById('cardHolderName').value,
+            },
+        });
+
+        if (error) {
+            console.error(error);
+            alert(error.message);
+        } else {
+            // Ödeme yöntemini forma ekle
+            const hiddenInput = document.createElement('input');
+            hiddenInput.setAttribute('type', 'hidden');
+            hiddenInput.setAttribute('name', 'payment_method_id');
+            hiddenInput.setAttribute('value', paymentMethod.id);
+            form.appendChild(hiddenInput);
+            form.submit();
+        }
+    });
+
     function updateCardNumber(value) {
     const display = document.getElementById('cardNumberDisplay');
     const formattedValue = value.replace(/\D/g, '').replace(/(.{4})/g, '$1 ').trim(); 
