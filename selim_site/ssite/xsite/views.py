@@ -15,8 +15,11 @@ from django.contrib import messages
 from .models import Cart, CartItem, Order, OrderItem, Product
 from django.db import transaction
 import stripe
+import logging
 from django.conf import settings
+from decimal import Decimal
 
+logger = logging.getLogger(__name__)
 stripe.api_key = settings.STRIPE_SECRET_KEY
 
 class CustomLoginView(LoginView):
@@ -110,61 +113,78 @@ class bagView(LoginRequiredMixin, ListView):
     def get_queryset(self):
         user_orders = Order.objects.filter(user=self.request.user)
         products = Product.objects.filter(orderitem__order__in=user_orders).distinct()
+        logger.info(f"User {self.request.user.username} library query returned {products.count()} products")
         return products
     
 
 class OrderCheckoutView(LoginRequiredMixin, View):
     def post(self, request):
-        cart = Cart.objects.get(user=request.user)
-        cart_items = cart.items.all()
-
-        if not cart_items:
-            messages.error(request, "Sepetiniz boş.")
-            return redirect('cart')
-
-        total_price = sum(
-            item.product.discounted_price if item.product.apply_discount else item.product.price.amount
-            for item in cart_items
-        )
-
         try:
+            cart = Cart.objects.get(user=request.user)
+            cart_items = cart.items.all()
+
+            if not cart_items:
+                messages.error(request, "Sepetiniz boş.")
+                logger.warning(f"User {request.user.username} attempted checkout with empty cart.")
+                return redirect('cart')
+
+            # Toplam fiyatı hesapla
+            total_price = sum(
+                Decimal(str(item.product.discounted_price if item.product.apply_discount else item.product.price.amount))
+                for item in cart_items
+            )
+            logger.info(f"Total price calculated: {total_price} for user {request.user.username}")
+
+            payment_method_id = request.POST.get('payment_method_id')
+            if not payment_method_id:
+                messages.error(request, "Ödeme yöntemi sağlanmadı.")
+                logger.error(f"No payment method provided for user {request.user.username}")
+                return redirect('cart')
+
             # Stripe PaymentIntent oluştur
             payment_intent = stripe.PaymentIntent.create(
                 amount=int(total_price * 100),  # Cent cinsinden
                 currency='try',
-                payment_method=request.POST.get('payment_method_id'),
+                payment_method=payment_method_id,
                 confirm=True,
-                return_url='https://your-domain.com/payment/return/',  # Ödeme sonrası geri dönülecek URL
+                automatic_payment_methods={
+                    'enabled': True,
+                    'allow_redirects': 'never',
+                },
             )
+            logger.info(f"PaymentIntent created: {payment_intent.id} for user {request.user.username}")
 
-            # Ödeme durumunu kontrol et
-            if payment_intent.status == 'requires_action':
-                # Yönlendirme gerekiyorsa, kullanıcıyı Stripe'ın ödeme sayfasına yönlendir
-                return redirect(payment_intent.next_action.redirect_to_url.url)
-
-            # Ödeme başarılıysa siparişi kaydet
+            # Ödeme başarılıysa veritabanı işlemlerini gerçekleştir
             with transaction.atomic():
                 order = Order.objects.create(
                     user=request.user,
                     total_price=total_price,
                 )
+                logger.info(f"Order created: {order.id} for user {request.user.username}")
+
                 for item in cart_items:
                     OrderItem.objects.create(
                         order=order,
                         product=item.product,
                         quantity=item.quantity,
-                        price=item.product.discounted_price if item.product.apply_discount else item.product.price.amount
+                        price=Decimal(str(item.product.discounted_price if item.product.apply_discount else item.product.price.amount))
                     )
-                cart.items.all().delete()
+                    logger.info(f"OrderItem created for product {item.product.name} in order {order.id}")
+
+                # Sepeti temizle
+                cart_items.delete()
+                logger.info(f"Cart cleared for user {request.user.username}")
 
             messages.success(request, "Ödeme başarılı! Ürünler kütüphanenize eklendi.")
             return redirect('bag')
 
         except stripe.error.StripeError as e:
             messages.error(request, f"Ödeme hatası: {str(e)}")
+            logger.error(f"Stripe error for user {request.user.username}: {str(e)}")
             return redirect('cart')
         except Exception as e:
             messages.error(request, f"Bir hata oluştu: {str(e)}")
+            logger.error(f"General error for user {request.user.username}: {str(e)}")
             return redirect('cart')
         
 
