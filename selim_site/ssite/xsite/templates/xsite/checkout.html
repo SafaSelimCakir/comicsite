@@ -1,118 +1,129 @@
 {% extends 'xsite/cart.html' %}
 {% load static %}
 {% block content %}
-    <link rel="stylesheet" href="{% static 'css/main.css'%}">
-	<link rel="stylesheet" href="{% static 'css/card.css'%}">	
-	<link rel="stylesheet" href="{% static 'css/search.css'%}">
-	<form action="{% url 'get_queryset' %}" method="get" class="search-form">
-        <input name="q" type="text" placeholder="Search..." class="search-input">
-        <button type="submit" class="search-button">Search</button>
-    </form>
+<link rel="stylesheet" href="{% static 'css/main.css'%}">
+<link rel="stylesheet" href="{% static 'css/card.css'%}">	
+<link rel="stylesheet" href="{% static 'css/search.css'%}">
 
-	<ul>
+<form action="{% url 'get_queryset' %}" method="get" class="search-form">
+    <input name="q" type="text" placeholder="Search..." class="search-input">
+    <button type="submit" class="search-button">Search</button>
+</form>
+
+<ul>
+	{% for category in categories %}
+		<li>{{ category.name }}</li>
+	{% empty %}
+		<li>Kategori bulunamadı.</li>
+	{% endfor %}
+</ul>
+
+<form method="get" action="{% url 'get_queryset' %}">
+	<select name="category">
+		<option value="">Tüm Kategoriler</option>
 		{% for category in categories %}
-			<li>{{ category.name }}</li>
+			<option value="{{ category.id }}">{{ category.name }}</option>
 		{% empty %}
-			<li>Kategori bulunamadı.</li>
+			<option value="">Kategori bulunamadı.</option>
 		{% endfor %}
-	</ul>
-	
-	<form method="get" action="{% url 'get_queryset' %}">
-		<select name="category">
-			<option value="">Tüm Kategoriler</option>
-			{% for category in categories %}
-				<option value="{{ category.id }}">{{ category.name }}</option>
-			{% empty %}
-				<option value="">Kategori bulunamadı.</option>
-			{% endfor %}
-		</select>
-		
-		<button type="submit">Filtrele</button>
-	</form>
-	
-	<form method="get" action="{% url 'get_queryset' %}">
-		<select name="category">
-			<option value="">Tüm Kategoriler</option>
-			{% for category in categories %}
-            <option value="{{ category.id }}">{{ category.name }}</option>
-			{% endfor %}
-		</select>
-		<button type="submit">Filtrele</button>
-	</form>
+	</select>
+	<button type="submit">Filtrele</button>
+</form>
 
+<form method="get" action="{% url 'get_queryset' %}">
+	<select name="category">
+		<option value="">Tüm Kategoriler</option>
+		{% for category in categories %}
+			<option value="{{ category.id }}">{{ category.name }}</option>
+		{% endfor %}
+	</select>
+	<button type="submit">Filtrele</button>
+</form>
 
-	{% if products %}
-	<ul>
-		<div class="row">
-			{% for product in products %}
-			<div class="col-lg-3" style="margin-top: 30px;">
-				<div class="card bg-dark text-white" style="width:250px;border: none;height: 470px; box-shadow: rgba(0, 0, 0, 0.17) 0px -23px 25px 0px inset, rgba(0, 0, 0, 0.15) 0px -36px 30px 0px inset, rgba(0, 0, 0, 0.1) 0px -79px 40px 0px inset, rgba(0, 0, 0, 0.06) 0px 2px 1px, rgba(0, 0, 0, 0.09) 0px 4px 2px, rgba(0, 0, 0, 0.09) 0px 8px 4px, rgba(0, 0, 0, 0.09) 0px 16px 8px, rgba(0, 0, 0, 0.09) 0px 32px 16px;">
-					<div class="img-container">
-						<a href="{% url 'product-detail' product.id %}">
-							<img class="card-img-top" style="height: 340px;width: 250px;border-radius: 8px;"  src="{{ product.pimageURL }}" alt="{{ product.name }}">
-							<p style="font-size:15px;" class="overlay">Detaylar için tıklayın</p>
-						</a>
-					</div>
-					<div class="card-body">
-						<h5 class="card-title">{{ product.name }}</h5>
-						
-						<div class="price-and-button">
-							<p class="card-text">
-								{% if product.apply_discount %}
-									<span style="text-decoration: line-through; color: gray;">{{ product.price }}</span>
-									<span style="color: red;">{{ product.discounted_price }}</span>
-								{% else %}
-									{{ product.price }}
-								{% endif %}
-							</p>
-							<button 
+{% if products %}
+<ul>
+	<div class="row">
+		{% for product in products %}
+		<div class="col-lg-3" style="margin-top: 30px;">
+			<div class="card bg-dark text-white" style="width:250px;border: none;height: 470px; box-shadow: rgba(0, 0, 0, 0.17) 0px -23px 25px 0px inset, rgba(0, 0, 0, 0.15) 0px -36px 30px 0px inset, rgba(0, 0, 0, 0.1) 0px -79px 40px 0px inset, rgba(0, 0, 0, 0.06) 0px 2px 1px, rgba(0, 0, 0, 0.09) 0px 4px 2px, rgba(0, 0, 0, 0.09) 0px 8px 4px, rgba(0, 0, 0, 0.09) 0px 16px 8px, rgba(0, 0, 0, 0.09) 0px 32px 16px;">
+				<div class="img-container">
+					<a href="{% url 'product-detail' product.id %}">
+						<img class="card-img-top" style="height: 340px;width: 250px;border-radius: 8px;"  src="{{ product.pimageURL }}" alt="{{ product.name }}">
+						<p style="font-size:15px;" class="overlay">Detaylar için tıklayın</p>
+					</a>
+				</div>
+				<div class="card-body">
+					<h5 class="card-title">{{ product.name }}</h5>
+					
+					<div class="price-and-button">
+						<p class="card-text">
+							{% if product.apply_discount %}
+								<span style="text-decoration: line-through; color: gray;">{{ product.price }}</span>
+								<span style="color: red;">{{ product.discounted_price }}</span>
+							{% else %}
+								{{ product.price }}
+							{% endif %}
+						</p>
+
+						<button 
 							class="css-scan-edited-element-0" 
 							style="height: 30px; width: 135px;"
 							id="add-to-cart-button-{{ product.id }}">
-								sepete ekle
-								<span id="cart-message-{{ product.id }}" style="color: green; display: none; ">Eklendi</span>
-							</button>
-	
-							
-							<script>
-								document.getElementById('add-to-cart-button-{{ product.id }}').addEventListener('click', function() {
-									const productId = "{{ product.id }}";
-									const url = '{% url "api_add_to_cart" product.id %}';
-								
-	
-									fetch(url, {
-										method: 'GET', 
-										headers: {
-											'X-Requested-With': 'XMLHttpRequest',
-										},
-									})
-									.then(response => response.json())
-									.then(data => {
-										if (data.success) {
-											const message = document.getElementById('cart-message-{{ product.id }}');
-											message.style.display = 'inline';
-											setTimeout(() => {
-												message.style.display = 'none';
-											}, 2000); 
-										} else {
-											alert('Ürün sepete eklenemedi!');
-										}
-									})
-									.catch(error => console.error('Error:', error));
-								});
-							</script>
-						</div>
+							sepete ekle
+						</button>
+
+						<script>
+							document.getElementById('add-to-cart-button-{{ product.id }}').addEventListener('click', function() {
+								const url = '{% url "api_add_to_cart" product.id %}';
+								fetch(url, {
+									method: 'GET',
+									headers: {
+										'X-Requested-With': 'XMLHttpRequest',
+									},
+								})
+								.then(response => response.json())
+								.then(data => {
+									if (data.success) {
+										const popup = document.getElementById('popup-message');
+										popup.style.display = 'block';
+										setTimeout(() => {
+											popup.style.display = 'none';
+										}, 2000);
+									} else {
+										alert('Ürün sepete eklenemedi!');
+									}
+								})
+								.catch(error => console.error('Error:', error));
+							});
+						</script>
 					</div>
 				</div>
 			</div>
-			{% endfor %}
-			
 		</div>
-	
-	</ul>
+		{% endfor %}
+	</div>
+</ul>
 {% else %}
-	<h4 style="color: whitesmoke; font-family: 'Franklin Gothic Medium', 'Arial Narrow', Arial, sans-serif;">No products found.</h4>
+<h4 style="color: whitesmoke; font-family: 'Franklin Gothic Medium', 'Arial Narrow', Arial, sans-serif;">No products found.</h4>
 {% endif %}
+
+<div id="popup-message" style="
+	position: fixed;
+	top: 20px;
+	right: 20px;
+	background-color: #28a745;
+	color: white;
+	padding: 15px 25px;
+	border-radius: 8px;
+	box-shadow: 0 4px 8px rgba(0,0,0,0.2);
+	display: none;
+	z-index: 9999;
+	font-weight: bold;
+	font-family: sans-serif;
+">
+	Ürün sepete eklendi
+</div>
+
 {% endblock content %}
 </body>
 </html>

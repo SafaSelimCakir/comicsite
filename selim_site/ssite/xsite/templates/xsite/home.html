@@ -25,15 +25,16 @@
 <div class="row">
   {% for product in digital_products %}
   <div class="col-lg-3" style="margin-top: 30px;">
-    <div class="card bg-dark text-white" style="width:250px;border: none;box-shadow: rgba(0, 0, 0, 0.17) 0px -23px 25px 0px inset, rgba(0, 0, 0, 0.15) 0px -36px 30px 0px inset, rgba(0, 0, 0, 0.1) 0px -79px 40px 0px inset, rgba(0, 0, 0, 0.06) 0px 2px 1px, rgba(0, 0, 0, 0.09) 0px 4px 2px, rgba(0, 0, 0, 0.09) 0px 8px 4px, rgba(0, 0, 0, 0.09) 0px 16px 8px, rgba(0, 0, 0, 0.09) 0px 32px 16px;">
+    <div class="card bg-dark text-white" style="width:250px;border: none;height: 470px; box-shadow: rgba(0, 0, 0, 0.17) 0px -23px 25px 0px inset, rgba(0, 0, 0, 0.15) 0px -36px 30px 0px inset, rgba(0, 0, 0, 0.1) 0px -79px 40px 0px inset, rgba(0, 0, 0, 0.06) 0px 2px 1px, rgba(0, 0, 0, 0.09) 0px 4px 2px, rgba(0, 0, 0, 0.09) 0px 8px 4px, rgba(0, 0, 0, 0.09) 0px 16px 8px, rgba(0, 0, 0, 0.09) 0px 32px 16px;">
       <div class="img-container">
-        <a href="{% url 'product_detail' product.slug %}">
-          <img class="card-img-top" style="height: 340px;width: 250px;border-radius: 8px;" src="{{ product.pimageURL }}" alt="{{ product.name }}">
+        <a href="{% url 'product-detail' product.id %}">
+          <img class="card-img-top" style="height: 340px;width: 250px;border-radius: 8px;"  src="{{ product.pimageURL }}" alt="{{ product.name }}">
+          <p style="font-size:15px;" class="overlay">Detaylar için tıklayın</p>
         </a>
-        <p style="font-size:15px;" class="overlay">Detaylar için tıklayın</p>
       </div>
       <div class="card-body">
         <h5 class="card-title">{{ product.name }}</h5>
+        
         <div class="price-and-button">
           <p class="card-text">
             {% if product.apply_discount %}
@@ -43,27 +44,25 @@
               {{ product.price }}
             {% endif %}
           </p>
-          <p class="card-text">
-            Ortalama Puan: {{ product.average_rating|default:"0" }}
-        </p>
-        
           <button 
-            class="css-scan-edited-element-0" 
-            style="height: 30px; width: 135px;"
-            id="add-to-cart-button-{{ product.id }}">
-              Sepete Ekle
-              <span id="cart-message-{{ product.id }}" style="color: green; display: none;">Eklendi</span>
+          class="css-scan-edited-element-0" 
+          style="height: 30px; width: 135px;"
+          id="add-to-cart-button-{{ product.id }}">
+            sepete ekle
+            <span id="cart-message-{{ product.id }}" style="color: green; display: none; ">Eklendi</span>
           </button>
+
           
           <script>
             document.getElementById('add-to-cart-button-{{ product.id }}').addEventListener('click', function() {
               const productId = "{{ product.id }}";
               const url = '{% url "api_add_to_cart" product.id %}';
-              
+            
+
               fetch(url, {
-                method: 'GET',
+                method: 'GET', 
                 headers: {
-                  'X-Requested-With': 'XMLHttpRequest', 
+                  'X-Requested-With': 'XMLHttpRequest',
                 },
               })
               .then(response => response.json())

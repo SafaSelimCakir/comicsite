@@ -36,8 +36,8 @@
                             <div class="price-and-button">
                                 <p class="card-text">
                                     {% if product.apply_discount %}
-                                        <span style="text-decoration: line-through; color: gray;">${{ product.price }}</span>
-                                        <span style="color: red;">${{ product.discounted_price }}</span>
+                                        <span style="text-decoration: line-through; color: gray;">{{ product.price }}</span>
+                                        <span style="color: red;">{{ product.discounted_price }}</span>
                                     {% else %}
                                         ${{ product.price }}
                                     {% endif %}
@@ -94,3 +94,5 @@
 </body>
 </html>
 {% endblock content %}
+
+
