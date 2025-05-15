@@ -7,23 +7,23 @@
 <div class="book-wrapper">
   {% if products %}
     {% for product in products %}
-    <a href="{% url 'book_view' product.id %}">
-      <div class="book-items">
-        <div class="main-book-wrap" style="height: 400px;">
-          <div class="book-cover" style="height: 400px;">
-            <div class="book-inside"></div>
-            <div class="book-image">
-              <img style="height: 400px;" src="{{ product.pimageURL }}" />
-              <div class="effect"></div>
-              <div class="light"></div>
+      <a href="{% url 'book_view' product.id %}">
+        <div class="book-items">
+          <div class="main-book-wrap" style="height: 400px;">
+            <div class="book-cover" style="height: 400px;">
+              <div class="book-inside"></div>
+              <div class="book-image">
+                <img style="height: 400px;" src="{{ product.pimageURL }}" alt="{{ product.name }}" />
+                <div class="effect"></div>
+                <div class="light"></div>
+              </div>
             </div>
           </div>
         </div>
-      </div>
-    </a>
-    <p class="product-name" style="font-family: 'Franklin Gothic Medium', 'Arial Narrow', Arial, sans-serif; color: whitesmoke; border-style: none;">
-      {{ product.name }}
-    </p>
+      </a>
+      <p class="product-name" style="font-family: 'Franklin Gothic Medium', 'Arial Narrow', Arial, sans-serif; color: whitesmoke; border-style: none;">
+        {{ product.name }}
+      </p>
     {% endfor %}
   {% else %}
     <p style="color: whitesmoke; font-size: 18px;">Kütüphanenizde henüz ürün yok. Hemen alışverişe başlayın!</p>

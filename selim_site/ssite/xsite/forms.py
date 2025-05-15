@@ -1,33 +1,23 @@
-# forms.py
 from django import forms
 from django.contrib.auth.forms import UserCreationForm
 from django.contrib.auth.models import User
-from xsite.models import Profile,ProductImage
-from django.contrib.auth.forms import PasswordChangeForm
-from django.contrib.auth import authenticate
-from django import forms
-from .models import Rating
-from .models import Comment
-from django import forms
+from xsite.models import Profile, ProductImage
+from .models import Rating, Comment
 
 class CommentForm(forms.ModelForm):
     class Meta:
         model = Comment
         fields = ('name', 'email', 'body')
 
-
 class RatingForm(forms.ModelForm):
     class Meta:
         model = Rating
         fields = ['rating', 'comment']
 
-
-
 class ProductImageForm(forms.ModelForm):
     class Meta:
         model = ProductImage
         fields = ['product', 'image']
-
 
 class CustomPasswordChangeForm(forms.Form):
     old_password = forms.CharField(widget=forms.PasswordInput(attrs={'placeholder': 'Eski Şifre'}), label='Eski Şifre')
@@ -38,7 +28,6 @@ class CustomPasswordChangeForm(forms.Form):
         cleaned_data = super().clean()
         new_password = cleaned_data.get('new_password')
         new_password_confirm = cleaned_data.get('new_password_confirm')
-
         if new_password != new_password_confirm:
             raise forms.ValidationError("Yeni şifreler eşleşmiyor.")
         return cleaned_data
@@ -57,7 +46,7 @@ class ProfileUpdateForm(forms.ModelForm):
     class Meta:
         model = Profile
         fields = ['profile_picture', 'bio']
-        
+
 class UserForm(forms.ModelForm):
     class Meta:
         model = User
@@ -68,12 +57,9 @@ class ProfileForm(forms.ModelForm):
         model = Profile
         fields = ['bio', 'profile_picture']
 
-
-
-
 class UserProfileUpdateForm(forms.ModelForm):
     email = forms.EmailField(required=True)
-    
+
     class Meta:
         model = Profile
         fields = ['profile_picture', 'bio']
@@ -86,3 +72,17 @@ class UserProfileUpdateForm(forms.ModelForm):
             self.fields['username'].initial = user.username
 
     username = forms.CharField(required=True)
+
+
+class PaymentForm(forms.Form):
+    PAYMENT_CHOICES = [
+        ('card', 'Kart ile Ödeme'),
+        ('sprite', 'Sprite ile Ödeme'),  
+    ]
+    payment_method = forms.ChoiceField(
+        choices=PAYMENT_CHOICES,
+        widget=forms.RadioSelect,
+        initial='card',
+        label="Ödeme Seçenekleri"
+    )
+    payment_method_id = forms.CharField(widget=forms.HiddenInput(), required=False)

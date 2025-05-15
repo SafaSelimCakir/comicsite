@@ -3,20 +3,15 @@
 
 {% block content %}
 <link rel="stylesheet" href="{% static 'css/cart.css' %}">
-<script src="https://js.stripe.com/v3/"></script>
 
 <div class="cart-container" style="background-color: #333; box-shadow: 10px 10px 25px black; z-index: 2;">
-    <h1 style="color: #111111; font-family: 'Franklin Gothic Medium', 'Arial Narrow', Arial, sans-serif;">Alışveriş Sepetiniz</h1>
+    <h1 style="color: #ffffff; font-family: 'Franklin Gothic Medium', 'Arial Narrow', Arial, sans-serif;">Alışveriş Sepetiniz</h1>
     
     <div class="cart-items">
         {% if cart.items.all %}
             {% for item in cart.items.all %}
             <div class="cart-item" style="background-color: #141414; box-shadow: 5px 5px 15px black;"
-                {% if item.product.apply_discount %}
-                    data-price="{{ item.product.discounted_price }}"
-                {% else %}
-                    data-price="{{ item.product.price }}"
-                {% endif %}
+                data-price="{{ item.product.discounted_price|default:item.product.price }}"
                 data-quantity="{{ item.quantity }}"
                 data-item-id="{{ item.id }}">
 
@@ -35,248 +30,46 @@
                 </div>
                 <div class="cart-item-actions">
                     <button class="item-button" onclick="updateQuantity('{{ item.id }}', 'increase')">+</button>
-                    <button class="item-button decrease" onclick="updateQuantity('{{ item.id }}', 'decrease')" {% if item.quantity == 1 %}disabled{% else %}enable{% endif %}>-</button>
+                    <button class="item-button decrease" onclick="updateQuantity('{{ item.id }}', 'decrease')" {% if item.quantity == 1 %}disabled{% endif %}>-</button>
                     <a href="{% url 'remove_from_cart' item.id %}" class="remove-button">Kaldır</a>
                 </div>
             </div>
             {% endfor %}
         {% else %}
-            <div class="cart-item" style="background-color: #141414; box-shadow: 5px 5px 15px black;"><h5 style="color: whitesmoke;">Sepetiniz boş.</h5></div>
+            <div class="cart-item" style="background-color: #141414; box-shadow: 5px 5px 15px black;">
+                <h5 style="color: whitesmoke;">Sepetiniz boş.</h5>
+            </div>
         {% endif %}
     </div>
 
-    <div class="cart-summary" style="background-color: #141414; box-shadow: 5px 5px 15px black;">
+    {% if cart.items.all %}
+    <div class="cart-summary" style="background-color: #141414; box-shadow: 5px 5px 15px black; padding: 20px;">
         <h3>Toplam</h3>
-        <p>Ürün Toplamı: <span id="totalPrice">0</span></p>
-        <form id="payment-form" action="{% url 'ordercheckout' %}" method="POST">
+        <p>Ürün Toplamı: <span id="totalPrice">0</span> TRY</p>
+
+        <!-- Stripe Checkout yönlendirme -->
+        <form action="{% url 'stripe_checkout' %}" method="post">
             {% csrf_token %}
-            <div class="payment-options" style="margin-top: 20px;">
-                <h4>Ödeme Seçenekleri:</h4>
-                <label style="color: whitesmoke;">
-                    <input type="radio" name="payment_method" value="card" checked>
-                    Kart ile Ödeme
-                </label>
-            </div>
-            
-            <div id="cardFields" class="card-design" style="display: block; margin-left: 160px; margin-bottom: 150px;">
-                <div class="card-front">
-                    <div class="chip"></div>
-                    <div class="bank-logo" id="bankLogo"></div>
-                    <div class="card-number" id="cardNumberDisplay">1234 5678 9012 3456</div>
-                    <div class="card-holder">
-                        <span>Kart Sahibi:</span>
-                        <div id="cardHolderDisplay">Ad Soyad</div>
-                    </div>
-                    <div class="expiry">
-                        <span>Son Kullanma Tarihi:</span>
-                        <div id="expiryDateDisplay">MM/YY</div>
-                    </div>
-                </div>
-                <div style="display: flex; flex-direction: column; gap: 10px; margin-top: 40px;">
-                    <div style="display: flex; justify-content: space-between; gap: 10px;">
-                        <div style="flex: 1;">
-                            <label class="card-text" for="cardHolderName">Kart Sahibi Adı:</label>
-                            <input required class="card-input" type="text" id="cardHolderName" placeholder="Ad Soyad" oninput="updateCardHolderName(this.value)">
-                        </div>
-                    </div>
-                    <div style="display: flex; justify-content: space-between; gap: 10px;">
-                        <div style="flex: 1;">
-                            <label class="card-text" for="card-element">Kart Bilgileri:</label>
-                            <div id="card-element" class="card-input"></div>
-                            <div id="card-errors" role="alert" style="color: red; margin-top: 10px;"></div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-            <button type="submit" class="ordercheckout-button" style="font-family: Arial, Helvetica, sans-serif; font-size: large; color: whitesmoke; margin-top: 20px; background-color: rgb(221, 51, 51); padding: 7px 10px; border-radius: 8px;">Satın Al</button>
+            <button type="submit"
+                style="margin-top: 20px; background-color: #DD3333; color: white; padding: 10px 20px; border: none; border-radius: 8px; font-size: 16px; cursor: pointer;">
+                Stripe ile Güvenli Ödeme Yap
+            </button>
         </form>
     </div>
+    {% endif %}
 </div>
 
-<style>
-    .bank-logo {
-        width: 100px;
-        height: 40px;
-        background-size: contain;
-        background-repeat: no-repeat;
-        position: absolute;
-        top: 20px;
-        right: 20px;
-    }
-
-    .card-input {
-        width: 100%;
-        padding: 8px;
-        margin-top: 5px;
-        border: 1px solid #ccc;
-        border-radius: 5px;
-        font-size: 16px;
-        background-color: #fff;
-        min-height: 40px;
-    }
-
-    .card-text {
-        display: block;
-        font-size: 14px;
-        color: whitesmoke;
-        margin-bottom: 5px;
-        text-align: left;
-    }
-
-    .card-design {
-        background: linear-gradient(135deg, #4a90e2, #9013fe);
-        color: white;
-        width: 400px;
-        border-radius: 15px;
-        padding: 20px;
-        margin-bottom: 20px;
-        position: relative;
-        box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
-    }
-
-    .chip {
-        width: 60px;
-        height: 40px;
-        background: gold;
-        border-radius: 5px;
-        position: absolute;
-        top: 20px;
-        left: 20px;
-    }
-
-    .card-number {
-        font-size: 18px;
-        letter-spacing: 3px;
-        margin: 60px 0 10px;
-    }
-
-    .card-holder, .expiry {
-        font-size: 14px;
-        margin-top: 10px;
-    }
-
-    .card-holder span, .expiry span {
-        font-weight: bold;
-        display: block;
-    }
-
-    .card-holder div, .expiry div {
-        font-size: 16px;
-    }
-
-    #card-element {
-        min-height: 40px;
-        padding: 10px;
-        background-color: #fff;
-        border: 1px solid #ccc;
-        border-radius: 5px;
-    }
-</style>
-
 <script>
-    // Stripe'ı başlat
-    console.log('STRIPE_PUBLIC_KEY:', '{{ STRIPE_PUBLIC_KEY }}');
-    const stripe = Stripe('{{ STRIPE_PUBLIC_KEY }}');
-    if (!stripe) {
-        console.error('Stripe failed to initialize. Check STRIPE_PUBLIC_KEY.');
-    }
-
-    const elements = stripe.elements();
-    const cardElement = elements.create('card', {
-        style: {
-            base: {
-                fontSize: '16px',
-                color: '#000',
-                '::placeholder': {
-                    color: '#aab7c4',
-                },
-            },
-            invalid: {
-                color: '#ff0000',
-            },
-        }
-    });
-    cardElement.mount('#card-element');
-
-    const form = document.getElementById('payment-form');
-    const cardErrors = document.getElementById('card-errors');
-
-    // Kart bilgisi değiştiğinde görsel kartı güncelle
-    cardElement.on('change', function(event) {
-        const cardNumberDisplay = document.getElementById('cardNumberDisplay');
-        const expiryDateDisplay = document.getElementById('expiryDateDisplay');
-        const bankLogo = document.getElementById('bankLogo');
-
-        // Hata varsa göster
-        if (event.error) {
-            cardErrors.textContent = event.error.message;
-            console.error('Card element error:', event.error);
-        } else {
-            cardErrors.textContent = '';
-        }
-
-        // Kart bilgilerini güncelle
-        if (event.complete && event.card) {
-            cardNumberDisplay.textContent = `**** **** **** ${event.card.last4 || '3456'}`;
-            expiryDateDisplay.textContent = event.card.exp_month && event.card.exp_year 
-                ? `${event.card.exp_month.toString().padStart(2, '0')}/${event.card.exp_year.toString().slice(-2)}`
-                : 'MM/YY';
-
-            // Banka logosu
-            const bankLogos = {
-                'visa': "{% static 'img/Visa-Logo.png' %}",
-                'mastercard': "{% static 'img/MasterCard_Logo.svg.png' %}",
-            };
-            if (event.brand && bankLogos[event.brand]) {
-                bankLogo.style.backgroundImage = `url(${bankLogos[event.brand]})`;
-                bankLogo.style.display = 'block';
-            } else {
-                bankLogo.style.backgroundImage = 'none';
-                bankLogo.style.display = 'none';
-            }
-        } else {
-            cardNumberDisplay.textContent = '1234 5678 9012 3456';
-            expiryDateDisplay.textContent = 'MM/YY';
-            bankLogo.style.display = 'none';
-        }
-    });
-
-    function updateCardHolderName(value) {
-        const display = document.getElementById('cardHolderDisplay');
-        display.textContent = value || 'Ad Soyad';
-    }
-
-    form.addEventListener('submit', async (event) => {
-        event.preventDefault();
-
-        const cardHolderName = document.getElementById('cardHolderName').value;
-        if (!cardHolderName) {
-            cardErrors.textContent = 'Kart sahibi adı gerekli.';
-            return;
-        }
-
-        const { paymentMethod, error } = await stripe.createPaymentMethod({
-            type: 'card',
-            card: cardElement,
-            billing_details: {
-                name: cardHolderName,
-            },
+    function calculateTotal() {
+        let total = 0;
+        const cartItems = document.querySelectorAll('.cart-item');
+        cartItems.forEach(item => {
+            const price = parseFloat(item.getAttribute('data-price'));
+            const quantity = parseInt(item.getAttribute('data-quantity'));
+            total += price * quantity;
         });
-
-        if (error) {
-            cardErrors.textContent = error.message;
-            console.error('Stripe error:', error);
-        } else {
-            const hiddenInput = document.createElement('input');
-            hiddenInput.setAttribute('type', 'hidden');
-            hiddenInput.setAttribute('name', 'payment_method_id');
-            hiddenInput.setAttribute('value', paymentMethod.id);
-            form.appendChild(hiddenInput);
-
-            console.log('Submitting form with payment_method_id:', paymentMethod.id);
-            form.submit();
-        }
-    });
+        document.getElementById('totalPrice').textContent = total.toFixed(2);
+    }
 
     function updateQuantity(itemId, action) {
         const item = document.querySelector(`[data-item-id="${itemId}"]`);
@@ -284,13 +77,11 @@
         let currentQuantity = parseInt(quantityElement.textContent);
 
         if (action === 'increase') {
-            currentQuantity += 1;
-        } else if (action === 'decrease') {
-            if (currentQuantity > 1) {
-                currentQuantity -= 1;
-            } else {
-                return;
-            }
+            currentQuantity++;
+        } else if (action === 'decrease' && currentQuantity > 1) {
+            currentQuantity--;
+        } else {
+            return;
         }
 
         quantityElement.textContent = currentQuantity;
@@ -299,12 +90,7 @@
         const totalPriceElement = document.getElementById('totalPrice');
         let currentTotal = parseFloat(totalPriceElement.textContent);
 
-        if (action === 'increase') {
-            currentTotal += price;
-        } else if (action === 'decrease') {
-            currentTotal -= price;
-        }
-
+        currentTotal = action === 'increase' ? currentTotal + price : currentTotal - price;
         totalPriceElement.textContent = currentTotal.toFixed(2);
 
         fetch(`/api/update_cart_item/${itemId}/`, {
@@ -313,35 +99,10 @@
                 'Content-Type': 'application/json',
                 'X-CSRFToken': '{{ csrf_token }}',
             },
-            body: JSON.stringify({
-                'quantity': currentQuantity,
-            }),
-        })
-        .then(response => response.json())
-        .then(data => {
-            if (data.success) {
-                console.log('Cart updated successfully');
-            } else {
-                console.error('Failed to update cart');
-            }
-        })
-        .catch(error => console.error('Fetch error:', error));
-    }
-
-    function calculateTotal() {
-        let total = 0;
-        const cartItems = document.querySelectorAll('.cart-item');
-        
-        cartItems.forEach(item => {
-            const price = parseFloat(item.getAttribute('data-price'));
-            const quantity = parseInt(item.getAttribute('data-quantity')); 
-            total += price * quantity; 
+            body: JSON.stringify({ 'quantity': currentQuantity }),
         });
-
-        document.getElementById('totalPrice').textContent = total.toFixed(2);
     }
 
     window.onload = calculateTotal;
 </script>
-
 {% endblock %}

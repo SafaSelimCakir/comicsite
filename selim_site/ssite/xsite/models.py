@@ -18,13 +18,14 @@ class Profile(models.Model):
     def __str__(self):
         return f"{self.user.username}'s Profile"
 
-class Customer(models.Model):
-	user = models.OneToOneField(User, null=True, blank=True, on_delete=models.CASCADE)
-	name = models.CharField(max_length=200, null=True)
-	email = models.CharField(max_length=200)
 
-	def __str__(self):
-		return self.name
+class Customer(models.Model):
+    user = models.OneToOneField(User, null=True, blank=True, on_delete=models.CASCADE)
+    name = models.CharField(max_length=200, null=True)
+    email = models.CharField(max_length=200)
+
+    def __str__(self):
+        return self.name
 
 
 class Rating(models.Model):
@@ -35,7 +36,7 @@ class Rating(models.Model):
     created_at = models.DateTimeField(auto_now_add=True)
 
     class Meta:
-        unique_together = ('user', 'product')  
+        unique_together = ('user', 'product')
 
     def __str__(self):
         return f"{self.user.username} - {self.product.name} - {self.rating}"
@@ -51,59 +52,54 @@ class Category(models.Model):
 class Product(models.Model):
     name = models.CharField(max_length=200)
     subname = models.CharField(max_length=1000, null=True, blank=True)
-    CURRENCY_CHOICES = [('TRY', 'Türk Lirası'), ('USD', 'Amerikan Doları')]
+    CURRENCY_CHOICES = [('TRY', 'Türk Lirası')]
     price = MoneyField(max_digits=10, decimal_places=2, default_currency='TRY', currency_choices=CURRENCY_CHOICES)
     digital = models.BooleanField(default=False, null=True, blank=True)
     pimage = models.ImageField(upload_to='img/', null=True, blank=True)
-    #pdf = models.FileField(upload_to='pdfs/', null=True, blank=True)
     categories = models.ManyToManyField(Category, related_name='products')
-    discount = models.IntegerField(default=0)  
-    apply_discount = models.BooleanField(default=False, null=True, blank=True)  
+    discount = models.IntegerField(default=0)
+    apply_discount = models.BooleanField(default=False, null=True, blank=True)
     owner = models.ForeignKey(User, on_delete=models.CASCADE, default=1)
     slug = models.SlugField(unique=True, blank=True, null=True)
 
     def save(self, *args, **kwargs):
         if not self.slug:
-            self.slug = slugify(self.name)  
+            self.slug = slugify(self.name)
         super().save(*args, **kwargs)
 
     def __str__(self):
         return self.name
 
-    #@property
-    #def discounted_price(self):
-    #    if self.apply_discount and self.discount > 0:
-    #        return round(float(self.price) * (1 - self.discount / 100), 2)
-    #    return self.price
-    
+    @property
+    def discounted_price(self):
+        if self.apply_discount and self.discount > 0:
+            return self.price.amount * (Decimal('1') - Decimal(self.discount) / Decimal('100'))
+        return self.price.amount
 
     @property
     def pimageURL(self):
         try:
-            url = self.pimage.url
+            return self.pimage.url
         except:
-            url = ''
-        return url
-
+            return ''
 
     @property
     def pdfURL(self):
         try:
-            url = self.pdf.url
+            return self.pdf.url
         except:
-            url = ''
-        return url
-    
+            return ''
+
     @property
     def image_count(self):
         return self.images.count()
-    
+
     @property
     def average_rating(self):
         ratings = self.ratings.all()
         if ratings.exists():
             return round(sum(r.rating for r in ratings) / ratings.count(), 2)
-        return 
+        return None
 
 
 class ProductImage(models.Model):
@@ -112,7 +108,7 @@ class ProductImage(models.Model):
 
     def __str__(self):
         return f"{self.product.name} - {self.image.name}"
-    
+
 
 class Cart(models.Model):
     user = models.OneToOneField(User, on_delete=models.CASCADE)
@@ -121,13 +117,14 @@ class Cart(models.Model):
     def __str__(self):
         return f"Cart of {self.user.username}"
 
+
 class CartItem(models.Model):
-    cart = models.ForeignKey(Cart, on_delete=models.CASCADE, related_name='items')
+    cart = models.ForeignKey(Cart, related_name='items', on_delete=models.CASCADE)
     product = models.ForeignKey(Product, on_delete=models.CASCADE)
     quantity = models.PositiveIntegerField(default=1)
 
     def __str__(self):
-        return f"{self.quantity} of {self.product.name}"    
+        return f"{self.quantity} of {self.product.name}"
 
 
 class Order(models.Model):
@@ -138,9 +135,10 @@ class Order(models.Model):
     def __str__(self):
         return f"Order {self.id} by {self.user.username}"
 
+
 class OrderItem(models.Model):
     order = models.ForeignKey(Order, on_delete=models.CASCADE)
-    product = models.ForeignKey('Product', on_delete=models.CASCADE)
+    product = models.ForeignKey(Product, on_delete=models.CASCADE)
     quantity = models.PositiveIntegerField()
     price = models.DecimalField(max_digits=10, decimal_places=2)
 
@@ -149,16 +147,16 @@ class OrderItem(models.Model):
 
 
 class ShippingAddress(models.Model):
-	customer = models.ForeignKey(Customer, on_delete=models.SET_NULL, null=True)
-	order = models.ForeignKey(Order, on_delete=models.SET_NULL, null=True)
-	address = models.CharField(max_length=200, null=False)
-	city = models.CharField(max_length=200, null=False)
-	state = models.CharField(max_length=200, null=False)
-	zipcode = models.CharField(max_length=200, null=False)
-	date_added = models.DateTimeField(auto_now_add=True)
+    customer = models.ForeignKey(Customer, on_delete=models.SET_NULL, null=True)
+    order = models.ForeignKey(Order, on_delete=models.SET_NULL, null=True)
+    address = models.CharField(max_length=200, null=False)
+    city = models.CharField(max_length=200, null=False)
+    state = models.CharField(max_length=200, null=False)
+    zipcode = models.CharField(max_length=200, null=False)
+    date_added = models.DateTimeField(auto_now_add=True)
 
-	def __str__(self):
-		return self.address
+    def __str__(self):
+        return self.address
 
 
 class xsite(models.Model):
@@ -177,4 +175,4 @@ class Comment(models.Model):
         ordering = ['created_on']
 
     def __str__(self):
-        return 'Comment {} by {}'.format(self.body, self.name)
+        return f'Comment {self.body} by {self.name}'
