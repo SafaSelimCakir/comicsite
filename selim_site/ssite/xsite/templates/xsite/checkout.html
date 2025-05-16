@@ -10,35 +10,6 @@
     <button type="submit" class="search-button">Search</button>
 </form>
 
-<ul>
-	{% for category in categories %}
-		<li>{{ category.name }}</li>
-	{% empty %}
-		<li>Kategori bulunamadı.</li>
-	{% endfor %}
-</ul>
-
-<form method="get" action="{% url 'get_queryset' %}">
-	<select name="category">
-		<option value="">Tüm Kategoriler</option>
-		{% for category in categories %}
-			<option value="{{ category.id }}">{{ category.name }}</option>
-		{% empty %}
-			<option value="">Kategori bulunamadı.</option>
-		{% endfor %}
-	</select>
-	<button type="submit">Filtrele</button>
-</form>
-
-<form method="get" action="{% url 'get_queryset' %}">
-	<select name="category">
-		<option value="">Tüm Kategoriler</option>
-		{% for category in categories %}
-			<option value="{{ category.id }}">{{ category.name }}</option>
-		{% endfor %}
-	</select>
-	<button type="submit">Filtrele</button>
-</form>
 
 {% if products %}
 <ul>

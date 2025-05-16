@@ -10,32 +10,41 @@
             <h2>{{ user.username }}'in Profil Bilgileri</h2>
         </div>
         <div class="profile-info">
-            <form id="profileForm" method="POST" class="profile-form" enctype="multipart/form-data">
+            <form id="profileForm" method="POST" action="{% url 'profile_update' %}" class="profile-form" enctype="multipart/form-data">
                 {% csrf_token %}
                 <div class="form-group profile-picture-container">
                     <label for="profile_picture_upload" class="profile-picture-label">
                         <img id="profile_picture_preview" src="{{ user.profile.profile_picture.url }}"
-                            style="height: 150px;width: 150px;margin-left: 30%;" alt="Profil Resmi" class="profile-img">
+                             style="height: 150px;width: 150px;margin-left: 30%;" alt="Profil Resmi" class="profile-img">
                         <span class="plus-icon"><i class="bi bi-plus-circle-fill"></i></span>
                     </label>
                     <input type="file" id="profile_picture_upload" name="profile_picture" style="display:none;">
                 </div>
                 <div class="form-group">
                     <label for="username">Kullanıcı Adı:</label>
-                    <input type="text" id="username" class="form-input" value="{{ user.username }}">
+                    <input type="text" id="username" name="username" class="form-input" value="{{ user.username }}">
                 </div>
                 <div class="form-group">
                     <label for="email">Email:</label>
-                    <input type="email" id="email" class="form-input" value="{{ user.email }}">
+                    <input type="email" id="email" name="email" class="form-input" value="{{ user.email }}">
                 </div>
                 <div class="form-group">
                     <label for="bio">Biyografi:</label>
-                    <textarea id="bio" class="form-textarea">{{ user.profile.bio }}</textarea>
+                    <textarea id="bio" name="bio" class="form-textarea">{{ user.profile.bio }}</textarea>
                 </div>
+                <div class="form-actions">
+                    <button type="submit" class="save-btn">Profili Kaydet</button>
+                </div>
+            </form>
+
+            <hr style="margin: 30px 0;">
+
+            <h3>Şifre Değiştir</h3>
+            <form id="passwordForm" class="profile-form">
+                {% csrf_token %}
                 <div class="form-group">
                     <label for="current_password">Mevcut Şifre</label>
-                    <input type="password" id="current_password" class="form-input"
-                        placeholder="Mevcut şifrenizi girin">
+                    <input type="password" id="current_password" class="form-input" placeholder="Mevcut şifrenizi girin">
                 </div>
                 <div class="form-group">
                     <label for="new_password">Yeni Şifre</label>
@@ -43,8 +52,7 @@
                 </div>
                 <div class="form-group">
                     <label for="confirm_password">Yeni Şifre (Tekrar)</label>
-                    <input type="password" id="confirm_password" class="form-input"
-                        placeholder="Yeni şifrenizi tekrar girin">
+                    <input type="password" id="confirm_password" class="form-input" placeholder="Yeni şifrenizi tekrar girin">
                 </div>
                 <div class="form-actions">
                     <button type="button" id="changePasswordButton" class="save-btn">Şifreyi Güncelle</button>
@@ -56,7 +64,6 @@
 
 <script>
     document.addEventListener('DOMContentLoaded', function () {
-        const saveButton = document.getElementById('saveButton');
         const profilePictureInput = document.getElementById('profile_picture_upload');
         const profilePicturePreview = document.getElementById('profile_picture_preview');
 
@@ -71,73 +78,44 @@
             }
         });
 
-        saveButton.addEventListener('click', function (event) {
+        document.getElementById('changePasswordButton').addEventListener('click', function (event) {
             event.preventDefault();
 
-            const username = document.getElementById('username').value;
-            const email = document.getElementById('email').value;
-            const bio = document.getElementById('bio').value;
-            const profilePicture = document.getElementById('profile_picture_upload').files[0];
             const currentPassword = document.getElementById('current_password').value;
             const newPassword = document.getElementById('new_password').value;
             const confirmPassword = document.getElementById('confirm_password').value;
 
-
             if (newPassword !== confirmPassword) {
-                alert("Yeni şifreler eşleşmiyor!");
+                alert('Yeni şifreler eşleşmiyor!');
                 return;
             }
 
-            const formData = new FormData();
-            formData.append('username', username);
-            formData.append('email', email);
-            formData.append('bio', bio);
-            formData.append('current_password', currentPassword);
-            formData.append('new_password', newPassword);
-            if (profilePicture) {
-                formData.append('profile_picture', profilePicture);
-            }
-            document.getElementById('changePasswordButton').addEventListener('click', function (event) {
-                event.preventDefault();
-
-                const currentPassword = document.getElementById('current_password').value;
-                const newPassword = document.getElementById('new_password').value;
-                const confirmPassword = document.getElementById('confirm_password').value;
-
-                if (newPassword !== confirmPassword) {
-                    alert('Yeni şifreler eşleşmiyor!');
-                    return;
-                }
-
-                fetch('/update-password/', {
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json',
-                        'X-CSRFToken': document.querySelector('[name=csrfmiddlewaretoken]').value
-                    },
-                    body: JSON.stringify({
-                        current_password: currentPassword,
-                        new_password: newPassword
-                    })
+            fetch('/update-password/', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'X-CSRFToken': document.querySelector('[name=csrfmiddlewaretoken]').value
+                },
+                body: JSON.stringify({
+                    current_password: currentPassword,
+                    new_password: newPassword
                 })
-                    .then(response => response.json())
-                    .then(data => {
-                        if (data.success) {
-                            alert('Şifre başarıyla güncellendi!');
-                        } else {
-                            alert('Hata: ' + (data.error || 'Şifre güncellenemedi!'));
-                        }
-                    })
-                    .catch(error => {
-                        console.error("Hata:", error);
-                        alert("Bir hata oluştu!");
-                    });
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.success) {
+                    alert('Şifre başarıyla güncellendi!');
+                    document.getElementById('passwordForm').reset();
+                } else {
+                    alert('Hata: ' + (data.error || 'Şifre güncellenemedi!'));
+                }
+            })
+            .catch(error => {
+                console.error("Hata:", error);
+                alert("Bir hata oluştu!");
             });
-
-
         });
     });
-
 </script>
 
 {% endblock %}

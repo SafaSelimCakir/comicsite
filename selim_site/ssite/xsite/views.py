@@ -16,6 +16,32 @@ from xsite.forms import RegisterForm, PaymentForm
 from django.views.decorators.csrf import csrf_exempt
 from django.utils.decorators import method_decorator
 
+class ProfileUpdateView(LoginRequiredMixin, View):
+    def post(self, request):
+        user = request.user
+        profile = user.profile
+
+        username = request.POST.get('username')
+        email = request.POST.get('email')
+        bio = request.POST.get('bio')
+        profile_picture = request.FILES.get('profile_picture')  # <-- burada dosya yakalanıyor
+
+        if username:
+            user.username = username
+        if email:
+            user.email = email
+        user.save()
+
+        if bio:
+            profile.bio = bio
+        if profile_picture:
+            profile.profile_picture = profile_picture  # <-- burada kayıt ediliyor
+        profile.save()
+
+        messages.success(request, "Profil bilgileri güncellendi.")
+        return redirect('profile')
+
+
 class StripeCheckoutRedirectView(LoginRequiredMixin, View):
     def post(self, request):
         cart = Cart.objects.get(user=request.user)

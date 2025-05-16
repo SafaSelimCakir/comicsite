@@ -1424,3 +1424,178 @@ https://api.stripe.com:443 "POST /v1/checkout/sessions HTTP/1.1" 200 2614
 message='Stripe API response' path=https://api.stripe.com/v1/checkout/sessions response_code=200
 body='{\n  "id": "cs_test_b11FR00JmBlshLZu3TTTPL0Da7uui3mCK4q0qquQ5S3BA9pGXlGKz6v1aF",\n  "object": "checkout.session",\n  "adaptive_pricing": {\n    "enabled": true\n  },\n  "after_expiration": null,\n  "allow_promotion_codes": null,\n  "amount_subtotal": 9010,\n  "amount_total": 9010,\n  "automatic_tax": {\n    "enabled": false,\n    "liability": null,\n    "provider": null,\n    "status": null\n  },\n  "billing_address_collection": null,\n  "cancel_url": "http://127.0.0.1:8000/cartd/",\n  "client_reference_id": null,\n  "client_secret": null,\n  "collected_information": null,\n  "consent": null,\n  "consent_collection": null,\n  "created": 1747319112,\n  "currency": "try",\n  "currency_conversion": null,\n  "custom_fields": [],\n  "custom_text": {\n    "after_submit": null,\n    "shipping_address": null,\n    "submit": null,\n    "terms_of_service_acceptance": null\n  },\n  "customer": null,\n  "customer_creation": "if_required",\n  "customer_details": null,\n  "customer_email": null,\n  "discounts": [],\n  "expires_at": 1747405512,\n  "invoice": null,\n  "invoice_creation": {\n    "enabled": false,\n    "invoice_data": {\n      "account_tax_ids": null,\n      "custom_fields": null,\n      "description": null,\n      "footer": null,\n      "issuer": null,\n      "metadata": {},\n      "rendering_options": null\n    }\n  },\n  "livemode": false,\n  "locale": null,\n  "metadata": {\n    "user_id": "11"\n  },\n  "mode": "payment",\n  "payment_intent": null,\n  "payment_link": null,\n  "payment_method_collection": "if_required",\n  "payment_method_configuration_details": null,\n  "payment_method_options": {\n    "card": {\n      "request_three_d_secure": "automatic"\n    }\n  },\n  "payment_method_types": [\n    "card"\n  ],\n  "payment_status": "unpaid",\n  "permissions": null,\n  "phone_number_collection": {\n    "enabled": false\n  },\n  "recovered_from": null,\n  "saved_payment_method_options": null,\n  "setup_intent": null,\n  "shipping_address_collection": null,\n  "shipping_cost": null,\n  "shipping_options": [],\n  "status": "open",\n  "submit_type": null,\n  "subscription": null,\n  "success_url": "http://127.0.0.1:8000/payment/success/",\n  "total_details": {\n    "amount_discount": 0,\n    "amount_shipping": 0,\n    "amount_tax": 0\n  },\n  "ui_mode": "hosted",\n  "url": "https://checkout.stripe.com/c/pay/cs_test_b11FR00JmBlshLZu3TTTPL0Da7uui3mCK4q0qquQ5S3BA9pGXlGKz6v1aF#fidkdWxOYHwnPyd1blpxYHZxWjA0V05BV2BATVMxRmI3dH9GMzZqbXNkMklIcVFIdWFzXTBIaT1VMnZIa2d9VGhWZGJ1XGlVY0hfNkY1dnZKbz1EUlxQaGRPQE1mPWNoQl9QbGlqa0JKf3JzNTVmTEtKPGx%2FbycpJ2N3amhWYHdzYHcnP3F3cGApJ2lkfGpwcVF8dWAnPydocGlxbFpscWBoJyknYGtkZ2lgVWlkZmBtamlhYHd2Jz9xd3BgeCUl",\n  "wallet_options": null\n}' message='API response body'
 link=https://dashboard.stripe.com/test/logs/req_8E7nqNn1P0ivMc message='Dashboard link for request'
+Watching for file changes with StatReloader
+Not Found: /favicon.ico
+message='Request to Stripe api' method=post url=https://api.stripe.com/v1/checkout/sessions
+api_version=2025-04-30.basil message='Post details' post_data=payment_method_types[0]=card&line_items[0][price_data][currency]=try&line_items[0][price_data][unit_amount]=800&line_items[0][price_data][product_data][name]=batman2&line_items[0][quantity]=1&mode=payment&success_url=http%3A%2F%2F127.0.0.1%3A8000%2Fpayment%2Fsuccess%2F&cancel_url=http%3A%2F%2F127.0.0.1%3A8000%2Fcartd%2F&metadata[user_id]=11
+Starting new HTTPS connection (1): api.stripe.com:443
+https://api.stripe.com:443 "POST /v1/checkout/sessions HTTP/1.1" 400 387
+message='Stripe API response' path=https://api.stripe.com/v1/checkout/sessions response_code=400
+body='{\n  "error": {\n    "code": "amount_too_small",\n    "doc_url": "https://stripe.com/docs/error-codes/amount-too-small",\n    "message": "The Checkout Session\'s total amount must convert to at least 50 cents. 8.00 TL converts to approximately $0.21.",\n    "request_log_url": "https://dashboard.stripe.com/test/logs/req_EIeqjy9sHUdRwK?t=1747376538",\n    "type": "invalid_request_error"\n  }\n}\n' message='API response body'
+link=https://dashboard.stripe.com/test/logs/req_EIeqjy9sHUdRwK message='Dashboard link for request'
+error_code=amount_too_small error_message="The Checkout Session's total amount must convert to at least 50 cents. 8.00 TL converts to approximately $0.21." error_param=None error_type=invalid_request_error message='Stripe v1 API error received'
+Internal Server Error: /stripe-checkout/
+Traceback (most recent call last):
+  File "C:\Users\user\Documents\GitHub\comicsite\selim_site\myvenv\Lib\site-packages\django\core\handlers\exception.py", line 55, in inner
+    response = get_response(request)
+               ^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\user\Documents\GitHub\comicsite\selim_site\myvenv\Lib\site-packages\django\core\handlers\base.py", line 197, in _get_response
+    response = wrapped_callback(request, *callback_args, **callback_kwargs)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\user\Documents\GitHub\comicsite\selim_site\myvenv\Lib\site-packages\django\views\generic\base.py", line 104, in view
+    return self.dispatch(request, *args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\user\Documents\GitHub\comicsite\selim_site\myvenv\Lib\site-packages\django\contrib\auth\mixins.py", line 73, in dispatch
+    return super().dispatch(request, *args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\user\Documents\GitHub\comicsite\selim_site\myvenv\Lib\site-packages\django\views\generic\base.py", line 143, in dispatch
+    return handler(request, *args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\user\Documents\GitHub\comicsite\selim_site\ssite\xsite\views.py", line 43, in post
+    session = stripe.checkout.Session.create(
+              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\user\Documents\GitHub\comicsite\selim_site\myvenv\Lib\site-packages\stripe\checkout\_session.py", line 4918, in create
+    cls._static_request(
+  File "C:\Users\user\Documents\GitHub\comicsite\selim_site\myvenv\Lib\site-packages\stripe\_api_resource.py", line 172, in _static_request
+    return _APIRequestor._global_instance().request(
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\user\Documents\GitHub\comicsite\selim_site\myvenv\Lib\site-packages\stripe\_api_requestor.py", line 197, in request
+    resp = requestor._interpret_response(rbody, rcode, rheaders, api_mode)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\user\Documents\GitHub\comicsite\selim_site\myvenv\Lib\site-packages\stripe\_api_requestor.py", line 853, in _interpret_response
+    self.handle_error_response(
+  File "C:\Users\user\Documents\GitHub\comicsite\selim_site\myvenv\Lib\site-packages\stripe\_api_requestor.py", line 336, in handle_error_response
+    raise err
+stripe._error.InvalidRequestError: Request req_EIeqjy9sHUdRwK: The Checkout Session's total amount must convert to at least 50 cents. 8.00 TL converts to approximately $0.21.
+message='Request to Stripe api' method=post url=https://api.stripe.com/v1/checkout/sessions
+api_version=2025-04-30.basil message='Post details' post_data=payment_method_types[0]=card&line_items[0][price_data][currency]=try&line_items[0][price_data][unit_amount]=800&line_items[0][price_data][product_data][name]=batman2&line_items[0][quantity]=1&line_items[1][price_data][currency]=try&line_items[1][price_data][unit_amount]=800&line_items[1][price_data][product_data][name]=test&line_items[1][quantity]=1&line_items[2][price_data][currency]=try&line_items[2][price_data][unit_amount]=99&line_items[2][price_data][product_data][name]=qq&line_items[2][quantity]=1&line_items[3][price_data][currency]=try&line_items[3][price_data][unit_amount]=10&line_items[3][price_data][product_data][name]=deneme&line_items[3][quantity]=1&mode=payment&success_url=http%3A%2F%2F127.0.0.1%3A8000%2Fpayment%2Fsuccess%2F&cancel_url=http%3A%2F%2F127.0.0.1%3A8000%2Fcartd%2F&metadata[user_id]=11
+https://api.stripe.com:443 "POST /v1/checkout/sessions HTTP/1.1" 400 388
+message='Stripe API response' path=https://api.stripe.com/v1/checkout/sessions response_code=400
+body='{\n  "error": {\n    "code": "amount_too_small",\n    "doc_url": "https://stripe.com/docs/error-codes/amount-too-small",\n    "message": "The Checkout Session\'s total amount must convert to at least 50 cents. 17.09 TL converts to approximately $0.44.",\n    "request_log_url": "https://dashboard.stripe.com/test/logs/req_P7vmvTzozN9pz7?t=1747376597",\n    "type": "invalid_request_error"\n  }\n}\n' message='API response body'
+link=https://dashboard.stripe.com/test/logs/req_P7vmvTzozN9pz7 message='Dashboard link for request'
+error_code=amount_too_small error_message="The Checkout Session's total amount must convert to at least 50 cents. 17.09 TL converts to approximately $0.44." error_param=None error_type=invalid_request_error message='Stripe v1 API error received'
+Internal Server Error: /stripe-checkout/
+Traceback (most recent call last):
+  File "C:\Users\user\Documents\GitHub\comicsite\selim_site\myvenv\Lib\site-packages\django\core\handlers\exception.py", line 55, in inner
+    response = get_response(request)
+               ^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\user\Documents\GitHub\comicsite\selim_site\myvenv\Lib\site-packages\django\core\handlers\base.py", line 197, in _get_response
+    response = wrapped_callback(request, *callback_args, **callback_kwargs)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\user\Documents\GitHub\comicsite\selim_site\myvenv\Lib\site-packages\django\views\generic\base.py", line 104, in view
+    return self.dispatch(request, *args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\user\Documents\GitHub\comicsite\selim_site\myvenv\Lib\site-packages\django\contrib\auth\mixins.py", line 73, in dispatch
+    return super().dispatch(request, *args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\user\Documents\GitHub\comicsite\selim_site\myvenv\Lib\site-packages\django\views\generic\base.py", line 143, in dispatch
+    return handler(request, *args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\user\Documents\GitHub\comicsite\selim_site\ssite\xsite\views.py", line 43, in post
+    session = stripe.checkout.Session.create(
+              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\user\Documents\GitHub\comicsite\selim_site\myvenv\Lib\site-packages\stripe\checkout\_session.py", line 4918, in create
+    cls._static_request(
+  File "C:\Users\user\Documents\GitHub\comicsite\selim_site\myvenv\Lib\site-packages\stripe\_api_resource.py", line 172, in _static_request
+    return _APIRequestor._global_instance().request(
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\user\Documents\GitHub\comicsite\selim_site\myvenv\Lib\site-packages\stripe\_api_requestor.py", line 197, in request
+    resp = requestor._interpret_response(rbody, rcode, rheaders, api_mode)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\user\Documents\GitHub\comicsite\selim_site\myvenv\Lib\site-packages\stripe\_api_requestor.py", line 853, in _interpret_response
+    self.handle_error_response(
+  File "C:\Users\user\Documents\GitHub\comicsite\selim_site\myvenv\Lib\site-packages\stripe\_api_requestor.py", line 336, in handle_error_response
+    raise err
+stripe._error.InvalidRequestError: Request req_P7vmvTzozN9pz7: The Checkout Session's total amount must convert to at least 50 cents. 17.09 TL converts to approximately $0.44.
+message='Request to Stripe api' method=post url=https://api.stripe.com/v1/checkout/sessions
+api_version=2025-04-30.basil message='Post details' post_data=payment_method_types[0]=card&line_items[0][price_data][currency]=try&line_items[0][price_data][unit_amount]=800&line_items[0][price_data][product_data][name]=batman2&line_items[0][quantity]=2&line_items[1][price_data][currency]=try&line_items[1][price_data][unit_amount]=800&line_items[1][price_data][product_data][name]=test&line_items[1][quantity]=1&line_items[2][price_data][currency]=try&line_items[2][price_data][unit_amount]=99&line_items[2][price_data][product_data][name]=qq&line_items[2][quantity]=1&line_items[3][price_data][currency]=try&line_items[3][price_data][unit_amount]=10&line_items[3][price_data][product_data][name]=deneme&line_items[3][quantity]=1&mode=payment&success_url=http%3A%2F%2F127.0.0.1%3A8000%2Fpayment%2Fsuccess%2F&cancel_url=http%3A%2F%2F127.0.0.1%3A8000%2Fcartd%2F&metadata[user_id]=11
+https://api.stripe.com:443 "POST /v1/checkout/sessions HTTP/1.1" 200 2614
+message='Stripe API response' path=https://api.stripe.com/v1/checkout/sessions response_code=200
+body='{\n  "id": "cs_test_b14SA77wlpkRB54rZHO63mKeBFghCpHYnf3Gh8YtwzdNwwJAvbdhwLERhO",\n  "object": "checkout.session",\n  "adaptive_pricing": {\n    "enabled": true\n  },\n  "after_expiration": null,\n  "allow_promotion_codes": null,\n  "amount_subtotal": 2509,\n  "amount_total": 2509,\n  "automatic_tax": {\n    "enabled": false,\n    "liability": null,\n    "provider": null,\n    "status": null\n  },\n  "billing_address_collection": null,\n  "cancel_url": "http://127.0.0.1:8000/cartd/",\n  "client_reference_id": null,\n  "client_secret": null,\n  "collected_information": null,\n  "consent": null,\n  "consent_collection": null,\n  "created": 1747376621,\n  "currency": "try",\n  "currency_conversion": null,\n  "custom_fields": [],\n  "custom_text": {\n    "after_submit": null,\n    "shipping_address": null,\n    "submit": null,\n    "terms_of_service_acceptance": null\n  },\n  "customer": null,\n  "customer_creation": "if_required",\n  "customer_details": null,\n  "customer_email": null,\n  "discounts": [],\n  "expires_at": 1747463020,\n  "invoice": null,\n  "invoice_creation": {\n    "enabled": false,\n    "invoice_data": {\n      "account_tax_ids": null,\n      "custom_fields": null,\n      "description": null,\n      "footer": null,\n      "issuer": null,\n      "metadata": {},\n      "rendering_options": null\n    }\n  },\n  "livemode": false,\n  "locale": null,\n  "metadata": {\n    "user_id": "11"\n  },\n  "mode": "payment",\n  "payment_intent": null,\n  "payment_link": null,\n  "payment_method_collection": "if_required",\n  "payment_method_configuration_details": null,\n  "payment_method_options": {\n    "card": {\n      "request_three_d_secure": "automatic"\n    }\n  },\n  "payment_method_types": [\n    "card"\n  ],\n  "payment_status": "unpaid",\n  "permissions": null,\n  "phone_number_collection": {\n    "enabled": false\n  },\n  "recovered_from": null,\n  "saved_payment_method_options": null,\n  "setup_intent": null,\n  "shipping_address_collection": null,\n  "shipping_cost": null,\n  "shipping_options": [],\n  "status": "open",\n  "submit_type": null,\n  "subscription": null,\n  "success_url": "http://127.0.0.1:8000/payment/success/",\n  "total_details": {\n    "amount_discount": 0,\n    "amount_shipping": 0,\n    "amount_tax": 0\n  },\n  "ui_mode": "hosted",\n  "url": "https://checkout.stripe.com/c/pay/cs_test_b14SA77wlpkRB54rZHO63mKeBFghCpHYnf3Gh8YtwzdNwwJAvbdhwLERhO#fidkdWxOYHwnPyd1blpxYHZxWjA0V05BV2BATVMxRmI3dH9GMzZqbXNkMklIcVFIdWFzXTBIaT1VMnZIa2d9VGhWZGJ1XGlVY0hfNkY1dnZKbz1EUlxQaGRPQE1mPWNoQl9QbGlqa0JKf3JzNTVmTEtKPGx%2FbycpJ2N3amhWYHdzYHcnP3F3cGApJ2lkfGpwcVF8dWAnPydocGlxbFpscWBoJyknYGtkZ2lgVWlkZmBtamlhYHd2Jz9xd3BgeCUl",\n  "wallet_options": null\n}' message='API response body'
+link=https://dashboard.stripe.com/test/logs/req_egKfcw1s7USSmC message='Dashboard link for request'
+message='Request to Stripe api' method=post url=https://api.stripe.com/v1/checkout/sessions
+api_version=2025-04-30.basil message='Post details' post_data=payment_method_types[0]=card&line_items[0][price_data][currency]=try&line_items[0][price_data][unit_amount]=1980&line_items[0][price_data][product_data][name]=batman2&line_items[0][quantity]=1&line_items[1][price_data][currency]=try&line_items[1][price_data][unit_amount]=2600&line_items[1][price_data][product_data][name]=batman1&line_items[1][quantity]=1&line_items[2][price_data][currency]=try&line_items[2][price_data][unit_amount]=800&line_items[2][price_data][product_data][name]=batman2&line_items[2][quantity]=1&line_items[3][price_data][currency]=try&line_items[3][price_data][unit_amount]=3000&line_items[3][price_data][product_data][name]=deneme2&line_items[3][quantity]=1&line_items[4][price_data][currency]=try&line_items[4][price_data][unit_amount]=10&line_items[4][price_data][product_data][name]=deneme&line_items[4][quantity]=1&line_items[5][price_data][currency]=try&line_items[5][price_data][unit_amount]=1840&line_items[5][price_data][product_data][name]=comic1&line_items[5][quantity]=1&line_items[6][price_data][currency]=try&line_items[6][price_data][unit_amount]=99&line_items[6][price_data][product_data][name]=qq&line_items[6][quantity]=1&line_items[7][price_data][currency]=try&line_items[7][price_data][unit_amount]=10000&line_items[7][price_data][product_data][name]=%C3%BCr%C3%BCn&line_items[7][quantity]=1&line_items[8][price_data][currency]=try&line_items[8][price_data][unit_amount]=800&line_items[8][price_data][product_data][name]=test&line_items[8][quantity]=1&line_items[9][price_data][currency]=try&line_items[9][price_data][unit_amount]=1000&line_items[9][price_data][product_data][name]=sat%C4%B1n+alma+deneme&line_items[9][quantity]=1&mode=payment&success_url=http%3A%2F%2F127.0.0.1%3A8000%2Fpayment%2Fsuccess%2F&cancel_url=http%3A%2F%2F127.0.0.1%3A8000%2Fcartd%2F&metadata[user_id]=11
+Starting new HTTPS connection (1): api.stripe.com:443
+https://api.stripe.com:443 "POST /v1/checkout/sessions HTTP/1.1" 200 2616
+message='Stripe API response' path=https://api.stripe.com/v1/checkout/sessions response_code=200
+body='{\n  "id": "cs_test_b1ZKc2xU9YI2z3ftX2nPCtws1msmNA0TdCZe4XUugALcX0orMdcNYhCL2w",\n  "object": "checkout.session",\n  "adaptive_pricing": {\n    "enabled": true\n  },\n  "after_expiration": null,\n  "allow_promotion_codes": null,\n  "amount_subtotal": 22129,\n  "amount_total": 22129,\n  "automatic_tax": {\n    "enabled": false,\n    "liability": null,\n    "provider": null,\n    "status": null\n  },\n  "billing_address_collection": null,\n  "cancel_url": "http://127.0.0.1:8000/cartd/",\n  "client_reference_id": null,\n  "client_secret": null,\n  "collected_information": null,\n  "consent": null,\n  "consent_collection": null,\n  "created": 1747376838,\n  "currency": "try",\n  "currency_conversion": null,\n  "custom_fields": [],\n  "custom_text": {\n    "after_submit": null,\n    "shipping_address": null,\n    "submit": null,\n    "terms_of_service_acceptance": null\n  },\n  "customer": null,\n  "customer_creation": "if_required",\n  "customer_details": null,\n  "customer_email": null,\n  "discounts": [],\n  "expires_at": 1747463237,\n  "invoice": null,\n  "invoice_creation": {\n    "enabled": false,\n    "invoice_data": {\n      "account_tax_ids": null,\n      "custom_fields": null,\n      "description": null,\n      "footer": null,\n      "issuer": null,\n      "metadata": {},\n      "rendering_options": null\n    }\n  },\n  "livemode": false,\n  "locale": null,\n  "metadata": {\n    "user_id": "11"\n  },\n  "mode": "payment",\n  "payment_intent": null,\n  "payment_link": null,\n  "payment_method_collection": "if_required",\n  "payment_method_configuration_details": null,\n  "payment_method_options": {\n    "card": {\n      "request_three_d_secure": "automatic"\n    }\n  },\n  "payment_method_types": [\n    "card"\n  ],\n  "payment_status": "unpaid",\n  "permissions": null,\n  "phone_number_collection": {\n    "enabled": false\n  },\n  "recovered_from": null,\n  "saved_payment_method_options": null,\n  "setup_intent": null,\n  "shipping_address_collection": null,\n  "shipping_cost": null,\n  "shipping_options": [],\n  "status": "open",\n  "submit_type": null,\n  "subscription": null,\n  "success_url": "http://127.0.0.1:8000/payment/success/",\n  "total_details": {\n    "amount_discount": 0,\n    "amount_shipping": 0,\n    "amount_tax": 0\n  },\n  "ui_mode": "hosted",\n  "url": "https://checkout.stripe.com/c/pay/cs_test_b1ZKc2xU9YI2z3ftX2nPCtws1msmNA0TdCZe4XUugALcX0orMdcNYhCL2w#fidkdWxOYHwnPyd1blpxYHZxWjA0V05BV2BATVMxRmI3dH9GMzZqbXNkMklIcVFIdWFzXTBIaT1VMnZIa2d9VGhWZGJ1XGlVY0hfNkY1dnZKbz1EUlxQaGRPQE1mPWNoQl9QbGlqa0JKf3JzNTVmTEtKPGx%2FbycpJ2N3amhWYHdzYHcnP3F3cGApJ2lkfGpwcVF8dWAnPydocGlxbFpscWBoJyknYGtkZ2lgVWlkZmBtamlhYHd2Jz9xd3BgeCUl",\n  "wallet_options": null\n}' message='API response body'
+link=https://dashboard.stripe.com/test/logs/req_lOoxGhByOZWayr message='Dashboard link for request'
+C:\Users\user\Documents\GitHub\comicsite\selim_site\ssite\xsite\views.py changed, reloading.
+Watching for file changes with StatReloader
+C:\Users\user\Documents\GitHub\comicsite\selim_site\ssite\xsite\views.py changed, reloading.
+Watching for file changes with StatReloader
+C:\Users\user\Documents\GitHub\comicsite\selim_site\ssite\xsite\urls.py changed, reloading.
+Watching for file changes with StatReloader
+C:\Users\user\Documents\GitHub\comicsite\selim_site\ssite\xsite\views.py changed, reloading.
+Watching for file changes with StatReloader
+Internal Server Error: /profile/update/
+Traceback (most recent call last):
+  File "C:\Users\user\Documents\GitHub\comicsite\selim_site\myvenv\Lib\site-packages\django\db\backends\utils.py", line 105, in _execute
+    return self.cursor.execute(sql, params)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\user\Documents\GitHub\comicsite\selim_site\myvenv\Lib\site-packages\django\db\backends\sqlite3\base.py", line 354, in execute
+    return super().execute(query, params)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+sqlite3.IntegrityError: UNIQUE constraint failed: auth_user.username
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "C:\Users\user\Documents\GitHub\comicsite\selim_site\myvenv\Lib\site-packages\django\core\handlers\exception.py", line 55, in inner
+    response = get_response(request)
+               ^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\user\Documents\GitHub\comicsite\selim_site\myvenv\Lib\site-packages\django\core\handlers\base.py", line 197, in _get_response
+    response = wrapped_callback(request, *callback_args, **callback_kwargs)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\user\Documents\GitHub\comicsite\selim_site\myvenv\Lib\site-packages\django\views\generic\base.py", line 104, in view
+    return self.dispatch(request, *args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\user\Documents\GitHub\comicsite\selim_site\myvenv\Lib\site-packages\django\contrib\auth\mixins.py", line 73, in dispatch
+    return super().dispatch(request, *args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\user\Documents\GitHub\comicsite\selim_site\myvenv\Lib\site-packages\django\views\generic\base.py", line 143, in dispatch
+    return handler(request, *args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\user\Documents\GitHub\comicsite\selim_site\ssite\xsite\views.py", line 33, in post
+    user.save()
+  File "C:\Users\user\Documents\GitHub\comicsite\selim_site\myvenv\Lib\site-packages\django\contrib\auth\base_user.py", line 62, in save
+    super().save(*args, **kwargs)
+  File "C:\Users\user\Documents\GitHub\comicsite\selim_site\myvenv\Lib\site-packages\django\db\models\base.py", line 891, in save
+    self.save_base(
+  File "C:\Users\user\Documents\GitHub\comicsite\selim_site\myvenv\Lib\site-packages\django\db\models\base.py", line 997, in save_base
+    updated = self._save_table(
+              ^^^^^^^^^^^^^^^^^
+  File "C:\Users\user\Documents\GitHub\comicsite\selim_site\myvenv\Lib\site-packages\django\db\models\base.py", line 1129, in _save_table
+    updated = self._do_update(
+              ^^^^^^^^^^^^^^^^
+  File "C:\Users\user\Documents\GitHub\comicsite\selim_site\myvenv\Lib\site-packages\django\db\models\base.py", line 1194, in _do_update
+    return filtered._update(values) > 0
+           ^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\user\Documents\GitHub\comicsite\selim_site\myvenv\Lib\site-packages\django\db\models\query.py", line 1278, in _update
+    return query.get_compiler(self.db).execute_sql(CURSOR)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\user\Documents\GitHub\comicsite\selim_site\myvenv\Lib\site-packages\django\db\models\sql\compiler.py", line 2003, in execute_sql
+    cursor = super().execute_sql(result_type)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\user\Documents\GitHub\comicsite\selim_site\myvenv\Lib\site-packages\django\db\models\sql\compiler.py", line 1574, in execute_sql
+    cursor.execute(sql, params)
+  File "C:\Users\user\Documents\GitHub\comicsite\selim_site\myvenv\Lib\site-packages\django\db\backends\utils.py", line 122, in execute
+    return super().execute(sql, params)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\user\Documents\GitHub\comicsite\selim_site\myvenv\Lib\site-packages\django\db\backends\utils.py", line 79, in execute
+    return self._execute_with_wrappers(
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\user\Documents\GitHub\comicsite\selim_site\myvenv\Lib\site-packages\django\db\backends\utils.py", line 92, in _execute_with_wrappers
+    return executor(sql, params, many, context)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\user\Documents\GitHub\comicsite\selim_site\myvenv\Lib\site-packages\django\db\backends\utils.py", line 100, in _execute
+    with self.db.wrap_database_errors:
+  File "C:\Users\user\Documents\GitHub\comicsite\selim_site\myvenv\Lib\site-packages\django\db\utils.py", line 91, in __exit__
+    raise dj_exc_value.with_traceback(traceback) from exc_value
+  File "C:\Users\user\Documents\GitHub\comicsite\selim_site\myvenv\Lib\site-packages\django\db\backends\utils.py", line 105, in _execute
+    return self.cursor.execute(sql, params)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\user\Documents\GitHub\comicsite\selim_site\myvenv\Lib\site-packages\django\db\backends\sqlite3\base.py", line 354, in execute
+    return super().execute(query, params)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+django.db.utils.IntegrityError: UNIQUE constraint failed: auth_user.username

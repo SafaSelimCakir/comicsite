@@ -23,7 +23,7 @@ urlpatterns = [
     path('payment/return/', PaymentReturnView.as_view(), name='payment_return'),
     path('stripe-checkout/', StripeCheckoutRedirectView.as_view(), name='stripe_checkout'),
     path('payment/success/', views.StripeSuccessView.as_view(), name='payment_success'),
-
+    path('profile/update/', views.ProfileUpdateView.as_view(), name='profile_update'),
 ]
 urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
 
