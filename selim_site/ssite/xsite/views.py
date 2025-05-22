@@ -11,7 +11,7 @@ from django.conf import settings
 from decimal import Decimal
 import stripe
 import logging
-from .models import Product, Cart, CartItem, Order, OrderItem
+from .models import Product, Cart, CartItem, Order, OrderItem,Category
 from xsite.forms import RegisterForm, PaymentForm
 from django.views.decorators.csrf import csrf_exempt
 from django.utils.decorators import method_decorator
@@ -24,7 +24,7 @@ class ProfileUpdateView(LoginRequiredMixin, View):
         username = request.POST.get('username')
         email = request.POST.get('email')
         bio = request.POST.get('bio')
-        profile_picture = request.FILES.get('profile_picture')  # <-- burada dosya yakalanıyor
+        profile_picture = request.FILES.get('profile_picture')  
 
         if username:
             user.username = username
@@ -35,7 +35,7 @@ class ProfileUpdateView(LoginRequiredMixin, View):
         if bio:
             profile.bio = bio
         if profile_picture:
-            profile.profile_picture = profile_picture  # <-- burada kayıt ediliyor
+            profile.profile_picture = profile_picture  
         profile.save()
 
         messages.success(request, "Profil bilgileri güncellendi.")
@@ -65,7 +65,7 @@ class StripeCheckoutRedirectView(LoginRequiredMixin, View):
                 'quantity': item.quantity,
             })
 
-        # Stripe Checkout Session
+        
         session = stripe.checkout.Session.create(
             payment_method_types=['card'],
             line_items=line_items,
@@ -87,7 +87,7 @@ class StripeSuccessView(LoginRequiredMixin, View):
         cart = Cart.objects.get(user=request.user)
         cart_items = cart.items.all()
         if not cart_items:
-            return redirect('home')  # önlem
+            return redirect('home')  
 
         total_price = sum(
             item.product.discounted_price if item.product.apply_discount else item.product.price.amount
@@ -146,8 +146,29 @@ class HomeView(ListView):
 class GetQuerySetView(View):
     def get(self, request):
         query = request.GET.get('q')
-        products = Product.objects.filter(Q(name__icontains=query)) if query else Product.objects.all()
-        return render(request, 'xsite/checkout.html', {'products': products})
+        category_id = request.GET.get('category')
+        min_price = request.GET.get('min_price')
+        max_price = request.GET.get('max_price')
+
+        products = Product.objects.all()
+
+        if query:
+            products = products.filter(name__icontains=query)
+
+        if category_id:
+            products = products.filter(categories__id=category_id)
+
+        if min_price:
+            products = products.filter(price__gte=min_price)
+        if max_price:
+            products = products.filter(price__lte=max_price)
+
+        categories = Category.objects.all()
+
+        return render(request, 'xsite/checkout.html', {
+            'products': products,
+            'categories': categories,
+        })
 
 
 class CheckoutView(ListView):
@@ -220,7 +241,6 @@ class OrderCheckoutView(LoginRequiredMixin, View):
                 messages.error(request, "Ödeme yöntemi sağlanmadı.")
                 return redirect('cart')
 
-            # Stripe ödeme işlemi
             payment_intent = stripe.PaymentIntent.create(
                 amount=int(total_price * 100),
                 currency='try',
@@ -229,7 +249,6 @@ class OrderCheckoutView(LoginRequiredMixin, View):
                 automatic_payment_methods={'enabled': True, 'allow_redirects': 'never'}
             )
 
-            # Satın alınan ürünleri listelemek için
             purchased_products = [item.product for item in cart_items]
 
             with transaction.atomic():
@@ -245,7 +264,7 @@ class OrderCheckoutView(LoginRequiredMixin, View):
 
             request.session['purchased_product_ids'] = [product.id for product in purchased_products]
             messages.success(request, "Ödeme başarılı! Ürünler kütüphanenize eklendi.")
-            return redirect('cart')  # kullanıcı cart/ sayfasına yönlendirilir
+            return redirect('cart')  
 
         except stripe.error.StripeError as e:
             messages.error(request, f"Ödeme hatası: {str(e)}")
@@ -258,7 +277,6 @@ def cart_detail(request):
     cart = Cart.objects.get(user=request.user)
     cart_items = cart.items.all()
 
-    # Satın alınan ürünleri session’dan çek
     purchased_product_ids = request.session.pop('purchased_product_ids', [])
     purchased_products = Product.objects.filter(id__in=purchased_product_ids) if purchased_product_ids else []
 

@@ -1,4 +1,3 @@
-/* Genel ayarlar */
 body {
     font-family: Arial, sans-serif;
     margin: 0;
@@ -10,7 +9,6 @@ body {
     background: linear-gradient(135deg, #c51414, #141414);
 }
 
-/* Login kutusu */
 .login-container {
     display: flex;
     justify-content: center;
@@ -32,7 +30,6 @@ body {
     color: whitesmoke;
 }
 
-/* Form elemanları */
 form {
     width: 100%;
 }
@@ -50,7 +47,6 @@ input[type="text"], input[type="password"], input[type="email"], select, textare
     font-size: 1em;
 }
 
-/* Buton */
 .btn {
     width: 100%;
     padding: 10px 15px;

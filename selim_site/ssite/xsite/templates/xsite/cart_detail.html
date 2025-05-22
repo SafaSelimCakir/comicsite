@@ -21,7 +21,7 @@
                     <p>
                         {% if item.product.apply_discount %}
                             <span class="original-price">{{ item.product.price }}</span>
-                            <span class="discounted-price">{{ item.product.discounted_price }}</span>
+                            <span class="discounted-price">TRY {{ item.product.discounted_price }}</span>
                         {% else %}
                             <span class="price">{{ item.product.price }}</span>
                         {% endif %}
@@ -47,7 +47,6 @@
         <h3>Toplam</h3>
         <p>Ürün Toplamı: <span id="totalPrice">0</span> TRY</p>
 
-        <!-- Stripe Checkout yönlendirme -->
         <form action="{% url 'stripe_checkout' %}" method="post">
             {% csrf_token %}
             <button type="submit"

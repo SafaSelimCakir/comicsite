@@ -2,13 +2,29 @@
 {% load static %}
 {% block content %}
 <link rel="stylesheet" href="{% static 'css/main.css'%}">
-<link rel="stylesheet" href="{% static 'css/card.css'%}">	
+<link rel="stylesheet" href="{% static 'css/card.css'%}">
 <link rel="stylesheet" href="{% static 'css/search.css'%}">
 
 <form action="{% url 'get_queryset' %}" method="get" class="search-form">
     <input name="q" type="text" placeholder="Search..." class="search-input">
     <button type="submit" class="search-button">Search</button>
 </form>
+
+
+<form method="get" action="{% url 'get_queryset' %}" class="filter-form" style="margin-bottom: 20px;">
+  <select name="category" style="padding: 6px;border: solid white;color: dimgray;">
+    <option value="">Kategori Seç</option>
+    {% for cat in categories %}
+      <option value="{{ cat.id }}" {% if request.GET.category == cat.id|stringformat:"s" %}selected{% endif %}>{{ cat.name }}</option>
+    {% endfor %}
+  </select>
+
+  <input style="width: 100px;height: 40px;border: solid white;" type="number" name="min_price" placeholder="Min Fiyat" value="{{ request.GET.min_price }}">
+  <input style="width: 100px;height: 40px;border: solid white;" type="number" name="max_price" placeholder="Max Fiyat" value="{{ request.GET.max_price }}">
+  
+  <button style="font-size: large;width: 90px;height: 40px;color: whitesmoke;border-radius: 12px;border: solid dimgray;background-color: dimgray;" type="submit">Filtrele</button>
+</form>
+
 
 
 {% if products %}
@@ -30,7 +46,7 @@
 						<p class="card-text">
 							{% if product.apply_discount %}
 								<span style="text-decoration: line-through; color: gray;">{{ product.price }}</span>
-								<span style="color: red;">{{ product.discounted_price }}</span>
+								<span style="color: red;">TRY{{ product.discounted_price }}</span>
 							{% else %}
 								{{ product.price }}
 							{% endif %}
